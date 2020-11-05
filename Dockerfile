@@ -4,3 +4,4 @@ COPY ./modules/ /build
 WORKDIR /build
 RUN chmod +x ./server/gradlew
 RUN ./server/gradlew build
+RUN ./server/gradlew test
