@@ -3,5 +3,7 @@ FROM openjdk:14-jdk AS app-build
 COPY ./modules/ /build
 WORKDIR /build
 RUN chmod +x ./server/gradlew
-RUN ./server/gradlew tasks
+RUN ./server/gradlew tasks --all
+RUN ./server/gradlew init
+RUN ./server/gradlew clean
 RUN ./server/gradlew build
