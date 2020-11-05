@@ -12,10 +12,4 @@ public class SimpleTest {
     public void passingTest() {
         assertEquals(123,123);
     }
-
-    @Test
-    @AfterAll
-    static void consoleInfo() {
-        System.out.println("SimpleTest Passed!");
-    }
 }
