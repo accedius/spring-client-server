@@ -7,4 +7,4 @@ build image:
   services:
     - docker:dind
   script:
-    - docker build .
+    - docker build ./sources/server/
