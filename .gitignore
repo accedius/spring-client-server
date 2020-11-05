@@ -1,5 +1,5 @@
-/sources/*/.gradle
-/sources/*/.idea
-/sources/*/build
-/sources/*/target
+/modules/*/.gradle
+/modules/*/.idea
+/modules/*/build
+/modules/*/target
 /**/.DS_Store
