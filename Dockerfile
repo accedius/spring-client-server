@@ -1,6 +1,6 @@
 FROM openjdk:14-jdk AS app-build
 
 ENV GRADLE_OPTS -Dorg.gradle.daemon = false
-COPY . /build
+COPY ./src/server/ /build
 WORKDIR /build
 RUN ./gradlew build
