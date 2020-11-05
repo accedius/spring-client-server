@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @DisplayName("Test class with simple passing test")
 public class SimpleTest {
     @Test
-    @DisplayName("Test, that should pass")
+    @DisplayName("Test that should pass")
     public void passingTest() {
         assertEquals(123,123);
     }
