@@ -3,12 +3,15 @@ package cz.cvut.fit.baklaal1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@DisplayName("Test class with simple passing test")
 public class SimpleTest {
     @Test
+    @DisplayName("Test, that should pass")
     public void passingTest() {
         assertEquals(123,123);
     }
