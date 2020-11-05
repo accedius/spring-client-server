@@ -5,4 +5,3 @@ WORKDIR /build
 RUN chmod +x ./gradlew
 RUN ./gradlew init
 RUN ./gradlew build
-RUN ./gradlew test
