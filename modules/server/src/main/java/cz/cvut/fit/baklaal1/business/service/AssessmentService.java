@@ -27,6 +27,12 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
         this.workService = workService;
         this.teacherService = teacherService;
     }
+
+    //TODO in Java there is no typedef, when what is the best practice to avoid type inconsistency (e.g. int vs long) in var/fields such as Ids?
+    public List<AssessmentDTO> findAllByEvaluatorId(int evaluatorId) {
+        List<Assessment> assessments = assessmentRepository.findAllByEvaluatorId(evaluatorId);
+        return toDTO(assessments);
+    }
     
     @Override
     @Transactional

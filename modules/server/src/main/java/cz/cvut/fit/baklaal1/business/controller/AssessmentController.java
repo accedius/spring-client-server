@@ -23,6 +23,11 @@ public class AssessmentController extends BasicController<Assessment, Integer, A
         this.assessmentService = assessmentService;
     }
 
+    @GetMapping(value = domainRoot, params = {"evaluatorId"})
+    List<AssessmentDTO> allByEvaluatorId(int evaluatorId) {
+        return assessmentService.findAllByEvaluatorId(evaluatorId);
+    }
+
     List<AssessmentDTO> all() {
         return super.all(domainRoot);
     }
