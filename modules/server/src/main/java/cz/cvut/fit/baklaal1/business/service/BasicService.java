@@ -1,23 +1,14 @@
 package cz.cvut.fit.baklaal1.business.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
 public abstract class BasicService<T, ID, T_DTO, T_CREATE_DTO> {
-    //TODO find a nicer way to propagate repository and retain @Autowired
-    //generic REPO extends JpaRepository<T, ID> is not recognised by @Autowired
-    //protected <R extends JpaRepository<T, ID> > R repository;
-    //protected final JpaRepository<T, ID> repository;
     private final JpaRepository<T, ID> repository;
 
-    @Autowired
     public BasicService(JpaRepository<T, ID> repository) {
         this.repository = repository;
     }
