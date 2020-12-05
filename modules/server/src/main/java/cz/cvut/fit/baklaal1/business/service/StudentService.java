@@ -7,6 +7,7 @@ import cz.cvut.fit.baklaal1.data.entity.Work;
 import cz.cvut.fit.baklaal1.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
     private final WorkService workService;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, WorkService workService) {
+    public StudentService(StudentRepository studentRepository, @Lazy WorkService workService) {
         super(studentRepository);
         this.studentRepository = studentRepository;
         this.workService = workService;

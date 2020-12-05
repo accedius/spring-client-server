@@ -8,6 +8,7 @@ import cz.cvut.fit.baklaal1.data.entity.Work;
 import cz.cvut.fit.baklaal1.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.AssessmentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +22,13 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
     private final TeacherService teacherService;
 
     @Autowired
-    public AssessmentService(AssessmentRepository assessmentRepository, WorkService workService, TeacherService teacherService) {
+    public AssessmentService(AssessmentRepository assessmentRepository, @Lazy WorkService workService, @Lazy TeacherService teacherService) {
         super(assessmentRepository);
         this.assessmentRepository = assessmentRepository;
         this.workService = workService;
         this.teacherService = teacherService;
     }
 
-    //TODO in Java there is no typedef, when what is the best practice to avoid type inconsistency (e.g. int vs long) in var/fields such as Ids?
     public List<AssessmentDTO> findAllByEvaluatorId(int evaluatorId) {
         List<Assessment> assessments = assessmentRepository.findAllByEvaluatorId(evaluatorId);
         return toDTO(assessments);

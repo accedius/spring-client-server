@@ -8,6 +8,7 @@ import cz.cvut.fit.baklaal1.data.entity.Work;
 import cz.cvut.fit.baklaal1.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.WorkDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreateDTO> {
-    //mirror of the abstract super class' repository
-    //private final WorkRepository workRepository = (WorkRepository) repository;
     private final WorkRepository workRepository;
     private final StudentService studentService;
     private final AssessmentService assessmentService;
 
     @Autowired
-    public WorkService(WorkRepository workRepository, StudentService studentService, AssessmentService assessmentService) {
+    public WorkService(WorkRepository workRepository, @Lazy StudentService studentService, @Lazy AssessmentService assessmentService) {
         super(workRepository);
         this.workRepository = workRepository;
         this.studentService = studentService;

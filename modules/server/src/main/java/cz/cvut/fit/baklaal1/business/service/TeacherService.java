@@ -1,6 +1,5 @@
 package cz.cvut.fit.baklaal1.business.service;
 
-import cz.cvut.fit.baklaal1.business.repository.PersonRepository;
 import cz.cvut.fit.baklaal1.business.repository.TeacherRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
@@ -8,6 +7,7 @@ import cz.cvut.fit.baklaal1.data.entity.Teacher;
 import cz.cvut.fit.baklaal1.data.entity.dto.TeacherCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.TeacherDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
     private final AssessmentService assessmentService;
 
     @Autowired
-    public TeacherService(TeacherRepository teacherRepository, AssessmentService assessmentService) {
+    public TeacherService(TeacherRepository teacherRepository, @Lazy AssessmentService assessmentService) {
         super(teacherRepository);
         this.teacherRepository = teacherRepository;
         this.assessmentService = assessmentService;
