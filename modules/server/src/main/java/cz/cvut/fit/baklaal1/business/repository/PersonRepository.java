@@ -2,13 +2,12 @@ package cz.cvut.fit.baklaal1.business.repository;
 
 import cz.cvut.fit.baklaal1.data.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.NoRepositoryBean;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@NoRepositoryBean
 public interface PersonRepository<T extends Person> extends JpaRepository<T, Integer> {
     Optional<T> findByUsername(String username);
 
