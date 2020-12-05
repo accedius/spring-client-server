@@ -29,12 +29,6 @@ public class Student extends Person {
         this.works = works;
     }
 
-    public Student(int id, String username, String name, Timestamp birthDate, float averageGrade, List<Work> works) {
-        super(id, username, name, birthDate);
-        this.averageGrade = averageGrade;
-        this.works = works;
-    }
-
     public float getAverageGrade() {
         return averageGrade;
     }

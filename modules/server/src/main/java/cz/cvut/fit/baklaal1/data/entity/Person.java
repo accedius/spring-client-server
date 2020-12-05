@@ -29,13 +29,6 @@ public abstract class Person {
         this.birthDate = birthDate;
     }
 
-    public Person(int id, String username, String name, Timestamp birthDate) {
-        this.id = id;
-        this.username = username;
-        this.name = name;
-        this.birthDate = birthDate;
-    }
-
     public int getId() {
         return id;
     }
