@@ -2,6 +2,8 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.StudentRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
+import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
+import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Student;
 import cz.cvut.fit.baklaal1.data.entity.Work;
 import cz.cvut.fit.baklaal1.data.entity.dto.StudentCreateDTO;
@@ -29,8 +31,7 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
     @Override
     @Transactional
     public StudentDTO create(StudentCreateDTO studentDTO) throws Exception {
-        List<Integer> workIds = studentDTO.getWorkIds();
-        List<Work> works = getRequiredWorkByIds(workIds, ServiceConstants.ON_CREATE);
+        List<Work> works = getRequiredWorkByCreateDTO(studentDTO, ServiceConstants.ACTION_CREATE);
 
         //TODO check if works right && better than new Student(studentDTO.getUsername(), studentDTO.getName(), studentDTO.getBirthDate(), studentDTO.getAverageGrade(), works);
         Student student = fillStudent(new Student(), studentDTO, works);
@@ -43,10 +44,9 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
     public StudentDTO update(Integer id, StudentCreateDTO studentDTO) throws Exception {
         Optional<Student> optStudent = findById(id);
         if(optStudent.isEmpty())
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.STUDENT_SERVICE + "student not found in db");
+            throw getServiceException(ServiceConstants.ACTION_UPDATE, ServiceConstants.STUDENT + ServiceConstants.NOT_FOUND_IN_DB, studentDTO);
 
-        List<Integer> workIds = studentDTO.getWorkIds();
-        List<Work> works = getRequiredWorkByIds(workIds, ServiceConstants.ON_UPDATE);
+        List<Work> works = getRequiredWorkByCreateDTO(studentDTO, ServiceConstants.ACTION_UPDATE);
 
         Student student = fillStudent(optStudent.get(), studentDTO, works);
 
@@ -60,15 +60,28 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
         return student;
     }
 
-    protected List<Work> getRequiredWorkByIds(List<Integer> workIds, final String ON_ACTION) throws Exception{
+    protected List<Work> getRequiredWorkByCreateDTO(StudentCreateDTO studentDTO, final String ACTION_NAME) throws Exception {
+        List<Integer> workIds = studentDTO.getWorkIds();
         List<Work> works = getWorkByIds(workIds);
         if(workIds.size() != works.size())
-            throw new Exception(ServiceConstants.EXCEPTION + ON_ACTION + ServiceConstants.STUDENT_SERVICE + "some works of the student not found in db!");
+            throw getServiceException(ACTION_NAME, ServiceConstants.WORKS + ServiceConstants.NOT_FOUND_IN_DB, studentDTO);
         return works;
     }
 
     private List<Work> getWorkByIds(List<Integer> workIds) {
         return workService.findByIds(workIds);
+    }
+
+    private ServiceException getServiceException(String duringActionName, String cause) {
+        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
+        builder.exception().inService(ServiceConstants.STUDENT_SERVICE).onAction(duringActionName).causedBy(cause);
+        return builder.build();
+    }
+
+    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
+        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
+        builder.exception().inService(ServiceConstants.STUDENT_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
+        return builder.build();
     }
 
     @Override

@@ -2,6 +2,8 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.AssessmentRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
+import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
+import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
 import cz.cvut.fit.baklaal1.data.entity.Teacher;
 import cz.cvut.fit.baklaal1.data.entity.Work;
@@ -37,15 +39,17 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
     @Override
     @Transactional
     public AssessmentDTO create(AssessmentCreateDTO assessmentDTO) throws Exception {
+        final String actionName = ServiceConstants.ACTION_CREATE;
+
         Integer evaluatorId = assessmentDTO.getEvaluatorId();
         Teacher evaluator = getEvaluatorById(evaluatorId);
         if(evaluator == null)
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_CREATE + ServiceConstants.ASSESSMENT_SERVICE + "evaluator of the assessment not found in db!");
+            throw getServiceException(actionName, ServiceConstants.EVALUATOR + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Integer workId = assessmentDTO.getWorkId();
         Work work = getWorkById(workId);
         if(work == null)
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_CREATE + ServiceConstants.ASSESSMENT_SERVICE + "work not found in db!");
+            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Assessment assessment = new Assessment(assessmentDTO.getGrade(), work, evaluator);
 
@@ -55,9 +59,11 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
     @Override
     @Transactional
     public AssessmentDTO update(Integer id, AssessmentCreateDTO assessmentDTO) throws Exception {
+        final String actionName = ServiceConstants.ACTION_UPDATE;
+
         Optional<Assessment> optAssessment = findById(id);
         if(optAssessment.isEmpty())
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.ASSESSMENT_SERVICE + "assessment not found in db");
+            throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Assessment assessment = optAssessment.get();
         assessment.setGrade(assessmentDTO.getGrade());
@@ -65,13 +71,13 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
         Integer evaluatorId = assessmentDTO.getEvaluatorId();
         Teacher evaluator = getEvaluatorById(evaluatorId);
         if(evaluator == null)
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.ASSESSMENT_SERVICE + "evaluator of the assessment not found in db!");
+            throw getServiceException(actionName, ServiceConstants.EVALUATOR + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
         assessment.setEvaluator(evaluator);
 
         Integer workId = assessmentDTO.getWorkId();
         Work work = getWorkById(workId);
         if(work == null)
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.ASSESSMENT_SERVICE + "work not found in db!");
+            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
         assessment.setWork(work);
 
         return toDTO(assessment);
@@ -83,6 +89,18 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
 
     private Work getWorkById(Integer workId) {
         return workService.findById(workId).orElse(null);
+    }
+
+    private ServiceException getServiceException(String duringActionName, String cause) {
+        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
+        builder.exception().inService(ServiceConstants.ASSESSMENT_SERVICE).onAction(duringActionName).causedBy(cause);
+        return builder.build();
+    }
+
+    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
+        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
+        builder.exception().inService(ServiceConstants.ASSESSMENT_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
+        return builder.build();
     }
 
     @Override

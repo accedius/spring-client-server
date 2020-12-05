@@ -2,6 +2,8 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.WorkRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
+import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
+import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
 import cz.cvut.fit.baklaal1.data.entity.Student;
 import cz.cvut.fit.baklaal1.data.entity.Work;
@@ -38,16 +40,18 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
     @Override
     @Transactional
     public WorkDTO create(WorkCreateDTO workDTO) throws Exception {
+        final String actionName = ServiceConstants.ACTION_CREATE;
+
         List<Integer> authorIds = workDTO.getAuthorIds();
         List<Student> authors = getAuthorByIds(authorIds);
         //author(s) should exist in time of the creation => no works without authors can be created, but works will remain after author(s) deletion
         if(authorIds.size() != authors.size())
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_CREATE + ServiceConstants.WORK_SERVICE + "some authors of the work not found in db!");
+            throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Integer assessmentId = workDTO.getAssessmentId();
         Assessment assessment = assessmentId != null ? getAssessmentById(assessmentId) : null;
         if(assessmentId != null && assessment == null)
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_CREATE + ServiceConstants.WORK_SERVICE + "assessment not found in db!");
+            throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Work work = new Work(workDTO.getTitle(), workDTO.getText(), authors, assessment);
 
@@ -57,9 +61,11 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
     @Override
     @Transactional
     public WorkDTO update(Integer id, WorkCreateDTO workDTO) throws Exception {
+        final String actionName = ServiceConstants.ACTION_UPDATE;
+
         Optional<Work> optWork = findById(id);
         if(optWork.isEmpty())
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.WORK_SERVICE + "work not found in db");
+            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Work work = optWork.get();
         work.setTitle(workDTO.getTitle());
@@ -68,13 +74,13 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
         List<Integer> authorIds = workDTO.getAuthorIds();
         List<Student> authors = getAuthorByIds(authorIds);
         if(authorIds.size() != authors.size())
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.WORK_SERVICE + "some authors of the work not found in db!");
+            throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
         work.setAuthors(authors);
 
         Integer assessmentId = workDTO.getAssessmentId();
         Assessment assessment = assessmentId != null ? getAssessmentById(assessmentId) : null;
         if(assessmentId != null && assessment == null)
-            throw new Exception(ServiceConstants.EXCEPTION + ServiceConstants.ON_UPDATE + ServiceConstants.WORK_SERVICE + "assessment not found in db!");
+            throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
         work.setAssessment(assessment);
 
         return toDTO(work);
@@ -88,7 +94,12 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
         return assessmentService.findById(assessmentId).orElse(null);
     }
 
-    //TODO find a nicer way to implement - mb adding implements generic interface
+    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
+        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
+        builder.exception().inService(ServiceConstants.WORK_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
+        return builder.build();
+    }
+
     @Override
     protected WorkDTO toDTO(Work work) {
         return new WorkDTO(work);
