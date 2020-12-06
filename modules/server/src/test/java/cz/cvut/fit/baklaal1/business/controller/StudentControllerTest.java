@@ -26,11 +26,6 @@ class StudentControllerTest {
 
     @Test
     void byId() {
-        Student student = new Student(1, "baklaal1", "Aleksej", null, 0, null);
-        BDDMockito.given(studentService.findById(student.getId())).willReturn(Optional.of(student));
-
-        Assertions.assertEquals(student.getUsername(), studentController.byId(student.getId()).getUsername());
-        Mockito.verify(studentService, Mockito.atLeastOnce()).findById(student.getId());
     }
 
     @Test
