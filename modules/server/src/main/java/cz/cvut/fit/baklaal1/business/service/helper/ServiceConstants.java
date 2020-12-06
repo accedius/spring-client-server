@@ -7,6 +7,7 @@ public final class ServiceConstants {
     public static final String ACTION_UPDATE = "update";
 
     public static final String NOT_FOUND_IN_DB = " not found in database";
+    public static final String MUST_NOT_BE_ABSENT = " must not be absent";
 
     public static final String ASSESSMENT_SERVICE = "AssessmentService";
     public static final String PERSON_SERVICE = "PersonService";

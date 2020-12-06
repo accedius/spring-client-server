@@ -56,19 +56,19 @@ public class ServiceExceptionBuilder {
     }
 
     public ServiceExceptionBuilder onAction(String actionName) {
-        String onAction = "on " + actionName;
+        String onAction = "on " + actionName + " action";
         messageSequenceMap.put(onSeqId, onAction);
         return this;
     }
 
     public ServiceExceptionBuilder causedBy(String problemDescription) {
-        String problem = "occurred problem: " + problemDescription;
+        String problem = ", caused by problem: " + problemDescription;
         messageSequenceMap.put(problemSeqId, problem);
         return this;
     }
 
     public ServiceExceptionBuilder relatedToObject(Object object) {
-        String obj = "related to object: " + object.toString();
+        String obj = ", related to object: " + object.toString();
         messageSequenceMap.put(objectSeqId, obj);
         return this;
     }

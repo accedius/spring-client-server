@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,9 +43,12 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
     public WorkDTO create(WorkCreateDTO workDTO) throws Exception {
         final String actionName = ServiceConstants.ACTION_CREATE;
 
-        List<Integer> authorIds = workDTO.getAuthorIds();
-        List<Student> authors = getAuthorByIds(authorIds);
         //author(s) should exist in time of the creation => no works without authors can be created, but works will remain after author(s) deletion
+        Set<Integer> authorIds = workDTO.getAuthorIds();
+        if(authorIds.isEmpty())
+            throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+
+        Set<Student> authors = getAuthorByIds(authorIds);
         if(authorIds.size() != authors.size())
             throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
@@ -71,8 +75,8 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
         work.setTitle(workDTO.getTitle());
         work.setText(workDTO.getText());
 
-        List<Integer> authorIds = workDTO.getAuthorIds();
-        List<Student> authors = getAuthorByIds(authorIds);
+        Set<Integer> authorIds = workDTO.getAuthorIds();
+        Set<Student> authors = getAuthorByIds(authorIds);
         if(authorIds.size() != authors.size())
             throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
         work.setAuthors(authors);
@@ -86,7 +90,7 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
         return toDTO(work);
     }
 
-    private List<Student> getAuthorByIds(List<Integer> authorIds) {
+    private Set<Student> getAuthorByIds(Set<Integer> authorIds) {
         return studentService.findByIds(authorIds);
     }
 

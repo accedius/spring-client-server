@@ -1,17 +1,22 @@
 package cz.cvut.fit.baklaal1.data.entity;
 
+import com.sun.istack.NotNull;
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
-public class Work {
+public class Work implements Comparable<Work> {
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
 
+    @NotNull
     private String title;
 
     private String text;
@@ -22,7 +27,9 @@ public class Work {
             joinColumns = @JoinColumn(name = DBConstants.WORK_ID),
             inverseJoinColumns = @JoinColumn(name = DBConstants.STUDENT_ID)
     )
-    private List<Student> authors = new ArrayList<>();
+    @SortNatural
+    @OrderBy("name ASC")
+    private Set<Student> authors = new TreeSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = DBConstants.ASSESSMENT_ID, referencedColumnName = DBConstants.ID)
@@ -35,14 +42,14 @@ public class Work {
         this.text = text;
     }
 
-    public Work(String title, String text, List<Student> authors, Assessment assessment) {
+    public Work(String title, String text, Set<Student> authors, Assessment assessment) {
         this.title = title;
         this.text = text;
         this.authors = authors;
         this.assessment = assessment;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -62,11 +69,11 @@ public class Work {
         this.text = text;
     }
 
-    public List<Student> getAuthors() {
+    public Set<Student> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<Student> authors) {
+    public void setAuthors(Set<Student> authors) {
         this.authors = authors;
     }
 
@@ -76,5 +83,26 @@ public class Work {
 
     public void setAssessment(Assessment assessment) {
         this.assessment = assessment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Work)) return false;
+        Work work = (Work) o;
+        if(id != null && work.id != null && !id.equals(work.id)) return false;
+        return  title.equals(work.title) &&
+                Objects.equals(text, work.text) &&
+                authors.equals(work.authors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, text, authors);
+    }
+
+    @Override
+    public int compareTo(Work o) {
+        return title.compareTo(o.title);
     }
 }

@@ -4,13 +4,14 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Person {
+public abstract class Person implements Comparable<Person> {
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
 
     @NotNull
     @Column(unique = true)
@@ -29,7 +30,7 @@ public abstract class Person {
         this.birthDate = birthDate;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -55,5 +56,25 @@ public abstract class Person {
 
     public void setBirthDate(Timestamp birthDate) {
         this.birthDate = birthDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return id == person.id &&
+                username.equals(person.username) &&
+                name.equals(person.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, name);
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return name.compareTo(o.name);
     }
 }

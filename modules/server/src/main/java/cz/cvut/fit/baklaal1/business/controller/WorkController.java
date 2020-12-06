@@ -21,22 +21,6 @@ public class WorkController extends BasicController<Work, Integer, WorkDTO, Work
         this.workService = workService;
     }
 
-    List<WorkDTO> all() {
-        return super.all();
-    }
-
-    WorkDTO byId(int id) {
-        return super.byId(id);
-    }
-
-    WorkDTO save(WorkCreateDTO workDTO) throws Exception {
-        return super.save(workDTO);
-    }
-
-    WorkDTO save(int id, WorkCreateDTO book) throws Exception {
-        return super.save(id, book);
-    }
-
     @GetMapping(params = {"title"})
     List<WorkDTO> allByTitle(@RequestParam String title) {
         return workService.findAllByTitle(title);

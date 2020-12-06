@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, TeacherCreateDTO> {
@@ -31,7 +31,7 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
     @Override
     @Transactional
     public TeacherDTO create(TeacherCreateDTO teacherDTO) throws Exception {
-        List<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_CREATE);
+        Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_CREATE);
 
         Teacher teacher = fillTeacher(new Teacher(), teacherDTO, assessments);
 
@@ -45,29 +45,29 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
         if(optTeacher.isEmpty())
             throw getServiceException(ServiceConstants.ACTION_UPDATE, ServiceConstants.TEACHER + ServiceConstants.NOT_FOUND_IN_DB, teacherDTO);
 
-        List<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_UPDATE);
+        Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_UPDATE);
 
         Teacher teacher = fillTeacher(optTeacher.get(), teacherDTO, assessments);
 
         return toDTO(teacher);
     }
 
-    protected Teacher fillTeacher(Teacher teacher, TeacherCreateDTO teacherDTO, List<Assessment> assessments) throws Exception {
+    protected Teacher fillTeacher(Teacher teacher, TeacherCreateDTO teacherDTO, Set<Assessment> assessments) throws Exception {
         fillPerson(teacher, teacherDTO);
         teacher.setWage(teacherDTO.getWage());
         teacher.setAssessments(assessments);
         return teacher;
     }
 
-    protected List<Assessment> getRequiredAssessmentByCreateDTO(TeacherCreateDTO teacherDTO, final String ACTION_NAME) throws Exception {
-        List<Integer> assessmentIds = teacherDTO.getAssessmentIds();
-        List<Assessment> assessments = getAssessmentByIds(assessmentIds);
+    protected Set<Assessment> getRequiredAssessmentByCreateDTO(TeacherCreateDTO teacherDTO, final String ACTION_NAME) throws Exception {
+        Set<Integer> assessmentIds = teacherDTO.getAssessmentIds();
+        Set<Assessment> assessments = getAssessmentByIds(assessmentIds);
         if(assessmentIds.size() != assessments.size())
             throw getServiceException(ACTION_NAME, ServiceConstants.ASSESSMENTS + ServiceConstants.NOT_FOUND_IN_DB, teacherDTO);
         return assessments;
     }
 
-    private List<Assessment> getAssessmentByIds(List<Integer> assessmentIds) {
+    private Set<Assessment> getAssessmentByIds(Set<Integer> assessmentIds) {
         return assessmentService.findByIds(assessmentIds);
     }
 

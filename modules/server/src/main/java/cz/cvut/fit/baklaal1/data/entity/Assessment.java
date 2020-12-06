@@ -4,16 +4,18 @@ import com.sun.istack.NotNull;
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-public class Assessment {
+public class Assessment implements Comparable<Assessment> {
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
 
     @NotNull
     private int grade;
 
+    @NotNull
     @OneToOne(mappedBy = DBConstants.ASSESSMENT)
     private Work work;
 
@@ -33,7 +35,7 @@ public class Assessment {
         this.evaluator = evaluator;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -59,5 +61,25 @@ public class Assessment {
 
     public void setEvaluator(Teacher evaluator) {
         this.evaluator = evaluator;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Assessment)) return false;
+        Assessment assessment = (Assessment) o;
+        if(id != null && assessment.id != null && !id.equals(assessment.id)) return false;
+        return  grade == assessment.grade &&
+                work.equals(assessment.work);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grade, work);
+    }
+
+    @Override
+    public int compareTo(Assessment o) {
+        return id.compareTo(o.id);
     }
 }

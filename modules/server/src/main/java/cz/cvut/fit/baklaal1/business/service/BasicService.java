@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public abstract class BasicService<T, ID, T_DTO, T_CREATE_DTO> {
@@ -18,8 +20,8 @@ public abstract class BasicService<T, ID, T_DTO, T_CREATE_DTO> {
         return items.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<T> findByIds(List<ID> ids) {
-        return repository.findAllById(ids);
+    public Set<T> findByIds(Set<ID> ids) {
+        return new TreeSet<>(repository.findAllById(ids));
     }
 
     public Optional<T> findById(ID id) {

@@ -1,12 +1,15 @@
 package cz.cvut.fit.baklaal1.data.entity;
 
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 public class Student extends Person {
@@ -14,7 +17,9 @@ public class Student extends Person {
     private float averageGrade;
 
     @ManyToMany(mappedBy = DBConstants.AUTHORS)
-    private List<Work> works = new ArrayList<>();
+    @SortNatural
+    @OrderBy("title ASC")
+    private Set<Work> works = new TreeSet<>();
 
     public Student() {}
 
@@ -23,7 +28,7 @@ public class Student extends Person {
         this.averageGrade = averageGrade;
     }
 
-    public Student(String username, String name, Timestamp birthDate, float averageGrade, List<Work> works) {
+    public Student(String username, String name, Timestamp birthDate, float averageGrade, Set<Work> works) {
         super(username, name, birthDate);
         this.averageGrade = averageGrade;
         this.works = works;
@@ -37,11 +42,11 @@ public class Student extends Person {
         this.averageGrade = averageGrade;
     }
 
-    public List<Work> getWorks() {
+    public Set<Work> getWorks() {
         return works;
     }
 
-    public void setWorks(List<Work> works) {
+    public void setWorks(Set<Work> works) {
         this.works = works;
     }
 }

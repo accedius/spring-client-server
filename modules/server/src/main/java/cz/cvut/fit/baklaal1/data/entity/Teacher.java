@@ -2,12 +2,15 @@ package cz.cvut.fit.baklaal1.data.entity;
 
 import com.sun.istack.NotNull;
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 public class Teacher extends Person {
@@ -15,7 +18,9 @@ public class Teacher extends Person {
     private double wage;
 
     @OneToMany(mappedBy = DBConstants.EVALUATOR)
-    private List<Assessment> assessments = new ArrayList<>();
+    @SortNatural
+    @OrderBy
+    private Set<Assessment> assessments = new TreeSet<>();
 
     public Teacher() {}
 
@@ -24,7 +29,7 @@ public class Teacher extends Person {
         this.wage = wage;
     }
 
-    public Teacher(String username, String name, Timestamp birthDate, double wage, List<Assessment> assessments) {
+    public Teacher(String username, String name, Timestamp birthDate, double wage, Set<Assessment> assessments) {
         super(username, name, birthDate);
         this.wage = wage;
         this.assessments = assessments;
@@ -38,11 +43,11 @@ public class Teacher extends Person {
         this.wage = wage;
     }
 
-    public List<Assessment> getAssessments() {
+    public Set<Assessment> getAssessments() {
         return assessments;
     }
 
-    public void setAssessments(List<Assessment> assessments) {
+    public void setAssessments(Set<Assessment> assessments) {
         this.assessments = assessments;
     }
 }

@@ -27,20 +27,4 @@ public class AssessmentController extends BasicController<Assessment, Integer, A
     List<AssessmentDTO> allByEvaluatorId(int evaluatorId) {
         return assessmentService.findAllByEvaluatorId(evaluatorId);
     }
-
-    List<AssessmentDTO> all() {
-        return super.all();
-    }
-
-    AssessmentDTO byId(int id) {
-        return super.byId(id);
-    }
-
-    AssessmentDTO save(AssessmentCreateDTO assessmentDTO) throws Exception {
-        return super.save(assessmentDTO);
-    }
-
-    AssessmentDTO save(int id, AssessmentCreateDTO book) throws Exception {
-        return super.save(id, book);
-    }
 }

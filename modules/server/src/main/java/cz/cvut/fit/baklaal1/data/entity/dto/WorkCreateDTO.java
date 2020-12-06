@@ -1,15 +1,14 @@
 package cz.cvut.fit.baklaal1.data.entity.dto;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 public class WorkCreateDTO {
     private final String title;
     private final String text;
-    private final List<Integer> authorIds;
+    private final Set<Integer> authorIds;
     private final Integer assessmentId;
 
-    public WorkCreateDTO(String title, String text, List<Integer> authorIds, Integer assessmentId) {
+    public WorkCreateDTO(String title, String text, Set<Integer> authorIds, Integer assessmentId) {
         this.title = title;
         this.text = text;
         this.authorIds = authorIds;
@@ -24,7 +23,7 @@ public class WorkCreateDTO {
         return text;
     }
 
-    public List<Integer> getAuthorIds() {
+    public Set<Integer> getAuthorIds() {
         return authorIds;
     }
 
