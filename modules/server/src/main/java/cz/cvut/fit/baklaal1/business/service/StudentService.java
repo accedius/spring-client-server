@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class StudentService extends PersonService<Student, Integer, StudentDTO, StudentCreateDTO> {
     private final StudentRepository studentRepository;
     private final WorkService workService;
@@ -34,13 +35,12 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
 
         //TODO check if works right && better than new Student(studentDTO.getUsername(), studentDTO.getName(), studentDTO.getBirthDate(), studentDTO.getAverageGrade(), works);
         Student student = fillStudent(new Student(), studentDTO, works);
-        studentRepository.save(student);
+        Student savedStudent = studentRepository.save(student);
 
-        return toDTO(student);
+        return toDTO(savedStudent);
     }
 
     @Override
-    @Transactional
     public StudentDTO update(Integer id, StudentCreateDTO studentDTO) throws Exception {
         Optional<Student> optStudent = findById(id);
         if(optStudent.isEmpty())
@@ -49,8 +49,9 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
         Set<Work> works = getRequiredWorkByCreateDTO(studentDTO, ServiceConstants.ACTION_UPDATE);
 
         Student student = fillStudent(optStudent.get(), studentDTO, works);
+        Student savedStudent = studentRepository.save(student);
 
-        return toDTO(student);
+        return toDTO(savedStudent);
     }
 
     protected Student fillStudent(Student student, StudentCreateDTO studentDTO, Set<Work> works) throws Exception {

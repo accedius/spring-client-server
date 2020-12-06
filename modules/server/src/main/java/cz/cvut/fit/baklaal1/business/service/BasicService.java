@@ -1,6 +1,7 @@
 package cz.cvut.fit.baklaal1.business.service;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+@Transactional
 public abstract class BasicService<T, ID, T_DTO, T_CREATE_DTO> {
     private final JpaRepository<T, ID> repository;
 

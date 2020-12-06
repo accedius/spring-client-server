@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, TeacherCreateDTO> {
     private final TeacherRepository teacherRepository;
     private final AssessmentService assessmentService;
@@ -33,13 +34,12 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
         Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_CREATE);
 
         Teacher teacher = fillTeacher(new Teacher(), teacherDTO, assessments);
-        teacherRepository.save(teacher);
+        Teacher savedTeacher = teacherRepository.save(teacher);
 
-        return toDTO(teacher);
+        return toDTO(savedTeacher);
     }
 
     @Override
-    @Transactional
     public TeacherDTO update(Integer id, TeacherCreateDTO teacherDTO) throws Exception {
         Optional<Teacher> optTeacher = findById(id);
         if(optTeacher.isEmpty())
@@ -48,8 +48,9 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
         Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_UPDATE);
 
         Teacher teacher = fillTeacher(optTeacher.get(), teacherDTO, assessments);
+        Teacher savedTeacher = teacherRepository.save(teacher);
 
-        return toDTO(teacher);
+        return toDTO(savedTeacher);
     }
 
     protected Teacher fillTeacher(Teacher teacher, TeacherCreateDTO teacherDTO, Set<Assessment> assessments) throws Exception {

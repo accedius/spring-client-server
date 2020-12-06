@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreateDTO> {
     private final WorkRepository workRepository;
     private final StudentService studentService;
@@ -57,13 +58,12 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
             throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Work work = new Work(workDTO.getTitle(), workDTO.getText(), authors, assessment);
-        workRepository.save(work);
+        Work savedWork = workRepository.save(work);
 
-        return toDTO(work);
+        return toDTO(savedWork);
     }
 
     @Override
-    @Transactional
     public WorkDTO update(Integer id, WorkCreateDTO workDTO) throws Exception {
         final String actionName = ServiceConstants.ACTION_UPDATE;
 
@@ -86,8 +86,9 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
         if(assessmentId != null && assessment == null)
             throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
         work.setAssessment(assessment);
+        Work savedWork = workRepository.save(work);
 
-        return toDTO(work);
+        return toDTO(savedWork);
     }
 
     private Set<Student> getAuthorByIds(Set<Integer> authorIds) {

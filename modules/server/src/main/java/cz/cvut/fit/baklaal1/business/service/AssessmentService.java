@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AssessmentService extends BasicService<Assessment, Integer, AssessmentDTO, AssessmentCreateDTO> {
     private final AssessmentRepository assessmentRepository;
     private final WorkService workService;
@@ -51,13 +52,12 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
             throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Assessment assessment = new Assessment(assessmentDTO.getGrade(), work, evaluator);
-        assessmentRepository.save(assessment);
+        Assessment savedAssessment = assessmentRepository.save(assessment);
 
-        return toDTO(assessment);
+        return toDTO(savedAssessment);
     }
 
     @Override
-    @Transactional
     public AssessmentDTO update(Integer id, AssessmentCreateDTO assessmentDTO) throws Exception {
         final String actionName = ServiceConstants.ACTION_UPDATE;
 
@@ -79,8 +79,9 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
         if(work == null)
             throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
         assessment.setWork(work);
+        Assessment savedAssessment = assessmentRepository.save(assessment);
 
-        return toDTO(assessment);
+        return toDTO(savedAssessment);
     }
 
     private Teacher getEvaluatorById(Integer evaluatorId) {
