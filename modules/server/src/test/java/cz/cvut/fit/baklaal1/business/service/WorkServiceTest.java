@@ -1,10 +1,12 @@
 package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.WorkRepository;
+import cz.cvut.fit.baklaal1.data.entity.Assessment;
 import cz.cvut.fit.baklaal1.data.entity.Student;
 import cz.cvut.fit.baklaal1.data.entity.Work;
 import cz.cvut.fit.baklaal1.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.WorkDTO;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,40 +41,87 @@ class WorkServiceTest {
     @MockBean
     private AssessmentService assessmentServiceMock;
 
-    @BeforeEach
-    void setUp() {
-        Student ID10 = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(ID10, "id", 10);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(ID10);
-
-        BDDMockito.given(studentServiceMock.findByIds(any())).willReturn(authors);
-    }
-
     @Test
     void create() throws Exception {
-        Work workToReturn = new Work();
+        final String title = "Title";
+        final String text = "Text";
+        final int authorId = 10;
+        final int workId = 1337;
 
-        ReflectionTestUtils.setField(workToReturn, "id", 1337);
+        Student author = new Student("perfect", "Perfect", null, 1);
+        ReflectionTestUtils.setField(author, "id", authorId);
+        Set<Student> authors = new TreeSet<>();
+        authors.add(author);
+        Work workToReturn = new Work(title, text, authors, null);
+
+        ReflectionTestUtils.setField(workToReturn, "id", workId);
         Set<Integer> authorsIds = new HashSet<>();
-        authorsIds.add(10);
-        WorkCreateDTO workCreateDTO = new WorkCreateDTO("Title", "Text", authorsIds, null);
+        authorsIds.add(authorId);
+        WorkCreateDTO workCreateDTO = new WorkCreateDTO(title, text, authorsIds, null);
 
         BDDMockito.given(workRepositoryMock.save(any(Work.class))).willReturn(workToReturn);
+        BDDMockito.given(studentServiceMock.findByIds(authorsIds)).willReturn(authors);
 
         WorkDTO returnedWorkDTO = workService.create(workCreateDTO);
 
-        WorkDTO expectedWorkDTO = new WorkDTO(1337, "Title", "Text", authorsIds, null);
+        WorkDTO expectedWorkDTO = new WorkDTO(workId, title, text, authorsIds, null);
         assertEquals(expectedWorkDTO, returnedWorkDTO);
 
         ArgumentCaptor<Work> argumentCaptor = ArgumentCaptor.forClass(Work.class);
         Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
         Work workProvidedToSave = argumentCaptor.getValue();
-        assertEquals("Title", workProvidedToSave.getTitle());
-        assertEquals("Text", workProvidedToSave.getText());
+        assertEquals(title, workProvidedToSave.getTitle());
+        assertEquals(text, workProvidedToSave.getText());
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
+        final String title = "Title";
+        final String text = "Text";
+        final int authorId = 10;
+        final String newTitle = "New Title";
+        final String newText = "New Text";
+        final int newAuthorId = 20;
+        final int newAssessmentId = 3;
+        final int workId = 1337;
+
+        Student author = new Student("perfect", "Perfect", null, 1);
+        ReflectionTestUtils.setField(author, "id", authorId);
+        Set<Student> authors = new TreeSet<>();
+        authors.add(author);
+        Work workToBeUpdated = new Work(title, text, authors, null);
+        ReflectionTestUtils.setField(workToBeUpdated, "id", workId);
+
+        Student newAuthor = new Student("perfect", "Perfect", null, 1);
+        ReflectionTestUtils.setField(newAuthor, "id", newAuthorId);
+        Set<Student> newAuthors = new TreeSet<>();
+        newAuthors.add(newAuthor);
+        Work workToReturn = new Work(newTitle, newText, newAuthors, null);
+        ReflectionTestUtils.setField(workToReturn, "id", workId);
+
+        Assessment newAssessment = new Assessment(2, workToReturn, null);
+        ReflectionTestUtils.setField(newAssessment, "id", newAssessmentId);
+        workToReturn.setAssessment(newAssessment);
+
+        Set<Integer> newAuthorsIds = new HashSet<>();
+        newAuthorsIds.add(newAuthorId);
+        WorkCreateDTO workToUpdateDTO = new WorkCreateDTO(newTitle, newText, newAuthorsIds, newAssessmentId);
+
+        BDDMockito.given(workRepositoryMock.findById(workId)).willReturn(Optional.of(workToBeUpdated));
+        BDDMockito.given(workRepositoryMock.save(any(Work.class))).willReturn(workToReturn);
+        BDDMockito.given(studentServiceMock.findByIds(newAuthorsIds)).willReturn(newAuthors);
+        BDDMockito.given(assessmentServiceMock.findById(newAssessmentId)).willReturn(Optional.of(newAssessment));
+
+        WorkDTO returnedWorkDTO = workService.update(workId, workToUpdateDTO);
+
+        WorkDTO expectedWorkDTO = new WorkDTO(workId, newTitle, newText, newAuthorsIds, newAssessmentId);
+        assertEquals(expectedWorkDTO, returnedWorkDTO);
+
+        ArgumentCaptor<Work> argumentCaptor = ArgumentCaptor.forClass(Work.class);
+        //TODO find out if mock is the same as in the create() method test, could be counting previous calls as well
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
+        Work workProvidedToSave = argumentCaptor.getValue();
+        assertEquals(newTitle, workProvidedToSave.getTitle());
+        assertEquals(newText, workProvidedToSave.getText());
     }
 }
