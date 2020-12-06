@@ -39,7 +39,6 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
     }
 
     @Override
-    @Transactional
     public WorkDTO create(WorkCreateDTO workDTO) throws Exception {
         final String actionName = ServiceConstants.ACTION_CREATE;
 
@@ -58,6 +57,7 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
             throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Work work = new Work(workDTO.getTitle(), workDTO.getText(), authors, assessment);
+        workRepository.save(work);
 
         return toDTO(work);
     }

@@ -37,7 +37,6 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
     }
     
     @Override
-    @Transactional
     public AssessmentDTO create(AssessmentCreateDTO assessmentDTO) throws Exception {
         final String actionName = ServiceConstants.ACTION_CREATE;
 
@@ -52,6 +51,7 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
             throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Assessment assessment = new Assessment(assessmentDTO.getGrade(), work, evaluator);
+        assessmentRepository.save(assessment);
 
         return toDTO(assessment);
     }

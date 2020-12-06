@@ -29,12 +29,12 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
     }
 
     @Override
-    @Transactional
     public StudentDTO create(StudentCreateDTO studentDTO) throws Exception {
         Set<Work> works = getRequiredWorkByCreateDTO(studentDTO, ServiceConstants.ACTION_CREATE);
 
         //TODO check if works right && better than new Student(studentDTO.getUsername(), studentDTO.getName(), studentDTO.getBirthDate(), studentDTO.getAverageGrade(), works);
         Student student = fillStudent(new Student(), studentDTO, works);
+        studentRepository.save(student);
 
         return toDTO(student);
     }

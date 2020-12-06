@@ -29,11 +29,11 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
     }
 
     @Override
-    @Transactional
     public TeacherDTO create(TeacherCreateDTO teacherDTO) throws Exception {
         Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_CREATE);
 
         Teacher teacher = fillTeacher(new Teacher(), teacherDTO, assessments);
+        teacherRepository.save(teacher);
 
         return toDTO(teacher);
     }
