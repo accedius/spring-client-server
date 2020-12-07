@@ -1,11 +1,12 @@
 package cz.cvut.fit.baklaal1.data.entity.dto;
 
 import cz.cvut.fit.baklaal1.data.entity.Person;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public abstract class PersonDTO {
+public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends RepresentationModel<T_DTO> implements ReadableId {
     protected int id;
     protected String username;
     protected String name;
@@ -18,7 +19,7 @@ public abstract class PersonDTO {
         this.birthDate = birthDate;
     }
 
-    public PersonDTO(Person person) {
+    public PersonDTO(final Person person) {
         this.id = person.getId() == null ? -1 : person.getId();
         this.username = person.getUsername();
         this.name = person.getName();

@@ -2,12 +2,13 @@ package cz.cvut.fit.baklaal1.data.entity.dto;
 
 import cz.cvut.fit.baklaal1.data.entity.Student;
 import cz.cvut.fit.baklaal1.data.entity.Work;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class WorkDTO {
+public class WorkDTO extends RepresentationModel<WorkDTO> implements ReadableId {
     private final int id;
     private final String title;
     private final String text;
@@ -22,7 +23,7 @@ public class WorkDTO {
         this.assessmentId = assessmentId;
     }
 
-    public WorkDTO(Work work) {
+    public WorkDTO(final Work work) {
         this.id = work.getId() == null ? -1 : work.getId();
         this.title = work.getTitle();
         this.text = work.getText();
@@ -33,6 +34,11 @@ public class WorkDTO {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public int readId() {
+        return getId();
     }
 
     public String getTitle() {

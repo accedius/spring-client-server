@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TeacherDTO extends PersonDTO {
+public class TeacherDTO extends PersonDTO<TeacherDTO> {
     private double wage;
     private Set<Integer> assessmentIds;
 
@@ -18,11 +18,16 @@ public class TeacherDTO extends PersonDTO {
         this.assessmentIds = assessmentIds;
     }
 
-    public TeacherDTO(Teacher teacher) {
+    public TeacherDTO(final Teacher teacher) {
         super(teacher);
         this.wage = teacher.getWage();
         Set<Assessment> assessments = teacher.getAssessments();
         this.assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+    }
+
+    @Override
+    public int readId() {
+        return getId();
     }
 
     public double getWage() {

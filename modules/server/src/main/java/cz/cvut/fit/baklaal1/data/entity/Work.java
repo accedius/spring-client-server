@@ -1,6 +1,7 @@
 package cz.cvut.fit.baklaal1.data.entity;
 
 import com.sun.istack.NotNull;
+import cz.cvut.fit.baklaal1.data.entity.dto.WorkDTO;
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
 import org.hibernate.annotations.SortNatural;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
-public class Work implements Comparable<Work> {
+public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO> {
     @Id
     @GeneratedValue
     private Integer id;
@@ -98,11 +99,16 @@ public class Work implements Comparable<Work> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, text, authors);
+        return Objects.hash(title, authors);
     }
 
     @Override
     public int compareTo(Work o) {
         return title.compareTo(o.title);
+    }
+
+    @Override
+    public WorkDTO toDTO() {
+        return new WorkDTO(this);
     }
 }

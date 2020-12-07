@@ -1,13 +1,14 @@
 package cz.cvut.fit.baklaal1.data.entity;
 
 import com.sun.istack.NotNull;
+import cz.cvut.fit.baklaal1.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Assessment implements Comparable<Assessment> {
+public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<AssessmentDTO> {
     @Id
     @GeneratedValue
     private Integer id;
@@ -81,5 +82,10 @@ public class Assessment implements Comparable<Assessment> {
     @Override
     public int compareTo(Assessment o) {
         return id.compareTo(o.id);
+    }
+
+    @Override
+    public AssessmentDTO toDTO() {
+        return new AssessmentDTO(this);
     }
 }

@@ -1,10 +1,11 @@
 package cz.cvut.fit.baklaal1.data.entity.dto;
 
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class AssessmentDTO {
+public class AssessmentDTO extends RepresentationModel<AssessmentDTO> implements ReadableId {
     private final int id;
     private final int grade;
     private final int workId;
@@ -17,7 +18,7 @@ public class AssessmentDTO {
         this.evaluatorId = evaluatorId;
     }
 
-    public AssessmentDTO(Assessment assessment) {
+    public AssessmentDTO(final Assessment assessment) {
         this.id = assessment.getId() == null ? -1 : assessment.getId();
         this.grade = assessment.getGrade();
         this.workId = assessment.getWork().getId();
@@ -26,6 +27,11 @@ public class AssessmentDTO {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public int readId() {
+        return getId();
     }
 
     public int getGrade() {
