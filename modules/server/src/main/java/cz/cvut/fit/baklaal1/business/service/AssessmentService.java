@@ -2,8 +2,6 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.AssessmentRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
 import cz.cvut.fit.baklaal1.data.entity.Teacher;
 import cz.cvut.fit.baklaal1.data.entity.Work;
@@ -19,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class AssessmentService extends BasicService<Assessment, Integer, AssessmentDTO, AssessmentCreateDTO> {
+public class AssessmentService extends BasicService<Assessment, AssessmentDTO, AssessmentCreateDTO> {
     private final AssessmentRepository assessmentRepository;
     private final WorkService workService;
     private final TeacherService teacherService;
@@ -39,19 +37,23 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
     
     @Override
     public AssessmentDTO create(AssessmentCreateDTO assessmentDTO) throws Exception {
-        final String actionName = ServiceConstants.ACTION_CREATE;
+        final String actionCreate = ServiceConstants.ACTION_CREATE;
 
         Integer evaluatorId = assessmentDTO.getEvaluatorId();
         Teacher evaluator = getEvaluatorById(evaluatorId);
         if(evaluator == null)
-            throw getServiceException(actionName, ServiceConstants.EVALUATOR + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+            throw getServiceException(actionCreate, ServiceConstants.EVALUATOR + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Integer workId = assessmentDTO.getWorkId();
         Work work = getWorkById(workId);
         if(work == null)
-            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Assessment assessment = new Assessment(assessmentDTO.getGrade(), work, evaluator);
+
+        if(exists(assessment))
+            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, assessmentDTO);
+
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
         return toDTO(savedAssessment);
@@ -59,11 +61,11 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
 
     @Override
     public AssessmentDTO update(Integer id, AssessmentCreateDTO assessmentDTO) throws Exception {
-        final String actionName = ServiceConstants.ACTION_UPDATE;
+        final String actionUpdate = ServiceConstants.ACTION_UPDATE;
 
         Optional<Assessment> optAssessment = findById(id);
         if(optAssessment.isEmpty())
-            throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
 
         Assessment assessment = optAssessment.get();
         assessment.setGrade(assessmentDTO.getGrade());
@@ -71,17 +73,27 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
         Integer evaluatorId = assessmentDTO.getEvaluatorId();
         Teacher evaluator = getEvaluatorById(evaluatorId);
         if(evaluator == null)
-            throw getServiceException(actionName, ServiceConstants.EVALUATOR + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.EVALUATOR + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
         assessment.setEvaluator(evaluator);
 
         Integer workId = assessmentDTO.getWorkId();
         Work work = getWorkById(workId);
         if(work == null)
-            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
         assessment.setWork(work);
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
         return toDTO(savedAssessment);
+    }
+
+    @Override
+    protected boolean exists(Assessment item) {
+        return assessmentRepository.findByWork(item.getWork()).isPresent();
+    }
+
+    @Override
+    protected String getServiceName() {
+        return ServiceConstants.ASSESSMENT_SERVICE;
     }
 
     private Teacher getEvaluatorById(Integer evaluatorId) {
@@ -90,18 +102,6 @@ public class AssessmentService extends BasicService<Assessment, Integer, Assessm
 
     private Work getWorkById(Integer workId) {
         return workService.findById(workId).orElse(null);
-    }
-
-    private ServiceException getServiceException(String duringActionName, String cause) {
-        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
-        builder.exception().inService(ServiceConstants.ASSESSMENT_SERVICE).onAction(duringActionName).causedBy(cause);
-        return builder.build();
-    }
-
-    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
-        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
-        builder.exception().inService(ServiceConstants.ASSESSMENT_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
-        return builder.build();
     }
 
     @Override

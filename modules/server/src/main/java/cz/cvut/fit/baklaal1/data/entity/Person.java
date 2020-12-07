@@ -64,13 +64,12 @@ public abstract class Person implements Comparable<Person> {
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
         if(id != null && person.id != null && !id.equals(person.id)) return false;
-        return username.equals(person.username) &&
-                name.equals(person.name);
+        return username.equals(person.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, name);
+        return Objects.hash(username);
     }
 
     @Override

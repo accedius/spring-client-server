@@ -2,8 +2,6 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.StudentRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Student;
 import cz.cvut.fit.baklaal1.data.entity.Work;
 import cz.cvut.fit.baklaal1.data.entity.dto.StudentCreateDTO;
@@ -18,7 +16,7 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class StudentService extends PersonService<Student, Integer, StudentDTO, StudentCreateDTO> {
+public class StudentService extends PersonService<Student, StudentDTO, StudentCreateDTO> {
     private final StudentRepository studentRepository;
     private final WorkService workService;
 
@@ -31,10 +29,16 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
 
     @Override
     public StudentDTO create(StudentCreateDTO studentDTO) throws Exception {
+        final String actionCreate = ServiceConstants.ACTION_CREATE;
+
         Set<Work> works = getRequiredWorkByCreateDTO(studentDTO, ServiceConstants.ACTION_CREATE);
 
         //TODO check if works right && better than new Student(studentDTO.getUsername(), studentDTO.getName(), studentDTO.getBirthDate(), studentDTO.getAverageGrade(), works);
         Student student = fillStudent(new Student(), studentDTO, works);
+
+        if(exists(student))
+            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, studentDTO);
+
         Student savedStudent = studentRepository.save(student);
 
         return toDTO(savedStudent);
@@ -42,9 +46,11 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
 
     @Override
     public StudentDTO update(Integer id, StudentCreateDTO studentDTO) throws Exception {
+        final String actionUpdate = ServiceConstants.ACTION_UPDATE;
+
         Optional<Student> optStudent = findById(id);
         if(optStudent.isEmpty())
-            throw getServiceException(ServiceConstants.ACTION_UPDATE, ServiceConstants.STUDENT + ServiceConstants.NOT_FOUND_IN_DB, studentDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.STUDENT + ServiceConstants.NOT_FOUND_IN_DB, studentDTO);
 
         Set<Work> works = getRequiredWorkByCreateDTO(studentDTO, ServiceConstants.ACTION_UPDATE);
 
@@ -52,6 +58,11 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
         Student savedStudent = studentRepository.save(student);
 
         return toDTO(savedStudent);
+    }
+
+    @Override
+    protected String getServiceName() {
+        return ServiceConstants.STUDENT_SERVICE;
     }
 
     protected Student fillStudent(Student student, StudentCreateDTO studentDTO, Set<Work> works) throws Exception {
@@ -71,18 +82,6 @@ public class StudentService extends PersonService<Student, Integer, StudentDTO, 
 
     private Set<Work> getWorkByIds(Set<Integer> workIds) {
         return workService.findByIds(workIds);
-    }
-
-    private ServiceException getServiceException(String duringActionName, String cause) {
-        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
-        builder.exception().inService(ServiceConstants.STUDENT_SERVICE).onAction(duringActionName).causedBy(cause);
-        return builder.build();
-    }
-
-    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
-        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
-        builder.exception().inService(ServiceConstants.STUDENT_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
-        return builder.build();
     }
 
     @Override

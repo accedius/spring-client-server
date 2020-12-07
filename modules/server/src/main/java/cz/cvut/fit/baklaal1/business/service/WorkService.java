@@ -2,8 +2,6 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.WorkRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
 import cz.cvut.fit.baklaal1.data.entity.Student;
 import cz.cvut.fit.baklaal1.data.entity.Work;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreateDTO> {
+public class WorkService extends BasicService<Work, WorkDTO, WorkCreateDTO> {
     private final WorkRepository workRepository;
     private final StudentService studentService;
     private final AssessmentService assessmentService;
@@ -41,23 +39,28 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
 
     @Override
     public WorkDTO create(WorkCreateDTO workDTO) throws Exception {
-        final String actionName = ServiceConstants.ACTION_CREATE;
+        final String actionCreate = ServiceConstants.ACTION_CREATE;
 
         //author(s) should exist in time of the creation => no works without authors can be created, but works will remain after author(s) deletion
         Set<Integer> authorIds = workDTO.getAuthorIds();
         if(authorIds.isEmpty())
-            throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+            throw getServiceException(actionCreate, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Set<Student> authors = getAuthorByIds(authorIds);
         if(authorIds.size() != authors.size())
-            throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+            throw getServiceException(actionCreate, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
+        //Assessment should be null on creation, but still better check
         Integer assessmentId = workDTO.getAssessmentId();
         Assessment assessment = assessmentId != null ? getAssessmentById(assessmentId) : null;
         if(assessmentId != null && assessment == null)
-            throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+            throw getServiceException(actionCreate, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Work work = new Work(workDTO.getTitle(), workDTO.getText(), authors, assessment);
+
+        if(exists(work))
+            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, workDTO);
+
         Work savedWork = workRepository.save(work);
 
         return toDTO(savedWork);
@@ -65,11 +68,11 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
 
     @Override
     public WorkDTO update(Integer id, WorkCreateDTO workDTO) throws Exception {
-        final String actionName = ServiceConstants.ACTION_UPDATE;
+        final String actionUpdate = ServiceConstants.ACTION_UPDATE;
 
         Optional<Work> optWork = findById(id);
         if(optWork.isEmpty())
-            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
 
         Work work = optWork.get();
         work.setTitle(workDTO.getTitle());
@@ -78,17 +81,28 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
         Set<Integer> authorIds = workDTO.getAuthorIds();
         Set<Student> authors = getAuthorByIds(authorIds);
         if(authorIds.size() != authors.size())
-            throw getServiceException(actionName, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.AUTHORS + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
         work.setAuthors(authors);
 
         Integer assessmentId = workDTO.getAssessmentId();
         Assessment assessment = assessmentId != null ? getAssessmentById(assessmentId) : null;
         if(assessmentId != null && assessment == null)
-            throw getServiceException(actionName, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.ASSESSMENT + ServiceConstants.NOT_FOUND_IN_DB, workDTO);
         work.setAssessment(assessment);
+
         Work savedWork = workRepository.save(work);
 
         return toDTO(savedWork);
+    }
+
+    @Override
+    protected boolean exists(final Work item) {
+        return !workRepository.findAllByTitleAndAuthorsIn(item.getTitle(), item.getAuthors()).isEmpty();
+    }
+
+    @Override
+    protected String getServiceName() {
+        return ServiceConstants.WORK_SERVICE;
     }
 
     private Set<Student> getAuthorByIds(Set<Integer> authorIds) {
@@ -97,12 +111,6 @@ public class WorkService extends BasicService<Work, Integer, WorkDTO, WorkCreate
 
     private Assessment getAssessmentById(Integer assessmentId) {
         return assessmentService.findById(assessmentId).orElse(null);
-    }
-
-    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
-        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
-        builder.exception().inService(ServiceConstants.WORK_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
-        return builder.build();
     }
 
     @Override

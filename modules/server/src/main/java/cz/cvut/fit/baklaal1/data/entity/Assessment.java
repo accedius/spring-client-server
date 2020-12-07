@@ -70,13 +70,12 @@ public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<Asse
         if (!(o instanceof Assessment)) return false;
         Assessment assessment = (Assessment) o;
         if(id != null && assessment.id != null && !id.equals(assessment.id)) return false;
-        return  grade == assessment.grade &&
-                work.equals(assessment.work);
+        return work.equals(assessment.work);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(grade, work);
+        return Objects.hash(work);
     }
 
     @Override

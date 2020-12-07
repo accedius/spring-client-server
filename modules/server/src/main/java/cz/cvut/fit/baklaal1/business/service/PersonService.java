@@ -4,20 +4,23 @@ import cz.cvut.fit.baklaal1.business.repository.PersonRepository;
 import cz.cvut.fit.baklaal1.data.entity.Person;
 import cz.cvut.fit.baklaal1.data.entity.dto.PersonCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.PersonDTO;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Transactional
-public abstract class PersonService<T extends Person, ID, T_DTO extends PersonDTO, T_CREATE_DTO extends PersonCreateDTO> extends BasicService<T, ID, T_DTO, T_CREATE_DTO> {
+public abstract class PersonService<T extends Person, T_DTO extends PersonDTO<T_DTO>, T_CREATE_DTO extends PersonCreateDTO> extends BasicService<T, T_DTO, T_CREATE_DTO> {
     private final PersonRepository<T> personRepository;
 
     public PersonService(PersonRepository<T> repository) {
-        //TODO better super call solution
-        super((JpaRepository<T, ID>) repository);
+        super(repository);
         personRepository = repository;
+    }
+
+    @Override
+    protected boolean exists(T item) {
+        return personRepository.findByUsername(item.getUsername()).isPresent();
     }
 
     protected T fillPerson(T person, T_CREATE_DTO itemDTO) throws Exception {

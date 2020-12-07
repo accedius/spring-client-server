@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 //TODO consider making a super class for any type of exceptions/?warnings?
-public class ServiceExceptionBuilder {
+public class ServiceExceptionBuilder<T extends Exception> {
     private static final String DEFAULT = "Undefined";
     private static final String EXCEPTION = "SERVICE EXCEPTION";
     private static final String CREATE = "create";
@@ -73,9 +73,9 @@ public class ServiceExceptionBuilder {
         return this;
     }
 
-    public ServiceException build() {
+    public ServiceExceptionInBusinessLogic build() {
         String message = buildMessage();
-        ServiceException exception = new ServiceException(message);
+        ServiceExceptionInBusinessLogic exception = new ServiceExceptionInBusinessLogic(message);
         return exception;
     }
 

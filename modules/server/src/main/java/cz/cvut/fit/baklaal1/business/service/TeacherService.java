@@ -2,8 +2,6 @@ package cz.cvut.fit.baklaal1.business.service;
 
 import cz.cvut.fit.baklaal1.business.repository.TeacherRepository;
 import cz.cvut.fit.baklaal1.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceException;
-import cz.cvut.fit.baklaal1.business.service.helper.ServiceExceptionBuilder;
 import cz.cvut.fit.baklaal1.data.entity.Assessment;
 import cz.cvut.fit.baklaal1.data.entity.Teacher;
 import cz.cvut.fit.baklaal1.data.entity.dto.TeacherCreateDTO;
@@ -18,7 +16,7 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, TeacherCreateDTO> {
+public class TeacherService extends PersonService<Teacher, TeacherDTO, TeacherCreateDTO> {
     private final TeacherRepository teacherRepository;
     private final AssessmentService assessmentService;
 
@@ -31,9 +29,15 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
 
     @Override
     public TeacherDTO create(TeacherCreateDTO teacherDTO) throws Exception {
+        final String actionCreate = ServiceConstants.ACTION_CREATE;
+
         Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_CREATE);
 
         Teacher teacher = fillTeacher(new Teacher(), teacherDTO, assessments);
+
+        if(exists(teacher))
+            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, teacherDTO);
+
         Teacher savedTeacher = teacherRepository.save(teacher);
 
         return toDTO(savedTeacher);
@@ -41,9 +45,11 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
 
     @Override
     public TeacherDTO update(Integer id, TeacherCreateDTO teacherDTO) throws Exception {
+        final String actionUpdate = ServiceConstants.ACTION_UPDATE;
+
         Optional<Teacher> optTeacher = findById(id);
         if(optTeacher.isEmpty())
-            throw getServiceException(ServiceConstants.ACTION_UPDATE, ServiceConstants.TEACHER + ServiceConstants.NOT_FOUND_IN_DB, teacherDTO);
+            throw getServiceException(actionUpdate, ServiceConstants.TEACHER + ServiceConstants.NOT_FOUND_IN_DB, teacherDTO);
 
         Set<Assessment> assessments = getRequiredAssessmentByCreateDTO(teacherDTO, ServiceConstants.ACTION_UPDATE);
 
@@ -51,6 +57,11 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
         Teacher savedTeacher = teacherRepository.save(teacher);
 
         return toDTO(savedTeacher);
+    }
+
+    @Override
+    protected String getServiceName() {
+        return ServiceConstants.TEACHER_SERVICE;
     }
 
     protected Teacher fillTeacher(Teacher teacher, TeacherCreateDTO teacherDTO, Set<Assessment> assessments) throws Exception {
@@ -70,12 +81,6 @@ public class TeacherService extends PersonService<Teacher, Integer, TeacherDTO, 
 
     private Set<Assessment> getAssessmentByIds(Set<Integer> assessmentIds) {
         return assessmentService.findByIds(assessmentIds);
-    }
-
-    private ServiceException getServiceException(String duringActionName, String cause, Object relatedObject) {
-        ServiceExceptionBuilder builder = new ServiceExceptionBuilder();
-        builder.exception().inService(ServiceConstants.TEACHER_SERVICE).onAction(duringActionName).causedBy(cause).relatedToObject(relatedObject);
-        return builder.build();
     }
 
     @Override
