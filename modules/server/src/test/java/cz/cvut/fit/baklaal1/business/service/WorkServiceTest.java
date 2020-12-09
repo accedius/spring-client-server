@@ -42,7 +42,7 @@ class WorkServiceTest {
     private AssessmentService assessmentServiceMock;
 
     @Test
-    void create() throws Exception {
+    public void create() throws Exception {
         final String title = "Title";
         final String text = "Text";
         final int authorId = 10;
@@ -75,7 +75,7 @@ class WorkServiceTest {
     }
 
     @Test
-    void update() throws Exception {
+    public void update() throws Exception {
         final String title = "Title";
         final String text = "Text";
         final int authorId = 10;
