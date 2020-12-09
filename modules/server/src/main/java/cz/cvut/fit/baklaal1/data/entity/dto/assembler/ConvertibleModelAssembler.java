@@ -18,7 +18,11 @@ public abstract class ConvertibleModelAssembler<T extends ConvertibleToDTO<T_DTO
     @Override
     public T_DTO toModel(T entity) {
         T_DTO model = entity.toDTO();
-        model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).byId(model.readId())).withSelfRel());
+        addLinksToModel(model);
         return model;
+    }
+
+    public T_DTO addLinksToModel(T_DTO model) {
+        return model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readById(model.readId())).withSelfRel());
     }
 }

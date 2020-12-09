@@ -20,14 +20,14 @@ public abstract class Person implements Comparable<Person> {
     @NotNull
     protected String name;
 
-    protected Timestamp birthDate;
+    protected Timestamp birthdate;
 
     public Person() {}
 
-    public Person(String username, String name, Timestamp birthDate) {
+    public Person(String username, String name, Timestamp birthdate) {
         this.username = username;
         this.name = name;
-        this.birthDate = birthDate;
+        this.birthdate = birthdate;
     }
 
     public Integer getId() {
@@ -50,12 +50,12 @@ public abstract class Person implements Comparable<Person> {
         this.name = name;
     }
 
-    public Timestamp getBirthDate() {
-        return birthDate;
+    public Timestamp getBirthdate() {
+        return birthdate;
     }
 
-    public void setBirthDate(Timestamp birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthdate(Timestamp birthDate) {
+        this.birthdate = birthDate;
     }
 
     @Override

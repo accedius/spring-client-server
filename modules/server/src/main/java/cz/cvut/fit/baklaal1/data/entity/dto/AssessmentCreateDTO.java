@@ -1,5 +1,7 @@
 package cz.cvut.fit.baklaal1.data.entity.dto;
 
+import java.util.Objects;
+
 public class AssessmentCreateDTO {
     private final int grade;
     private final int workId;
@@ -21,5 +23,20 @@ public class AssessmentCreateDTO {
 
     public Integer getEvaluatorId() {
         return evaluatorId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AssessmentCreateDTO)) return false;
+        AssessmentCreateDTO that = (AssessmentCreateDTO) o;
+        return grade == that.grade &&
+                workId == that.workId &&
+                Objects.equals(evaluatorId, that.evaluatorId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grade, workId, evaluatorId);
     }
 }

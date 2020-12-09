@@ -10,20 +10,20 @@ public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends Represen
     protected int id;
     protected String username;
     protected String name;
-    protected Timestamp birthDate;
+    protected Timestamp birthdate;
 
-    public PersonDTO(int id, String username, String name, Timestamp birthDate) {
+    public PersonDTO(int id, String username, String name, Timestamp birthdate) {
         this.id = id;
         this.username = username;
         this.name = name;
-        this.birthDate = birthDate;
+        this.birthdate = birthdate;
     }
 
     public PersonDTO(final Person person) {
         this.id = person.getId() == null ? -1 : person.getId();
         this.username = person.getUsername();
         this.name = person.getName();
-        this.birthDate = person.getBirthDate();
+        this.birthdate = person.getBirthdate();
     }
 
     public int getId() {
@@ -38,8 +38,8 @@ public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends Represen
         return name;
     }
 
-    public Timestamp getBirthDate() {
-        return birthDate;
+    public Timestamp getBirthdate() {
+        return birthdate;
     }
 
     protected boolean equals(Person personDTO) {
@@ -47,6 +47,6 @@ public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends Represen
         return id == personDTO.getId() &&
                 username.equals(personDTO.getUsername()) &&
                 name.equals(personDTO.getName()) &&
-                Objects.equals(birthDate, personDTO.getBirthDate());
+                Objects.equals(birthdate, personDTO.getBirthdate());
     }
 }

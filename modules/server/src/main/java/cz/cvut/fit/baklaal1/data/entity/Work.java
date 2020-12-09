@@ -1,18 +1,18 @@
 package cz.cvut.fit.baklaal1.data.entity;
 
 import com.sun.istack.NotNull;
+import cz.cvut.fit.baklaal1.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.WorkDTO;
 import cz.cvut.fit.baklaal1.data.helper.DBConstants;
 import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
-public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO> {
+public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO>, ConvertibleToCreateDTO<WorkCreateDTO> {
     @Id
     @GeneratedValue
     private Integer id;
@@ -110,5 +110,10 @@ public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO> {
     @Override
     public WorkDTO toDTO() {
         return new WorkDTO(this);
+    }
+
+    @Override
+    public WorkCreateDTO toCreateDTO() {
+        return new WorkCreateDTO(this);
     }
 }

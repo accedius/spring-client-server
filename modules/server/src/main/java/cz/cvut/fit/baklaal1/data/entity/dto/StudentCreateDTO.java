@@ -1,6 +1,7 @@
 package cz.cvut.fit.baklaal1.data.entity.dto;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 public class StudentCreateDTO extends PersonCreateDTO {
@@ -19,5 +20,20 @@ public class StudentCreateDTO extends PersonCreateDTO {
 
     public Set<Integer> getWorkIds() {
         return workIds;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StudentCreateDTO)) return false;
+        if (!super.equals(o)) return false;
+        StudentCreateDTO that = (StudentCreateDTO) o;
+        return super.equals(o) && Float.compare(that.averageGrade, averageGrade) == 0 &&
+                workIds.equals(that.workIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), averageGrade, workIds);
     }
 }
