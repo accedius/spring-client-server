@@ -30,6 +30,9 @@ configurations {
 
 test {
     useJUnitPlatform()
+
+    //CTU FIT's OracleDB has a limit for parallel sessions for students, so parallel forks are limited to only 2, but in production reality could be Runtime.runtime.availableProcessors()
+    maxParallelForks = 2;
 }
 
 tasks.withType(Test) {
