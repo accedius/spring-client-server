@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class StudentDTO extends PersonDTO<StudentDTO> {
+public class StudentDTO extends PersonDTO<StudentDTO> implements Comparable<StudentDTO> {
     private final float averageGrade;
     private final Set<Integer> workIds;
 
@@ -46,5 +46,13 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
         return super.equals(studentDTO) &&
                 Float.compare(studentDTO.averageGrade, averageGrade) == 0 &&
                 workIds.equals(studentDTO.workIds);
+    }
+
+    @Override
+    public int compareTo(StudentDTO o) {
+        if(this.equals(o)) return 0;
+        int res = this.name.compareTo(o.name);
+        if(res == 0) return Integer.compare(this.id, o.id);
+        return res;
     }
 }

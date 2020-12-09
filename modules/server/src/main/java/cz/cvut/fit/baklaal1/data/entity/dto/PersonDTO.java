@@ -42,7 +42,11 @@ public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends Represen
         return birthdate;
     }
 
-    protected boolean equals(Person personDTO) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o.getClass().equals(this.getClass()))) return false;
+        PersonDTO personDTO = (PersonDTO) o;
         if(id != -1 && personDTO.getId() != -1 && id != personDTO.getId()) return false;
         return id == personDTO.getId() &&
                 username.equals(personDTO.getUsername()) &&

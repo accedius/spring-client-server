@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class WorkDTO extends RepresentationModel<WorkDTO> implements ReadableId {
+public class WorkDTO extends RepresentationModel<WorkDTO> implements ReadableId, Comparable<WorkDTO> {
     private final int id;
     private final String title;
     private final String text;
@@ -67,5 +67,13 @@ public class WorkDTO extends RepresentationModel<WorkDTO> implements ReadableId 
                 text.equals(workDTO.text) &&
                 authorIds.equals(workDTO.authorIds) &&
                 Objects.equals(assessmentId, workDTO.assessmentId);
+    }
+
+    @Override
+    public int compareTo(WorkDTO o) {
+        if(this.equals(o)) return 0;
+        int res = this.title.compareTo(o.title);
+        if(res == 0) return Integer.compare(this.id, o.id);
+        return res;
     }
 }

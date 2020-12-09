@@ -104,6 +104,9 @@ public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO>, Conver
 
     @Override
     public int compareTo(Work o) {
+        if(this.equals(o)) return 0;
+        int res = this.title.compareTo(o.title);
+        if(res == 0) return this.id.compareTo(o.id);
         return title.compareTo(o.title);
     }
 
