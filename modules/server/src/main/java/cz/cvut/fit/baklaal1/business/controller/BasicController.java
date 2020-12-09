@@ -20,8 +20,8 @@ import java.util.List;
 
 public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO extends RepresentationModel<T_DTO> & ReadableId, T_CREATE_DTO> {
     private final BasicService<T, T_DTO, T_CREATE_DTO> service;
-    private final ConvertibleModelAssembler<T, T_DTO> modelAssembler;
-    private final PagedResourcesAssembler<T> pagedResourcesAssembler;
+    protected final ConvertibleModelAssembler<T, T_DTO> modelAssembler;
+    protected final PagedResourcesAssembler<T> pagedResourcesAssembler;
 
     public BasicController(BasicService<T, T_DTO, T_CREATE_DTO> service, ConvertibleModelAssembler<T, T_DTO> modelAssembler, PagedResourcesAssembler<T> pagedResourcesAssembler) {
         this.service = service;
@@ -30,13 +30,14 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     }
 
     @GetMapping("/all")
-    public List<T_DTO> all() {
-        return service.findAll();
+    public List<T_DTO> readAll() {
+        return service.findAllAsDTO();
     }
 
     @GetMapping("/{id}")
-    public T_DTO byId(@PathVariable int id) {
-        T_DTO foundAsDTO = service.findByIdAsDTO(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public T_DTO readById(@PathVariable int id) {
+        T foundItem = service.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        T_DTO foundAsDTO = modelAssembler.toModel(foundItem);
         foundAsDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readPage(0, 10)).withRel(IanaLinkRelations.COLLECTION));
         return foundAsDTO;
     }
@@ -46,12 +47,12 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
         return pagedResourcesAssembler.toModel(service.pageAll(PageRequest.of(page, size)), modelAssembler);
     }
 
-    @PostMapping("/")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity create(@RequestBody T_CREATE_DTO itemDTO) {
         try {
             T_DTO createdDTO = service.create(itemDTO);
-            return ResponseEntity.created(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).byId(createdDTO.readId())).toUri()).build();
+            return ResponseEntity.created(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readById(createdDTO.readId())).toUri()).build();
         } catch (ServiceExceptionInBusinessLogic e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -72,8 +73,8 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        service.deleteById(id);
+        service.delete(id);
     }
 }

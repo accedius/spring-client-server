@@ -26,7 +26,7 @@ public class AssessmentController extends BasicController<Assessment, Assessment
     }
 
     @GetMapping(params = {"evaluatorId"})
-    public List<AssessmentDTO> allByEvaluatorId(int evaluatorId) {
+    public List<AssessmentDTO> readAllByEvaluatorId(int evaluatorId) {
         return assessmentService.findAllByEvaluatorId(evaluatorId);
     }
 }

@@ -24,8 +24,8 @@ public class WorkController extends BasicController<Work, WorkDTO, WorkCreateDTO
     }
 
     @GetMapping(params = {"title"})
-    public List<WorkDTO> allByTitle(@RequestParam String title) {
+    public List<WorkDTO> readAllByTitle(@RequestParam String title) {
         if(title == null || title.isBlank());
-        return workService.findAllByTitle(title);
+        return workService.findAllByTitleAsDTO(title);
     }
 }

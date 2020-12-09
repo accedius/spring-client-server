@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,9 +31,9 @@ public class WorkService extends BasicService<Work, WorkDTO, WorkCreateDTO> {
         this.assessmentService = assessmentService;
     }
 
-    public List<WorkDTO> findAllByTitle(String title) {
+    public List<WorkDTO> findAllByTitleAsDTO(String title) {
         List<Work> works = workRepository.findAllByTitle(title);
-        return works.stream().map(this::toDTO).collect(Collectors.toList());
+        return toDTO(works);
     }
 
     @Override

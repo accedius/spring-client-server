@@ -22,9 +22,12 @@ public abstract class BasicService<T, T_DTO extends RepresentationModel<T_DTO>, 
         this.repository = repository;
     }
 
-    public List<T_DTO> findAll() {
-        List<T> items = repository.findAll();
-        return toDTO(items);
+    public List<T_DTO> findAllAsDTO() {
+        return toDTO(findAll());
+    }
+
+    public List<T> findAll() {
+        return repository.findAll();
     }
 
     public Page<T> pageAll(Pageable pageable) {
@@ -33,6 +36,10 @@ public abstract class BasicService<T, T_DTO extends RepresentationModel<T_DTO>, 
 
     public Set<T> findByIds(Set<Integer> ids) {
         return new TreeSet<>(repository.findAllById(ids));
+    }
+
+    public Set<T_DTO> findByIdsAsDTO(Set<Integer> ids) {
+        return new TreeSet<>(toDTO(repository.findAllById(ids)));
     }
 
     public Optional<T> findById(Integer id) {
@@ -47,7 +54,7 @@ public abstract class BasicService<T, T_DTO extends RepresentationModel<T_DTO>, 
 
     public abstract T_DTO update(Integer id, T_CREATE_DTO itemDTO) throws Exception;
 
-    public void deleteById(Integer id) {
+    public void delete(Integer id) {
         repository.deleteById(id);
     }
 

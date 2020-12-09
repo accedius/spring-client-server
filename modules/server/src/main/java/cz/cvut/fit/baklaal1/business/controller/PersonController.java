@@ -23,12 +23,12 @@ public abstract class PersonController<T extends Person & ConvertibleToDTO<T_DTO
     }
 
     @GetMapping(params = {"username"})
-    public T_DTO byUsername(@RequestParam String username) {
-        return personService.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public T_DTO readByUsername(@RequestParam String username) {
+        return personService.findByUsernameAsDTO(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(params = {"name"})
-    public List<T_DTO> allByName(@RequestParam String name) {
-        return personService.findAllByName(name);
+    public List<T_DTO> readAllByName(@RequestParam String name) {
+        return personService.findAllByNameAsDTO(name);
     }
 }
