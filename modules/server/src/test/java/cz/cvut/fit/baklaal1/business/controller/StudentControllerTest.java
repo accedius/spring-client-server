@@ -31,10 +31,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -106,6 +103,7 @@ class StudentControllerTest {
                 .accept("application/json")
                 .contentType("application/json"))
 
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(student.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(student.getUsername())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(student.getName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.birthdate", CoreMatchers.is(student.getBirthdate())))
@@ -180,6 +178,148 @@ class StudentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.studentDTOList[1].username", CoreMatchers.is("user2")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.studentDTOList[1].averageGrade", CoreMatchers.is(Double.valueOf(Float.toString(data.get(1).getAverageGrade())))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.studentDTOList[2].username", CoreMatchers.is("user3")));
+    }
+
+    @Test
+    public void getAll() throws Exception {
+        final int id1 = 1;
+        final String username1 = "somebody";
+        final String name1 = "Once Toldme";
+        final Timestamp birthdate = null;
+        final float averageGrade = 4;
+        final Set<Work> works = new TreeSet<>();
+        final List<Integer> workIds = new ArrayList<>();
+
+        final int id2 = 2;
+        final String username2 = "The world";
+        final String name2 = "is gonna roll me";
+
+        final Student student1 = new Student(username1, name1, birthdate, averageGrade, works);
+        ReflectionTestUtils.setField(student1, "id", id1);
+
+        final Student student2 = new Student(username2, name2, birthdate, averageGrade, works);
+        ReflectionTestUtils.setField(student2, "id", id2);
+
+        List<Student> allStudents = new ArrayList<>();
+        allStudents.add(student1);
+        allStudents.add(student2);
+        BDDMockito.given(studentServiceMock.findAll()).willReturn(allStudents);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(postAddress + "/all")
+                .accept("application/json")
+                .contentType("application/json"))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id", CoreMatchers.is(id1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].username", CoreMatchers.is(username1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name", CoreMatchers.is(name1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].birthdate", CoreMatchers.is(birthdate)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].averageGrade", CoreMatchers.is(Double.valueOf(Float.toString(averageGrade)))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].workIds", CoreMatchers.is(workIds)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].username", CoreMatchers.is(username2)));
+    }
+
+    @Test
+    public void update() throws Exception {
+        final int id = 1;
+        final String username = "somebody";
+        final String name = "Once Toldme";
+        final Timestamp birthdate = null;
+        final Set<Integer> workIds = new TreeSet<>();
+
+        final StudentDTO studentDTO = new StudentDTO(id, username, name, birthdate, 0, workIds);
+        final StudentCreateDTO studentCreateDTO = new StudentCreateDTO(username, name, birthdate, 0, workIds);
+        BDDMockito.given(studentServiceMock.update(id, studentCreateDTO)).willReturn(studentDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put(postAddress + "/{id}", id)
+                .contentType("application/json")
+                .content("{\"username\" : \"somebody\", \"name\" : \"Once Toldme\", \"birthdate\" : null, \"workIds\" : [] }"))
+
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(studentDTO.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(studentDTO.getUsername())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(studentDTO.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.birthdate", CoreMatchers.is(studentDTO.getBirthdate())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.workIds", CoreMatchers.is(Matchers.empty())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.self.href", CoreMatchers.endsWith(postAddress + "/" + studentDTO.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.collection.href", CoreMatchers.containsString(postAddress)));
+    }
+
+    @Test
+    public void delete() throws Exception {
+        final int id = 1337;
+
+        BDDMockito.doNothing().when(studentServiceMock).delete(id);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete(postAddress + "/{id}", id))
+
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void readByUsername() throws Exception {
+        final int id = 1337;
+        final String username = "somebody";
+        final String name = "Once Toldme";
+        final Timestamp birthdate = null;
+        final Set<Work> works = new TreeSet<>();
+        final Set<Integer> workIds = new TreeSet<>();
+
+        final StudentDTO studentDTO = new StudentDTO(id, username, name, birthdate, 0, workIds);
+        BDDMockito.given(studentServiceMock.findByUsernameAsDTO(studentDTO.getUsername())).willReturn(Optional.of(studentDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(postAddress + PersonController.READ_BY_USERNAME + "?username={username}", studentDTO.getUsername())
+                .accept("application/json")
+                .contentType("application/json"))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(studentDTO.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(studentDTO.getUsername())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(studentDTO.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.birthdate", CoreMatchers.is(studentDTO.getBirthdate())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.workIds", CoreMatchers.is(Matchers.empty())))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void readAllByName() throws Exception {
+        final String name = "Shrek";
+
+        final int id1 = 1;
+        final String username1 = "somebody";
+        final Timestamp birthdate = null;
+        final float averageGrade = 4;
+        final Set<Work> works = new TreeSet<>();
+        final List<Integer> workIds = new ArrayList<>();
+
+        final int id2 = 2;
+        final String username2 = "The world";
+
+        final Student student1 = new Student(username1, name, birthdate, averageGrade, works);
+        ReflectionTestUtils.setField(student1, "id", id1);
+
+        final Student student2 = new Student(username2, name, birthdate, averageGrade, works);
+        ReflectionTestUtils.setField(student2, "id", id2);
+
+        Set<StudentDTO> allStudentsOfSameName = new TreeSet<>();
+        allStudentsOfSameName.add(student1.toDTO());
+        allStudentsOfSameName.add(student2.toDTO());
+        BDDMockito.given(studentServiceMock.findAllByNameAsDTO(name)).willReturn(allStudentsOfSameName);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(postAddress + PersonController.READ_ALL_BY_NAME + "?name={name}", name)
+                .accept("application/json")
+                .contentType("application/json"))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id", CoreMatchers.is(id1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].username", CoreMatchers.is(username1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name", CoreMatchers.is(name)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].birthdate", CoreMatchers.is(birthdate)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].averageGrade", CoreMatchers.is(Double.valueOf(Float.toString(averageGrade)))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].workIds", CoreMatchers.is(workIds)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[1].username", CoreMatchers.is(username2)));
     }
 
     @Test
