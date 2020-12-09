@@ -20,6 +20,8 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
     private final StudentRepository studentRepository;
     private final WorkService workService;
 
+    private static final String ACTION_JOIN_WORK = "join work";
+
     @Autowired
     public StudentService(StudentRepository studentRepository, @Lazy WorkService workService) {
         super(studentRepository);
@@ -58,6 +60,26 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
         Student savedStudent = studentRepository.save(student);
 
         return toDTO(savedStudent);
+    }
+
+    public void joinWork(int studentId, int workId) throws Exception {
+        final String actionName = ACTION_JOIN_WORK;
+
+        Optional<Work> optionalWork = workService.findById(workId);
+        if(optionalWork.isEmpty())
+            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, workId);
+
+        Optional<Student> optionalStudent = this.findById(studentId);
+        if(optionalStudent.isEmpty())
+            throw getServiceException(actionName, ServiceConstants.STUDENT + ServiceConstants.NOT_FOUND_IN_DB, studentId);
+
+        Work work = optionalWork.get();
+        Student student = optionalStudent.get();
+
+        if(!work.getAuthors().contains(student)) {
+            work.getAuthors().add(student);
+            workService.update(workId, work.toCreateDTO());
+        }
     }
 
     @Override
