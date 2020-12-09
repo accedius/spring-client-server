@@ -3,9 +3,12 @@ package cz.cvut.fit.baklaal1.data.entity.dto.assembler;
 import cz.cvut.fit.baklaal1.business.controller.BasicController;
 import cz.cvut.fit.baklaal1.data.entity.ConvertibleToDTO;
 import cz.cvut.fit.baklaal1.data.entity.dto.ReadableId;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+
+import java.util.Collection;
 
 public abstract class ConvertibleModelAssembler<T extends ConvertibleToDTO<T_DTO>, T_DTO extends RepresentationModel<T_DTO> & ReadableId> extends RepresentationModelAssemblerSupport<T, T_DTO> {
     private final Class<? extends BasicController> controllerClass;
@@ -23,6 +26,13 @@ public abstract class ConvertibleModelAssembler<T extends ConvertibleToDTO<T_DTO
     }
 
     public T_DTO addLinksToModel(T_DTO model) {
-        return model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readById(model.readId())).withSelfRel());
+        model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readById(model.readId())).withSelfRel());
+        model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readPage(0, 10)).withRel(IanaLinkRelations.COLLECTION));
+        return model;
+    }
+
+    public <C_T_DTO extends Collection<T_DTO>> C_T_DTO addLinksToModels(C_T_DTO models) {
+        models.forEach(this::addLinksToModel);
+        return models;
     }
 }
