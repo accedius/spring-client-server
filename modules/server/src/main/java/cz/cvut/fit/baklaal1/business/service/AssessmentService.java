@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -30,8 +31,8 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         this.teacherService = teacherService;
     }
 
-    public List<AssessmentDTO> findAllByEvaluatorId(int evaluatorId) {
-        List<Assessment> assessments = assessmentRepository.findAllByEvaluatorId(evaluatorId);
+    public Set<AssessmentDTO> findAllByEvaluatorId(int evaluatorId) {
+        Set<Assessment> assessments = assessmentRepository.findAllByEvaluatorId(evaluatorId);
         return toDTO(assessments);
     }
     

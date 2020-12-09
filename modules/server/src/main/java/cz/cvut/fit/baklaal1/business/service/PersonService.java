@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional
 public abstract class PersonService<T extends Person, T_DTO extends PersonDTO<T_DTO>, T_CREATE_DTO extends PersonCreateDTO> extends BasicService<T, T_DTO, T_CREATE_DTO> {
@@ -34,8 +35,8 @@ public abstract class PersonService<T extends Person, T_DTO extends PersonDTO<T_
         return toDTO(personRepository.findByUsername(username));
     }
 
-    public List<T_DTO> findAllByNameAsDTO(String name) {
-        List<T> persons = personRepository.findAllByName(name);
+    public Set<T_DTO> findAllByNameAsDTO(String name) {
+        Set<T> persons = personRepository.findAllByName(name);
         return toDTO(persons);
     }
 }

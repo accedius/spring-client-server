@@ -8,10 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -34,11 +31,11 @@ public abstract class BasicService<T, T_DTO extends RepresentationModel<T_DTO>, 
         return repository.findAll(pageable);
     }
 
-    public Set<T> findByIds(Set<Integer> ids) {
+    public Set<T> findAllByIds(Set<Integer> ids) {
         return new TreeSet<>(repository.findAllById(ids));
     }
 
-    public Set<T_DTO> findByIdsAsDTO(Set<Integer> ids) {
+    public Set<T_DTO> findAllByIdsAsDTO(Set<Integer> ids) {
         return new TreeSet<>(toDTO(repository.findAllById(ids)));
     }
 
@@ -99,5 +96,9 @@ public abstract class BasicService<T, T_DTO extends RepresentationModel<T_DTO>, 
 
     protected List<T_DTO> toDTO(List<T> items) {
         return items.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    protected Set<T_DTO> toDTO(Set<T> items) {
+        return items.stream().map(this::toDTO).collect(Collectors.toSet());
     }
 }

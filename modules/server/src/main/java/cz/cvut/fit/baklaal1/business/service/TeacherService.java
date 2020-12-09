@@ -80,7 +80,7 @@ public class TeacherService extends PersonService<Teacher, TeacherDTO, TeacherCr
     }
 
     private Set<Assessment> getAssessmentByIds(Set<Integer> assessmentIds) {
-        return assessmentService.findByIds(assessmentIds);
+        return assessmentService.findAllByIds(assessmentIds);
     }
 
     @Override

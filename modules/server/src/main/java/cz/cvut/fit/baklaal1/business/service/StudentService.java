@@ -103,7 +103,7 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
     }
 
     private Set<Work> getWorkByIds(Set<Integer> workIds) {
-        return workService.findByIds(workIds);
+        return workService.findAllByIds(workIds);
     }
 
     @Override

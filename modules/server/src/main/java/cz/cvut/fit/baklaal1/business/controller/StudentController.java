@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class StudentController extends PersonController<Student, StudentDTO, StudentCreateDTO> {
     public static final String STUDENT_DOMAIN_ROOT = "/students";
     //TODO find out if a mapping could start with something other than a slash "/" to differentiate between sub-paths and path's methods
-    public static final String STUDENT_JOIN_WORK = "/joinWork";
+    public static final String STUDENT_JOIN_WORK = "/join-work";
     private final StudentService studentService;
 
     @Autowired

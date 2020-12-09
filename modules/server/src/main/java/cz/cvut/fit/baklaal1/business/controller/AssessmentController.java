@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(AssessmentController.ASSESSMENT_DOMAIN_ROOT)
@@ -26,7 +27,9 @@ public class AssessmentController extends BasicController<Assessment, Assessment
     }
 
     @GetMapping(params = {"evaluatorId"})
-    public List<AssessmentDTO> readAllByEvaluatorId(int evaluatorId) {
-        return assessmentService.findAllByEvaluatorId(evaluatorId);
+    public Set<AssessmentDTO> readAllByEvaluatorId(int evaluatorId) {
+        Set<AssessmentDTO> assessmentsAsDTO = assessmentService.findAllByEvaluatorId(evaluatorId);
+        modelAssembler.addLinksToModels(assessmentsAsDTO);
+        return assessmentsAsDTO;
     }
 }

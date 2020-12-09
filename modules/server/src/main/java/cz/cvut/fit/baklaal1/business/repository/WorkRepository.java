@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Repository
 public interface WorkRepository extends JpaRepository<Work, Integer> {
-    List<Work> findAllByTitle(String title);
+    Set<Work> findAllByTitle(String title);
 
-    List<Work> findAllByTitleAndAuthorsIn(String title, Set<Student> authors);
+    Set<Work> findAllByTitleAndAuthorsIn(String title, Set<Student> authors);
 }

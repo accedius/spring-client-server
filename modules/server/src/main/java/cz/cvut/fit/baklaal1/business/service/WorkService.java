@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 @Transactional
@@ -31,9 +32,10 @@ public class WorkService extends BasicService<Work, WorkDTO, WorkCreateDTO> {
         this.assessmentService = assessmentService;
     }
 
-    public List<WorkDTO> findAllByTitleAsDTO(String title) {
-        List<Work> works = workRepository.findAllByTitle(title);
-        return toDTO(works);
+    public Set<WorkDTO> findAllByTitleAsDTO(String title) {
+        Set<Work> works = workRepository.findAllByTitle(title);
+        Set<WorkDTO> worksAsDTO = toDTO(works);
+        return worksAsDTO;
     }
 
     @Override
@@ -105,7 +107,7 @@ public class WorkService extends BasicService<Work, WorkDTO, WorkCreateDTO> {
     }
 
     private Set<Student> getAuthorByIds(Set<Integer> authorIds) {
-        return studentService.findByIds(authorIds);
+        return studentService.findAllByIds(authorIds);
     }
 
     private Assessment getAssessmentById(Integer assessmentId) {

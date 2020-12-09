@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO extends RepresentationModel<T_DTO> & ReadableId, T_CREATE_DTO> {
     private final BasicService<T, T_DTO, T_CREATE_DTO> service;
@@ -31,14 +33,21 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
 
     @GetMapping("/all")
     public List<T_DTO> readAll() {
-        return service.findAllAsDTO();
+        List<T> all = service.findAll();
+        /*List<T_DTO> allAsDTO = new ArrayList<>();
+        for(T item : all) {
+            T_DTO itemAsDTO = modelAssembler.toModel(item);
+            allAsDTO.add(itemAsDTO);
+        }*/
+        List<T_DTO> allAsDTO = all.stream().map(modelAssembler::toModel).collect(Collectors.toList());
+        return allAsDTO;
     }
 
     @GetMapping("/{id}")
     public T_DTO readById(@PathVariable int id) {
         T foundItem = service.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         T_DTO foundAsDTO = modelAssembler.toModel(foundItem);
-        foundAsDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readPage(0, 10)).withRel(IanaLinkRelations.COLLECTION));
+        //foundAsDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readPage(0, 10)).withRel(IanaLinkRelations.COLLECTION));
         return foundAsDTO;
     }
 
@@ -64,7 +73,9 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     @ResponseStatus(HttpStatus.ACCEPTED)
     public T_DTO update(@PathVariable int id, @RequestBody T_CREATE_DTO itemDTO) {
         try {
-            return service.update(id, itemDTO);
+            T_DTO updated = service.update(id, itemDTO);
+            modelAssembler.addLinksToModel(updated);
+            return updated;
         } catch (ServiceExceptionInBusinessLogic e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

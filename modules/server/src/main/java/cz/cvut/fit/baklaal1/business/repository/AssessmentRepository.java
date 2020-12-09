@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AssessmentRepository extends JpaRepository<Assessment, Integer> {
-    public List<Assessment> findAllByEvaluatorId(int evaluatorId);
+    public Set<Assessment> findAllByEvaluatorId(int evaluatorId);
 
     public Optional<Assessment> findByWork(Work work);
 }

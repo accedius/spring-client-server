@@ -6,10 +6,11 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @NoRepositoryBean
 public interface PersonRepository<T extends Person> extends JpaRepository<T, Integer> {
     Optional<T> findByUsername(String username);
 
-    List<T> findAllByName(String name);
+    Set<T> findAllByName(String name);
 }

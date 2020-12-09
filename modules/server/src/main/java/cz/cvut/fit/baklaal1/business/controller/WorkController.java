@@ -10,6 +10,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(WorkController.WORK_DOMAIN_ROOT)
@@ -24,8 +25,9 @@ public class WorkController extends BasicController<Work, WorkDTO, WorkCreateDTO
     }
 
     @GetMapping(params = {"title"})
-    public List<WorkDTO> readAllByTitle(@RequestParam String title) {
-        if(title == null || title.isBlank());
-        return workService.findAllByTitleAsDTO(title);
+    public Set<WorkDTO> readAllByTitle(@RequestParam String title) {
+        Set<WorkDTO> worksAsDTO = workService.findAllByTitleAsDTO(title);
+        modelAssembler.addLinksToModels(worksAsDTO);
+        return worksAsDTO;
     }
 }
