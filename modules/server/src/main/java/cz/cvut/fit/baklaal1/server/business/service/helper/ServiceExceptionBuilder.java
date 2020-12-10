@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-//TODO consider making a super class for any type of exceptions/?warnings?
 public class ServiceExceptionBuilder<T extends Exception> {
     private static final String DEFAULT = "Undefined";
     private static final String EXCEPTION = "SERVICE EXCEPTION";

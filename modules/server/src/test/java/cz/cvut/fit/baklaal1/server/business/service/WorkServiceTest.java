@@ -377,7 +377,6 @@ class WorkServiceTest {
         assertEquals(expectedWorkDTO, returnedWorkDTO);
 
         ArgumentCaptor<Work> argumentCaptor = ArgumentCaptor.forClass(Work.class);
-        //TODO find out if mock is the same as in the create() method test, could be counting previous calls as well
         Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
         Work workProvidedToSave = argumentCaptor.getValue();
         assertEquals(newTitle, workProvidedToSave.getTitle());

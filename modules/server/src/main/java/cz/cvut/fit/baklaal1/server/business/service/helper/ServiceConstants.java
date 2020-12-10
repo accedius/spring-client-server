@@ -1,6 +1,5 @@
 package cz.cvut.fit.baklaal1.server.business.service.helper;
 
-//TODO implement an exception builder - own Exceptions
 public final class ServiceConstants {
     public static final String EXCEPTION = "SERVICE EXCEPTION";
     public static final String ACTION_CREATE = "create";
