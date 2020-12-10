@@ -27,7 +27,7 @@ public class AssessmentController extends BasicController<Assessment, Assessment
 
     @GetMapping(params = {"evaluatorId"})
     public Set<AssessmentDTO> readAllByEvaluatorId(int evaluatorId) {
-        Set<AssessmentDTO> assessmentsAsDTO = assessmentService.findAllByEvaluatorId(evaluatorId);
+        Set<AssessmentDTO> assessmentsAsDTO = assessmentService.findAllByEvaluatorIdAsDTO(evaluatorId);
         modelAssembler.addLinksToModels(assessmentsAsDTO);
         return assessmentsAsDTO;
     }

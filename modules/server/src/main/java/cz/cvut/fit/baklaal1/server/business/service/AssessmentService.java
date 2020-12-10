@@ -30,7 +30,7 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         this.teacherService = teacherService;
     }
 
-    public Set<AssessmentDTO> findAllByEvaluatorId(int evaluatorId) {
+    public Set<AssessmentDTO> findAllByEvaluatorIdAsDTO(int evaluatorId) {
         Set<Assessment> assessments = assessmentRepository.findAllByEvaluatorId(evaluatorId);
         return toDTO(assessments);
     }
