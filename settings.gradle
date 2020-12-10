@@ -1,1 +1,3 @@
 rootProject.name = 'tjv-sem'
+
+include 'model', 'server', 'client'
