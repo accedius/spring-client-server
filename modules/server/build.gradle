@@ -2,11 +2,17 @@ plugins {
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
+
+    id 'application'
 }
 
 group 'cz.cvut.fit.baklaal1'
 version '0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+application {
+    mainClass = 'cz.cvut.fit.baklaal1.server.ServerApp'
+}
 
 repositories {
     mavenCentral()
@@ -25,6 +31,9 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testRuntime 'com.h2database:h2'
+
+    //for the application runtime
+    runtimeOnly 'org.springframework.hateoas:spring-hateoas:1.2.1'
 }
 
 configurations {
