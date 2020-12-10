@@ -10,9 +10,12 @@ sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
+    implementation 'cz.cvut.fit.baklaal1:model:0.1-SNAPSHOT'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.springframework.hateoas:spring-hateoas:1.2.1'
