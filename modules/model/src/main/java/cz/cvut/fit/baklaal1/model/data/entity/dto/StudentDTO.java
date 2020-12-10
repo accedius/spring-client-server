@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class StudentDTO extends PersonDTO<StudentDTO> implements Comparable<StudentDTO> {
+public class StudentDTO extends PersonDTO<StudentDTO> {
     private final float averageGrade;
     private final Set<Integer> workIds;
 
@@ -22,11 +22,6 @@ public class StudentDTO extends PersonDTO<StudentDTO> implements Comparable<Stud
         this.averageGrade = student.getAverageGrade();
         Set<Work> works = student.getWorks();
         this.workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
-    }
-
-    @Override
-    public int readId() {
-        return getId();
     }
 
     public float getAverageGrade() {
@@ -45,13 +40,5 @@ public class StudentDTO extends PersonDTO<StudentDTO> implements Comparable<Stud
         return super.equals(studentDTO) &&
                 Float.compare(studentDTO.averageGrade, averageGrade) == 0 &&
                 workIds.equals(studentDTO.workIds);
-    }
-
-    @Override
-    public int compareTo(StudentDTO o) {
-        if(this.equals(o)) return 0;
-        int res = this.name.compareTo(o.name);
-        if(res == 0) return Integer.compare(this.id, o.id);
-        return res;
     }
 }

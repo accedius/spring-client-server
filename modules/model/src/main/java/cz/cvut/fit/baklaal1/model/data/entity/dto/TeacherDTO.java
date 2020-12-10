@@ -24,11 +24,6 @@ public class TeacherDTO extends PersonDTO<TeacherDTO> {
         this.assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
     }
 
-    @Override
-    public int readId() {
-        return getId();
-    }
-
     public double getWage() {
         return wage;
     }

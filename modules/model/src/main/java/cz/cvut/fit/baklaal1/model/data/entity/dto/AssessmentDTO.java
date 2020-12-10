@@ -5,7 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class AssessmentDTO extends RepresentationModel<AssessmentDTO> implements ReadableId {
+public class AssessmentDTO extends RepresentationModel<AssessmentDTO> implements ReadableId, Comparable<AssessmentDTO> {
     private final int id;
     private final int grade;
     private final int workId;
@@ -55,5 +55,12 @@ public class AssessmentDTO extends RepresentationModel<AssessmentDTO> implements
         return grade == assessmentDTO.grade &&
                 workId == assessmentDTO.workId &&
                 Objects.equals(evaluatorId, assessmentDTO.evaluatorId);
+    }
+
+    @Override
+    public int compareTo(AssessmentDTO o) {
+        if(this.equals(o)) return 0;
+        if(this.id == -1 || o.id == -1) return Integer.compare(this.workId, o.workId);
+        return Integer.compare(this.id, o.id);
     }
 }

@@ -81,7 +81,7 @@ public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<Asse
     @Override
     public int compareTo(Assessment o) {
         if(this.equals(o)) return 0;
-        if(id == null || o.id == null) return Integer.compare(this.grade, o.grade);
+        if(id == null || o.id == null) return Integer.compare(this.work.getId(), o.work.getId());
         return id.compareTo(o.id);
     }
 
