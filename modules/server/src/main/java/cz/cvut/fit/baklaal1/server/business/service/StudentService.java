@@ -1,5 +1,6 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
+import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.repository.StudentRepository;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
 import cz.cvut.fit.baklaal1.model.data.entity.Student;
@@ -75,6 +76,21 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
         Work work = optionalWork.get();
         Student student = optionalStudent.get();
 
+        //Following two checks are only for semester work's requirements fulfillment - they are not checked elsewhere (i.e. on work creation in WorkService)
+
+        //Assessment wasn't already defined or the work is considered failed, so can be improved
+        if(isWorkDone(work)) {
+            throw getServiceException(actionName, ServiceConstants.WORK + ServiceConstants.BELONGED + ServiceConstants.ASSESSMENT + ServiceConstants.ALREADY_EXISTS, work);
+        }
+
+        //Checks if student has already going projects
+        Set<Work> studentWorks = student.getWorks();
+        for(Work studentWork : studentWorks) {
+            if(!isWorkDone(studentWork)) {
+                throw getServiceException(actionName, ServiceConstants.STUDENT + ServiceConstants.HAS + ServiceConstants.WORK, student);
+            }
+        }
+
         if(!work.getAuthors().contains(student)) {
             work.getAuthors().add(student);
             workService.update(workId, work.toCreateDTO());
@@ -99,6 +115,10 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
         if(workIds.size() != works.size())
             throw getServiceException(ACTION_NAME, ServiceConstants.WORKS + ServiceConstants.NOT_FOUND_IN_DB, studentDTO);
         return works;
+    }
+
+    private boolean isWorkDone(Work work) {
+        return work.getAssessment() != null && work.getAssessment().getGrade() != Grades.F;
     }
 
     private Set<Work> getWorkByIds(Set<Integer> workIds) {
