@@ -86,6 +86,9 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
         //Checks if student has already going projects
         Set<Work> studentWorks = student.getWorks();
         for(Work studentWork : studentWorks) {
+            if(studentWork == work) {
+                break;
+            }
             if(!isWorkDone(studentWork)) {
                 throw getServiceException(actionName, ServiceConstants.STUDENT + ServiceConstants.HAS + ServiceConstants.WORK, student);
             }
