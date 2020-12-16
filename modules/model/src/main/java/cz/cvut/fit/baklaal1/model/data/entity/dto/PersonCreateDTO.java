@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 public abstract class PersonCreateDTO {
+    protected static final int defaultBirthdateTime = 0;
+
     protected String username;
     protected String name;
     protected Timestamp birthdate;
@@ -11,7 +13,7 @@ public abstract class PersonCreateDTO {
     public PersonCreateDTO(String username, String name, Timestamp birthdate) {
         this.username = username;
         this.name = name;
-        this.birthdate = birthdate;
+        setBirthdate(birthdate);
     }
 
     public String getUsername() {
@@ -39,5 +41,13 @@ public abstract class PersonCreateDTO {
     @Override
     public int hashCode() {
         return Objects.hash(username, name, birthdate);
+    }
+
+    protected void setBirthdate(Timestamp birthdate) {
+        if(birthdate != null) {
+            this.birthdate = birthdate;
+        } else {
+            birthdate = new Timestamp(defaultBirthdateTime);
+        }
     }
 }
