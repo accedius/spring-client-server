@@ -358,6 +358,7 @@ class AssessmentServiceTest {
         AssessmentCreateDTO assessmentCreateDTO = new AssessmentCreateDTO(grade, workId, teacherId);
 
         BDDMockito.given(assessmentRepositoryMock.save(any(Assessment.class))).willReturn(assessmentToReturn);
+        BDDMockito.given(assessmentRepositoryMock.findByWork(any(Work.class))).willReturn(Optional.empty());
         BDDMockito.given(teacherServiceMock.findById(teacherId)).willReturn(Optional.of(teacher));
         BDDMockito.given(workServiceMock.findById(workId)).willReturn(Optional.of(work));
 

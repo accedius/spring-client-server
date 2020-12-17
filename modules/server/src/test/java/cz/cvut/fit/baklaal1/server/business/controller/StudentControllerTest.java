@@ -31,8 +31,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.any;
-
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureMockMvc
@@ -121,7 +119,7 @@ class StudentControllerTest {
 
         final StudentDTO studentDTO = new StudentDTO(1, username, name, birthdate, 0, workIds);
         final StudentCreateDTO studentCreateDTO = new StudentCreateDTO(username, name, birthdate, 0, workIds);
-        BDDMockito.given(studentServiceMock.findByIdAsDTO(studentDTO.getId())).willReturn(Optional.empty());
+        BDDMockito.given(studentServiceMock.findById(studentDTO.getId())).willReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(postAddress + "/{id}", studentDTO.getId())
@@ -365,31 +363,5 @@ class StudentControllerTest {
         Mockito.verify(studentServiceMock, Mockito.times(1)).joinWork(studentIdCaptor.capture(), workIdCaptor.capture());
         Assertions.assertEquals(studentId, studentIdCaptor.getValue());
         Assertions.assertEquals(workId, workIdCaptor.getValue());
-
-        /*BDDMockito.given(workServiceMock.findById(workId)).willReturn(Optional.of(workToJoin));
-        BDDMockito.given(studentServiceMock.findById(studentId)).willReturn(Optional.of(student));
-        BDDMockito.given(workServiceMock.update(any(Integer.class), any(WorkCreateDTO.class))).willReturn(workToJoin.toDTO());
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .put(postAddress + StudentController.STUDENT_JOIN_WORK + "?studentId={studentId}&workId={workId}", studentId, workId))
-
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-
-        ArgumentCaptor<WorkCreateDTO> workCreateDTOArgumentCaptor = ArgumentCaptor.forClass(WorkCreateDTO.class);
-        ArgumentCaptor<Integer> idArgumentCaptor = ArgumentCaptor.forClass(Integer.class);
-
-        Mockito.verify(workServiceMock, Mockito.atLeastOnce()).findById(idArgumentCaptor.capture());
-        Assertions.assertEquals(workId, idArgumentCaptor.getValue());
-
-        Mockito.verify(studentServiceMock, Mockito.atLeastOnce()).findById(idArgumentCaptor.capture());
-        Assertions.assertEquals(studentId, idArgumentCaptor.getValue());
-
-        WorkCreateDTO workJoinedByStudentCreateDTO = workToJoin.toCreateDTO();
-        workJoinedByStudentCreateDTO.getAuthorIds().add(studentId);
-
-        Mockito.verify(workServiceMock, Mockito.atLeastOnce()).update(idArgumentCaptor.capture(), workCreateDTOArgumentCaptor.capture());
-        Assertions.assertEquals(workId, idArgumentCaptor.getValue());
-        WorkCreateDTO providedWorkJoinedByStudentCreateDTO = workCreateDTOArgumentCaptor.getValue();
-        Assertions.assertEquals(workJoinedByStudentCreateDTO, providedWorkJoinedByStudentCreateDTO);*/
     }
 }

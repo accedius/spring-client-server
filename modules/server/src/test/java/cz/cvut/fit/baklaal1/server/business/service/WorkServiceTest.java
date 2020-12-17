@@ -6,6 +6,7 @@ import cz.cvut.fit.baklaal1.model.data.entity.Student;
 import cz.cvut.fit.baklaal1.model.data.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkDTO;
+import org.hibernate.mapping.Any;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -319,6 +320,7 @@ class WorkServiceTest {
         WorkCreateDTO workCreateDTO = new WorkCreateDTO(title, text, authorsIds, null);
 
         BDDMockito.given(workRepositoryMock.save(any(Work.class))).willReturn(workToReturn);
+        BDDMockito.given(workRepositoryMock.findAllByTitleAndAuthorsIn(any(String.class), any())).willReturn(new TreeSet<>());
         BDDMockito.given(studentServiceMock.findAllByIds(authorsIds)).willReturn(authors);
 
         WorkDTO returnedWorkDTO = workService.create(workCreateDTO);
