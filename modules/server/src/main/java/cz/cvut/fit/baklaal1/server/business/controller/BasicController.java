@@ -32,11 +32,6 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     @GetMapping("/all")
     public List<T_DTO> readAll() {
         List<T> all = service.findAll();
-        /*List<T_DTO> allAsDTO = new ArrayList<>();
-        for(T item : all) {
-            T_DTO itemAsDTO = modelAssembler.toModel(item);
-            allAsDTO.add(itemAsDTO);
-        }*/
         List<T_DTO> allAsDTO = all.stream().map(modelAssembler::toModel).collect(Collectors.toList());
         return allAsDTO;
     }
@@ -45,7 +40,6 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     public T_DTO readById(@PathVariable int id) {
         T foundItem = service.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         T_DTO foundAsDTO = modelAssembler.toModel(foundItem);
-        //foundAsDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readPage(0, 10)).withRel(IanaLinkRelations.COLLECTION));
         return foundAsDTO;
     }
 
