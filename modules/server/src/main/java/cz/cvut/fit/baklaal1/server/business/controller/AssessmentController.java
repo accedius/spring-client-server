@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.Set;
 @RequestMapping(AssessmentController.ASSESSMENT_DOMAIN_ROOT)
 public class AssessmentController extends BasicController<Assessment, AssessmentDTO, AssessmentCreateDTO> {
     public static final String ASSESSMENT_DOMAIN_ROOT = "/assessments";
+    public static final String READ_ALL_BY_EVALUATOR_ID = "/all-by-evaluator-id";
     private final AssessmentService assessmentService;
 
     @Autowired
@@ -25,7 +27,7 @@ public class AssessmentController extends BasicController<Assessment, Assessment
         this.assessmentService = assessmentService;
     }
 
-    @GetMapping(params = {"evaluatorId"})
+    @RequestMapping(value = READ_ALL_BY_EVALUATOR_ID, method = RequestMethod.GET)
     public Set<AssessmentDTO> readAllByEvaluatorId(int evaluatorId) {
         Set<AssessmentDTO> assessmentsAsDTO = assessmentService.findAllByEvaluatorIdAsDTO(evaluatorId);
         modelAssembler.addLinksToModels(assessmentsAsDTO);

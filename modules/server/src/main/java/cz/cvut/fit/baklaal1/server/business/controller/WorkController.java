@@ -15,6 +15,7 @@ import java.util.Set;
 @RequestMapping(WorkController.WORK_DOMAIN_ROOT)
 public class WorkController extends BasicController<Work, WorkDTO, WorkCreateDTO>{
     public static final String WORK_DOMAIN_ROOT = "/works";
+    public static final String READ_ALL_BY_TITLE = "/all-by-title";
     private final WorkService workService;
 
     @Autowired
@@ -23,7 +24,7 @@ public class WorkController extends BasicController<Work, WorkDTO, WorkCreateDTO
         this.workService = workService;
     }
 
-    @GetMapping(params = {"title"})
+    @RequestMapping(value = READ_ALL_BY_TITLE, method = RequestMethod.GET)
     public Set<WorkDTO> readAllByTitle(@RequestParam String title) {
         Set<WorkDTO> worksAsDTO = workService.findAllByTitleAsDTO(title);
         modelAssembler.addLinksToModels(worksAsDTO);
