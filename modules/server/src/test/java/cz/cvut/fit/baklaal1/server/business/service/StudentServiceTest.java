@@ -43,50 +43,6 @@ class StudentServiceTest {
     @MockBean
     private WorkService workServiceMock;
 
-    private Student generateStudent(int i) {
-        String username = "student" + i;
-        String name = "studentName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
-        Student student = new Student(username, name, birthdate, averageGrade);
-        ReflectionTestUtils.setField(student, "id", i);
-        return student;
-    }
-
-    private <L extends Collection<Student>> L fillStudentCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateStudent(i));
-        }
-        return collection;
-    }
-
-    private StudentDTO generateStudentDTO(int i) {
-        String username = "student" + i;
-        String name = "studentName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
-        Set<Integer> workIds = new TreeSet<>();
-        StudentDTO studentDTO = new StudentDTO(i, username, name, birthdate, averageGrade, workIds);
-        return studentDTO;
-    }
-
-    private <L extends Collection<StudentDTO>> L fillStudentDTOCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateStudentDTO(i));
-        }
-        return collection;
-    }
-
-    private StudentCreateDTO generateStudentCreateDTO(int i) {
-        String username = "student" + i;
-        String name = "studentName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
-        Set<Integer> workIds = new TreeSet<>();
-        StudentCreateDTO studentCreateDTO = new StudentCreateDTO(username, name, birthdate, averageGrade, workIds);
-        return studentCreateDTO;
-    }
-
     @Test
     public void findAll() {
         final int allStudentsCnt = 10;
@@ -138,13 +94,6 @@ class StudentServiceTest {
         ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
         Mockito.verify(studentRepositoryMock, Mockito.atLeastOnce()).findAll(pageableArgumentCaptor.capture());
         assertEquals(pageableRequested, pageableArgumentCaptor.getValue());
-    }
-
-    private <L extends Collection<Integer>> L fillIntegerCollectionUpTo(L collection, int limit) {
-        for (int i = 0; i < limit; i++) {
-            collection.add(i);
-        }
-        return collection;
     }
 
     @Test
@@ -287,18 +236,6 @@ class StudentServiceTest {
         assertEquals(studentUsername, argumentCaptor.getValue());
     }
 
-    private <E, V> E setField(E entity, String fieldName, V fieldValue) {
-        ReflectionTestUtils.setField(entity, fieldName, fieldValue);
-        return entity;
-    }
-
-    private <E, V, C extends Collection<E>> C setFieldForAll(C collection, String fieldName, V fieldValue) {
-        for(E entity : collection) {
-            setField(entity, fieldName, fieldValue);
-        }
-        return collection;
-    }
-
     @Test
     public void findAllByNameAsDTO() throws Exception {
         final int allStudentsCnt = 5;
@@ -316,16 +253,6 @@ class StudentServiceTest {
         ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.verify(studentRepositoryMock, Mockito.atLeastOnce()).findAllByName(idCaptor.capture());
         assertEquals(wantedName, idCaptor.getValue());
-    }
-
-    private Work generateWork(int i) {
-        String title = "title" + i;
-        String text = "text" + i;
-        Set<Student> authors = new TreeSet<>();
-        Assessment assessment = null;
-        Work work = new Work(title, text, authors, assessment);
-        ReflectionTestUtils.setField(work, "id", i);
-        return work;
     }
 
     @Test
@@ -354,5 +281,66 @@ class StudentServiceTest {
 
         Mockito.verify(studentRepositoryMock, Mockito.atLeastOnce()).findById(idCaptor.capture());
         assertEquals(studentId, idCaptor.getValue());
+    }
+
+    private Student generateStudent(int i) {
+        String username = "student" + i;
+        String name = "studentName" + i;
+        Timestamp birthdate = new Timestamp(i*10000000);
+        float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
+        Student student = new Student(username, name, birthdate, averageGrade);
+        ReflectionTestUtils.setField(student, "id", i);
+        return student;
+    }
+
+    private <L extends Collection<Student>> L fillStudentCollection(L collection, int count) {
+        for (int i = 0; i < count; i++) {
+            collection.add(generateStudent(i));
+        }
+        return collection;
+    }
+
+    private StudentDTO generateStudentDTO(int i) {
+        return generateStudent(i).toDTO();
+    }
+
+    private <L extends Collection<StudentDTO>> L fillStudentDTOCollection(L collection, int count) {
+        for (int i = 0; i < count; i++) {
+            collection.add(generateStudentDTO(i));
+        }
+        return collection;
+    }
+
+    private StudentCreateDTO generateStudentCreateDTO(int i) {
+        return generateStudent(i).toCreateDTO();
+    }
+
+    private <L extends Collection<Integer>> L fillIntegerCollectionUpTo(L collection, int limit) {
+        for (int i = 0; i < limit; i++) {
+            collection.add(i);
+        }
+        return collection;
+    }
+
+    private <E, V> E setField(E entity, String fieldName, V fieldValue) {
+        ReflectionTestUtils.setField(entity, fieldName, fieldValue);
+        return entity;
+    }
+
+    private <E, V, C extends Collection<E>> C setFieldForAll(C collection, String fieldName, V fieldValue) {
+        for(E entity : collection) {
+            setField(entity, fieldName, fieldValue);
+        }
+        return collection;
+    }
+
+    private Work generateWork(int i) {
+        String title = "title" + i;
+        String text = "text" + i;
+        Set<Student> authors = new TreeSet<>();
+        Assessment assessment = null;
+        Work work = new Work(title, text, authors, assessment);
+        ReflectionTestUtils.setField(work, "id", i);
+        return work;
     }
 }

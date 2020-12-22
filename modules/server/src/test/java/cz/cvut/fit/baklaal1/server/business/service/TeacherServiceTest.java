@@ -43,50 +43,6 @@ class TeacherServiceTest {
     @MockBean
     private AssessmentService assessmentServiceMock;
 
-    private Teacher generateTeacher(int i) {
-        String username = "teacher" + i;
-        String name = "teacherName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        double wage = i * 10000;
-        Teacher teacher = new Teacher(username, name, birthdate, wage);
-        ReflectionTestUtils.setField(teacher, "id", i);
-        return teacher;
-    }
-
-    private <L extends Collection<Teacher>> L fillTeacherCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateTeacher(i));
-        }
-        return collection;
-    }
-
-    private TeacherDTO generateTeacherDTO(int i) {
-        String username = "teacher" + i;
-        String name = "teacherName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        double wage = i * 10000;
-        Set<Integer> assessmentIds = new TreeSet<>();
-        TeacherDTO teacherDTO = new TeacherDTO(i, username, name, birthdate, wage, assessmentIds);
-        return teacherDTO;
-    }
-
-    private <L extends Collection<TeacherDTO>> L fillTeacherDTOCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateTeacherDTO(i));
-        }
-        return collection;
-    }
-
-    private TeacherCreateDTO generateTeacherCreateDTO(int i) {
-        String username = "teacher" + i;
-        String name = "teacherName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        double wage = i * 10000;
-        Set<Integer> assessmentIds = new TreeSet<>();
-        TeacherCreateDTO teacherCreateDTO = new TeacherCreateDTO(username, name, birthdate, wage, assessmentIds);
-        return teacherCreateDTO;
-    }
-
     @Test
     public void findAll() {
         final int allTeachersCnt = 10;
@@ -138,13 +94,6 @@ class TeacherServiceTest {
         ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
         Mockito.verify(teacherRepositoryMock, Mockito.atLeastOnce()).findAll(pageableArgumentCaptor.capture());
         assertEquals(pageableRequested, pageableArgumentCaptor.getValue());
-    }
-
-    private <L extends Collection<Integer>> L fillIntegerCollectionUpTo(L collection, int limit) {
-        for (int i = 0; i < limit; i++) {
-            collection.add(i);
-        }
-        return collection;
     }
 
     @Test
@@ -270,5 +219,42 @@ class TeacherServiceTest {
         assertEquals(teacherNewToReturn, argumentCaptor.getValue());
     }
 
+    private Teacher generateTeacher(int i) {
+        String username = "teacher" + i;
+        String name = "teacherName" + i;
+        Timestamp birthdate = new Timestamp(i*10000000);
+        double wage = i * 10000;
+        Teacher teacher = new Teacher(username, name, birthdate, wage);
+        ReflectionTestUtils.setField(teacher, "id", i);
+        return teacher;
+    }
 
+    private <L extends Collection<Teacher>> L fillTeacherCollection(L collection, int count) {
+        for (int i = 0; i < count; i++) {
+            collection.add(generateTeacher(i));
+        }
+        return collection;
+    }
+
+    private TeacherDTO generateTeacherDTO(int i) {
+        return generateTeacher(i).toDTO();
+    }
+
+    private <L extends Collection<TeacherDTO>> L fillTeacherDTOCollection(L collection, int count) {
+        for (int i = 0; i < count; i++) {
+            collection.add(generateTeacherDTO(i));
+        }
+        return collection;
+    }
+
+    private TeacherCreateDTO generateTeacherCreateDTO(int i) {
+        return generateTeacher(i).toCreateDTO();
+    }
+
+    private <L extends Collection<Integer>> L fillIntegerCollectionUpTo(L collection, int limit) {
+        for (int i = 0; i < limit; i++) {
+            collection.add(i);
+        }
+        return collection;
+    }
 }
