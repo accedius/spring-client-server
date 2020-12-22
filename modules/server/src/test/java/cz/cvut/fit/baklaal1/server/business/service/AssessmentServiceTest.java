@@ -29,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
 //TODO maybe should just use one DataSource for all the Test classes, since Spring creates HikariDataSource pool for each Test class in runtime, causing opening and closing same database Connection for each Test class
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@DisplayName("AssessmentService CreateUpdate Test")
+@DisplayName("AssessmentService Test")
 class AssessmentServiceTest {
     @Autowired
     private AssessmentService assessmentService;
