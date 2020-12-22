@@ -1,11 +1,14 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
+import cz.cvut.fit.baklaal1.model.data.entity.Student;
+import cz.cvut.fit.baklaal1.model.data.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class StudentCreateDTO extends PersonCreateDTO {
     private static final Set<Integer> defaultWorkIds = new TreeSet<>();
@@ -17,6 +20,13 @@ public class StudentCreateDTO extends PersonCreateDTO {
         super(username, name, birthDate);
         this.averageGrade = averageGrade;
         this.workIds = workIds;
+    }
+
+    public StudentCreateDTO(Student student) {
+        super(student.getUsername(), student.getName(), student.getBirthdate());
+        this.averageGrade = student.getAverageGrade();
+        Set<Work> works = student.getWorks();
+        this.workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
     }
 
     public void setAverageGrade(float averageGrade) {

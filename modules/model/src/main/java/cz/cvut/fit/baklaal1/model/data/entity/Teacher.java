@@ -1,6 +1,7 @@
 package cz.cvut.fit.baklaal1.model.data.entity;
 
 import com.sun.istack.NotNull;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.DBConstants;
 import org.hibernate.annotations.SortNatural;
@@ -13,7 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
-public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO> {
+public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, ConvertibleToCreateDTO<TeacherCreateDTO> {
     @NotNull
     private double wage;
 
@@ -54,5 +55,10 @@ public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO> {
     @Override
     public TeacherDTO toDTO() {
         return new TeacherDTO(this);
+    }
+
+    @Override
+    public TeacherCreateDTO toCreateDTO() {
+        return new TeacherCreateDTO(this);
     }
 }

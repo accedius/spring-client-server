@@ -1,6 +1,7 @@
 package cz.cvut.fit.baklaal1.model.data.entity;
 
 import com.sun.istack.NotNull;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.DBConstants;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<AssessmentDTO> {
+public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<AssessmentDTO>, ConvertibleToCreateDTO<AssessmentCreateDTO> {
     @Id
     @GeneratedValue
     private Integer id;
@@ -88,5 +89,10 @@ public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<Asse
     @Override
     public AssessmentDTO toDTO() {
         return new AssessmentDTO(this);
+    }
+
+    @Override
+    public AssessmentCreateDTO toCreateDTO() {
+        return new AssessmentCreateDTO(this);
     }
 }

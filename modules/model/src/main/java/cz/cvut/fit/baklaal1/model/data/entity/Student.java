@@ -1,5 +1,6 @@
 package cz.cvut.fit.baklaal1.model.data.entity;
 
+import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.DBConstants;
 import org.hibernate.annotations.SortNatural;
@@ -12,7 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
-public class Student extends Person implements ConvertibleToDTO<StudentDTO> {
+public class Student extends Person implements ConvertibleToDTO<StudentDTO>, ConvertibleToCreateDTO<StudentCreateDTO> {
     //I know, it's a bad practice to store db-derived values in non buffer entities, but I just want to try it. Exists only as a buffer, updated only on work insertion -> possible inconsistency source
     private float averageGrade;
 
@@ -53,5 +54,10 @@ public class Student extends Person implements ConvertibleToDTO<StudentDTO> {
     @Override
     public StudentDTO toDTO() {
         return new StudentDTO(this);
+    }
+
+    @Override
+    public StudentCreateDTO toCreateDTO() {
+        return new StudentCreateDTO(this);
     }
 }
