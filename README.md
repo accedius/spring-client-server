@@ -1,5 +1,9 @@
 # TJV sem
 
+## Domain Model
+
+![domain-model](resources/DomainModel.png)
+
 ## Quick Start Guide
 
 ### Execute following steps, if using linux terminal:
@@ -18,9 +22,9 @@
 
 ### Alternatively you can start IntellijIDEA and:
 
-- Install `model` project at subdirectory modules/model
+- Run gradle task `Install` on `model` project at subdirectory `modules/model`
 - Run `ServerApp` in project `server` at subdirectory `modules/server`
-- Run `ClientApp` in project `client` at subdirectory `modules/client`
+- Run `ClientApp` in project `client` at subdirectory `modules/client` within `Terminal` and give it appropriate arguments as listed in `Client` section below
 
 ## Server
 
@@ -33,4 +37,4 @@ Server uses CTU FIT's OracleDB connection, so where is no need to configure anyt
 
 If server application is throwing an error, that wanted port is already in use:
 
-- At `server` project files at `src/main/resources/application.properties` change value `server.port = 8080` to `8081` or any other port number, compliant to your system port notation.
+- At `server` project files at `src/main/resources/application.properties` change value `server.port = 8080` to `8081` or any other port number, compliant to your system port notation. Do not forget to change `client`'s `application.properties` accordingly, the file is located similarly.
