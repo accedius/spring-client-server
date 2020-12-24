@@ -4,17 +4,27 @@ import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.StudentResource;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
+import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.sql.Timestamp;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 @Component
 public class StudentHandler extends PersonHandler<StudentDTO, StudentCreateDTO> {
     private static final String JOIN_WORK = ArgumentConstants.JOIN_WORK;
-    public static final String STUDENT_ID = ArgumentConstants.STUDENT_ID;
-    public static final String WORK_ID = ArgumentConstants.WORK_ID;
+    private static final String STUDENT_ID = ArgumentConstants.STUDENT_ID;
+    private static final String WORK_ID = ArgumentConstants.WORK_ID;
+
+    private static final String BIRTHDATE = ArgumentConstants.BIRTHDATE;
+    private static final String AVERAGE_GRADE = ArgumentConstants.AVERAGE_GRADE;
+    private static final String WORK_IDS = ArgumentConstants.WORK_IDS;
 
     @Autowired
     private final StudentResource studentResource;
@@ -61,7 +71,16 @@ public class StudentHandler extends PersonHandler<StudentDTO, StudentCreateDTO> 
     }
 
     @Override
-    protected StudentCreateDTO makeCreateModelFromArguments(ApplicationArguments args) {
-        return null;
+    protected StudentCreateDTO makeCreateModelFromArguments(ApplicationArguments args) throws Exception {
+        if(!args.containsOption(USERNAME) || !args.containsOption(NAME)) {
+            throwMustContain(USERNAME, NAME);
+        }
+
+        String username = args.getOptionValues(USERNAME).get(0);
+        String name = args.getOptionValues(NAME).get(0);
+        Timestamp birthdate = args.getOptionValues(BIRTHDATE) != null ? new Timestamp(Integer.parseInt(args.getOptionValues(BIRTHDATE).get(0))) : null;
+        float averageGrade = args.getOptionValues(AVERAGE_GRADE) != null ? Float.parseFloat(args.getOptionValues("assessmentId").get(0)) : Grades.DEFAULT;
+        Set<Integer> workIds = args.getOptionValues(WORK_IDS) != null ? args.getOptionValues(WORK_IDS).stream().map(Integer::parseInt).distinct().collect(Collectors.toCollection(TreeSet::new)) : new TreeSet<>();
+        return new StudentCreateDTO(username, name, birthdate, averageGrade, workIds);
     }
 }

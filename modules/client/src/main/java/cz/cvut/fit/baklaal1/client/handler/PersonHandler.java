@@ -9,11 +9,11 @@ import org.springframework.boot.ApplicationArguments;
 import java.util.Set;
 
 public abstract class PersonHandler<T_DTO extends Printable, T_CREATE_DTO> extends BasicHandler<T_DTO, T_CREATE_DTO> {
-    private static final String READ_BY_USERNAME = ArgumentConstants.READ_BY_USERNAME;
-    private static final String USERNAME = ArgumentConstants.USERNAME;
+    protected static final String READ_BY_USERNAME = ArgumentConstants.READ_BY_USERNAME;
+    protected static final String USERNAME = ArgumentConstants.USERNAME;
 
-    private static final String READ_ALL_BY_NAME = ArgumentConstants.READ_ALL_BY_NAME;
-    private static final String NAME = ArgumentConstants.NAME;
+    protected static final String READ_ALL_BY_NAME = ArgumentConstants.READ_ALL_BY_NAME;
+    protected static final String NAME = ArgumentConstants.NAME;
 
     private final PersonResource<T_DTO, T_CREATE_DTO> personResource;
 

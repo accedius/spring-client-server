@@ -9,11 +9,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Component
 public class WorkHandler extends BasicHandler<WorkDTO, WorkCreateDTO> {
     private static final String TITLE = ArgumentConstants.TITLE;
     private static final String READ_ALL_BY_TITLE = ArgumentConstants.READ_ALL_BY_TITLE;
+    private static final String AUTHOR_IDS = ArgumentConstants.AUTHOR_IDS;
+    private static final String TEXT = ArgumentConstants.TEXT;
 
     @Autowired
     private final WorkResource workResource;
@@ -60,7 +64,15 @@ public class WorkHandler extends BasicHandler<WorkDTO, WorkCreateDTO> {
     }
 
     @Override
-    protected WorkCreateDTO makeCreateModelFromArguments(ApplicationArguments args) {
-        return null;
+    protected WorkCreateDTO makeCreateModelFromArguments(ApplicationArguments args) throws Exception {
+        if(!args.containsOption(TITLE) || !args.containsOption(AUTHOR_IDS)) {
+            throwMustContain(TITLE, AUTHOR_IDS);
+        }
+
+        String title = args.getOptionValues(TITLE).get(0);
+        String text = args.getOptionValues(TEXT) != null ? args.getOptionValues(TEXT).get(0) : null;
+        Set<Integer> authorIds = args.getOptionValues(AUTHOR_IDS).stream().map(Integer::parseInt).distinct().collect(Collectors.toCollection(TreeSet::new));
+        Integer assessmentId = args.getOptionValues("assessmentId") != null ? Integer.parseInt(args.getOptionValues("assessmentId").get(0)) : null;
+        return new WorkCreateDTO(title, text, authorIds, assessmentId);
     }
 }

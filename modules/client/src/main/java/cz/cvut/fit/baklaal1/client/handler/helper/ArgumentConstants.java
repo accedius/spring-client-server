@@ -22,4 +22,12 @@ public class ArgumentConstants {
     public static final String WORK_ID = "workId";
     public static final String TITLE = "title";
 
+    public static final String TEXT = "text";
+    public static final String WORK_IDS = "workIds";
+    public static final String AUTHOR_IDS = "authorIds";
+    public static final String BIRTHDATE = "birthdate";
+    public static final String AVERAGE_GRADE = "averageGrade";
+    public static final String WAGE = "wage";
+    public static final String ASSESSMENT_IDS = "assessmentIds";
+    public static final String GRADE = "grade";
 }
