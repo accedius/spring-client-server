@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
     protected static final String CREATE = ArgumentConstants.CREATE;
@@ -115,20 +113,27 @@ public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
         final int size = 2;
         int page = 0;
         PagedModel<T_DTO> pages;
+        //Tree set for sorting dtos by compareTo
+        Set<T_DTO> items = new TreeSet<>();
         do {
             pages = resource.pageAll(page, size);
-            for (T_DTO item : pages.getContent()) {
-                printPagedModel(item);
-            }
+            items.addAll(pages.getContent());
             page++;
         } while (pages.hasLink("next"));
+
+        for (T_DTO item : items) {
+            System.out.println();
+            printPagedModel(item);
+        }
+        System.out.println();
     }
 
     protected void printAll(Collection<T_DTO> collection) {
         for(T_DTO item : collection) {
+            System.out.println();
             printModel(item);
-            System.out.println("\n");
         }
+        System.out.println();
     }
 
     private void readAll() {
