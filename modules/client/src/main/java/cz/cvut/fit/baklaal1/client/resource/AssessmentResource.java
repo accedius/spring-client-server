@@ -4,10 +4,13 @@ import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 @Component
 public class AssessmentResource extends BasicResource<AssessmentDTO, AssessmentCreateDTO> {
@@ -22,7 +25,18 @@ public class AssessmentResource extends BasicResource<AssessmentDTO, AssessmentC
 
     public Set<AssessmentDTO> readAllByEvaluatorId(String evaluatorId) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(READ_ALL_BY_EVALUATOR_ID).queryParam("evaluatorId", evaluatorId);
-        Set<AssessmentDTO> evaluatorAssessments = restTemplate.getForObject(uriBuilder.toUriString(), Set.class);
+        AssessmentDTO[] assessmentArray = restTemplate.getForObject(uriBuilder.toUriString(), getResponseTypeForArray());
+        Set<AssessmentDTO> evaluatorAssessments = fillCollectionFromArray(new TreeSet<>(), assessmentArray);
         return evaluatorAssessments;
+    }
+
+    @Override
+    protected ParameterizedTypeReference<PagedModel<AssessmentDTO>> getParametrizedTypeReference() {
+        return new ParameterizedTypeReference<PagedModel<AssessmentDTO>>() {};
+    }
+
+    @Override
+    protected Class<AssessmentDTO[]> getResponseTypeForArray() {
+        return AssessmentDTO[].class;
     }
 }
