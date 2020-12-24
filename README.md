@@ -43,6 +43,15 @@ Or
 - `*` means non-required 
 - `c` means complex
 
+### Basic commands:
+
+- `--action=create ...`
+- `--action=read id=<id>`
+- `--action=update id=<id> ...`
+- `--action=delete id=<id>`
+- `--action=readAll`
+- `--action=pageAll`
+
 ### Available commands per entity:
 
 #### Student:
@@ -55,6 +64,11 @@ Use `--entity=Student`
 - `--averageGrade`*
 - `--workIds`*c
 
+Special commands:
+
+- `--action=readByUsername username=<username>`
+- `--action=readAllByName name=<name>`
+- `--action=joinWork studentId=<id1> workId=<id2>`
 
 #### Teacher:
 
@@ -66,6 +80,11 @@ Use `--entity=Teacher`
 - `--wage`*
 - `--assessmentIds`*c
 
+Special commands:
+
+- `--action=readByUsername username=<username>`
+- `--action=readAllByName name=<name>`
+
 #### Work:
 
 Use `--entity=Work`
@@ -75,6 +94,10 @@ Use `--entity=Work`
 - `--authorIds`c
 - `--assessmentId`*
 
+Special commands:
+
+- `--action=readAllByTitle title=<title>`
+
 #### Assessment:
 
 Use `--entity=Assessment`
@@ -82,6 +105,10 @@ Use `--entity=Assessment`
 - `--grade`
 - `--workId`
 - `--evaluatorId`
+
+Special commands:
+
+- `--action=readAllByEvaluatorId evaluatorId=<evaluatorId>`
 
 ## Problem Solving
 
