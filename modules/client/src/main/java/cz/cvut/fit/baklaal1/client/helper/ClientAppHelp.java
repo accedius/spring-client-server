@@ -4,7 +4,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ClientAppHelp {
-    public void printHelp() {
-        ;
+    public static void printHelp() {
+        //TODO
+        System.out.println("Printing Help...");
     }
 }
