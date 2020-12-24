@@ -32,9 +32,6 @@ public class ClientApp implements ApplicationRunner {
 	@Autowired
 	private WorkHandler workHandler;
 
-	@Autowired
-	private ClientAppHelp helpModule;
-
     public static void main(String[] args) {
         SpringApplication.run(ClientApp.class, args);
     }
@@ -50,30 +47,35 @@ public class ClientApp implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         if (args.containsOption("action") && args.containsOption("entity")) {
         	String entity = args.getOptionValues("entity").get(0);
-			switch (entity) {
-				case "Student": {
-					studentHandler.handle(args);
-					break;
+        	try {
+				switch (entity) {
+					case "Student": {
+						studentHandler.handle(args);
+						break;
+					}
+					case "Teacher": {
+						teacherHandler.handle(args);
+						break;
+					}
+					case "Work": {
+						workHandler.handle(args);
+						break;
+					}
+					case "Assessment": {
+						assessmentHandler.handle(args);
+						break;
+					}
+					default: {
+						System.err.println("Invalid entity name: \"" + entity + "\"!");
+						ClientAppHelp.printHelp();
+					}
 				}
-				case "Teacher": {
-					teacherHandler.handle(args);
-					break;
-				}
-				case "Work": {
-					workHandler.handle(args);
-					break;
-				}
-				case "Assessment": {
-					assessmentHandler.handle(args);
-					break;
-				}
-				default: {
-					System.err.println("Invalid entity name: \"" + entity + "\"!");
-					helpModule.printHelp();
-				}
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				e.printStackTrace();
 			}
 		} else {
-        	helpModule.printHelp();
+        	ClientAppHelp.printHelp();
 		}
     }
 }
