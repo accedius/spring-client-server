@@ -6,7 +6,7 @@ plugins {
     id 'maven'
 }
 
-group 'cz.cvut.fit.baklaal1'
+group 'cz.cvut.fit.baklaal1.tjv-sem'
 version '0.1-SNAPSHOT'
 
 java {

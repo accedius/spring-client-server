@@ -6,7 +6,7 @@ plugins {
     id 'application'
 }
 
-group 'cz.cvut.fit.baklaal1'
+group 'cz.cvut.fit.baklaal1.tjv-sem.server'
 version '0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'cz.cvut.fit.baklaal1:model:0.1-SNAPSHOT'
+    implementation 'cz.cvut.fit.baklaal1.tjv-sem:model:0.1-SNAPSHOT'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
