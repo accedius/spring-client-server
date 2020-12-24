@@ -79,7 +79,7 @@ public class StudentHandler extends PersonHandler<StudentDTO, StudentCreateDTO> 
         String username = args.getOptionValues(USERNAME).get(0);
         String name = args.getOptionValues(NAME).get(0);
         Timestamp birthdate = args.getOptionValues(BIRTHDATE) != null ? new Timestamp(Integer.parseInt(args.getOptionValues(BIRTHDATE).get(0))) : null;
-        float averageGrade = args.getOptionValues(AVERAGE_GRADE) != null ? Float.parseFloat(args.getOptionValues("assessmentId").get(0)) : Grades.DEFAULT;
+        float averageGrade = args.getOptionValues(AVERAGE_GRADE) != null ? Float.parseFloat(args.getOptionValues(AVERAGE_GRADE).get(0)) : Grades.DEFAULT;
         Set<Integer> workIds = args.getOptionValues(WORK_IDS) != null ? args.getOptionValues(WORK_IDS).stream().map(Integer::parseInt).distinct().collect(Collectors.toCollection(TreeSet::new)) : new TreeSet<>();
         return new StudentCreateDTO(username, name, birthdate, averageGrade, workIds);
     }

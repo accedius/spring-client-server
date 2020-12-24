@@ -3,12 +3,14 @@ package cz.cvut.fit.baklaal1.client.handler;
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.BasicResource;
 import cz.cvut.fit.baklaal1.client.resource.PersonResource;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
 import org.springframework.boot.ApplicationArguments;
 
 import java.util.Set;
 
-public abstract class PersonHandler<T_DTO extends Printable, T_CREATE_DTO> extends BasicHandler<T_DTO, T_CREATE_DTO> {
+public abstract class PersonHandler<T_DTO extends PersonDTO<T_DTO>, T_CREATE_DTO> extends BasicHandler<T_DTO, T_CREATE_DTO> {
     protected static final String READ_BY_USERNAME = ArgumentConstants.READ_BY_USERNAME;
     protected static final String USERNAME = ArgumentConstants.USERNAME;
 

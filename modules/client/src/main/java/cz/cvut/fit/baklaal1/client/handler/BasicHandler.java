@@ -2,6 +2,7 @@ package cz.cvut.fit.baklaal1.client.handler;
 
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.BasicResource;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.boot.ApplicationArguments;
@@ -13,7 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.net.URI;
 import java.util.*;
 
-public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
+public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> {
     protected static final String CREATE = ArgumentConstants.CREATE;
     protected static final String READ = ArgumentConstants.READ;
     protected static final String UPDATE = ArgumentConstants.UPDATE;

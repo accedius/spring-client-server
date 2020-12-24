@@ -30,4 +30,5 @@ public class ArgumentConstants {
     public static final String WAGE = "wage";
     public static final String ASSESSMENT_IDS = "assessmentIds";
     public static final String GRADE = "grade";
+    public static final String ASSESSMENT_ID = "assessmentId";
 }

@@ -53,7 +53,7 @@ public class TeacherHandler extends PersonHandler<TeacherDTO, TeacherCreateDTO> 
         String username = args.getOptionValues(USERNAME).get(0);
         String name = args.getOptionValues(NAME).get(0);
         Timestamp birthdate = args.getOptionValues(BIRTHDATE) != null ? new Timestamp(Integer.parseInt(args.getOptionValues(BIRTHDATE).get(0))) : null;
-        double wage = args.getOptionValues(WAGE) != null ? Float.parseFloat(args.getOptionValues("assessmentId").get(0)) : 0d;
+        double wage = args.getOptionValues(WAGE) != null ? Float.parseFloat(args.getOptionValues(WAGE).get(0)) : 0d;
         Set<Integer> assessmentIds = args.getOptionValues(ASSESSMENT_IDS) != null ? args.getOptionValues(ASSESSMENT_IDS).stream().map(Integer::parseInt).distinct().collect(Collectors.toCollection(TreeSet::new)) : new TreeSet<>();
         return new TeacherCreateDTO(username, name, birthdate, wage, assessmentIds);
     }
