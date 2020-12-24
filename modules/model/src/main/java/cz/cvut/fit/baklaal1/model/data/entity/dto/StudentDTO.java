@@ -41,14 +41,9 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("averageGrade", averageGrade);
 
-        //TODO make a universal method to print collections formatted in json-like format
-        System.out.println("Work Ids: {");
-        for (Integer workId : workIds) {
-            printFormatted("workId", workId);
-        }
-        System.out.println("}");
+        printCollectionFormatted("Work Ids", workIds);
 
-        System.out.println(super.toString());
+        printLinksFormatted(super.toString());
         System.out.println("}");
     }
 

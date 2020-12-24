@@ -64,16 +64,11 @@ public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
         printFormatted("title", title);
         printFormatted("text", text);
 
-        //TODO make a universal method to print collections formatted in json-like format
-        System.out.println("Author (Student) Ids: {");
-        for (Integer authorId : authorIds) {
-            printFormatted("authorId", authorId);
-        }
-        System.out.println("}");
+        printCollectionFormatted("Author (Student) Ids", authorIds);
 
         printFormatted("assessmentId", assessmentId);
 
-        System.out.println(super.toString());
+        printLinksFormatted(super.toString());
         System.out.println("}");
     }
 

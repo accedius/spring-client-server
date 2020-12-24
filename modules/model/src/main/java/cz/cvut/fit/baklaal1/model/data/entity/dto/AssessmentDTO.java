@@ -52,7 +52,7 @@ public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable
         printFormatted("grade", grade);
         printFormatted("workId", workId);
         printFormatted("evaluatorId (teacherId)", evaluatorId);
-        System.out.println(super.toString());
+        printLinksFormatted(super.toString());
         System.out.println("}");
     }
 
