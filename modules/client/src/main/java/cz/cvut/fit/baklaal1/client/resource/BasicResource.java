@@ -3,7 +3,6 @@ package cz.cvut.fit.baklaal1.client.resource;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -17,10 +16,13 @@ public abstract class BasicResource<T_DTO, T_CREATE_DTO> {
     protected static final String URI_TEMPLATE_ONE = "/{id}";
     protected static final String COLLECTION_TEMPLATED = "/?page={page}&size={size}";
 
-    private final Class<T_DTO> modelClass;
+    protected final String RESOURCE_URL;
+
+    protected final Class<T_DTO> modelClass;
 
     public BasicResource(RestTemplateBuilder builder, String apiUrl, String classUrl, Class<T_DTO> modelClass) {
         restTemplate = builder.rootUri(apiUrl + classUrl).build();
+        this.RESOURCE_URL = apiUrl + classUrl;
         this.modelClass = modelClass;
     }
 

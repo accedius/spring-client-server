@@ -10,57 +10,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Set;
 
 @Component
-public class StudentResource extends BasicResource<StudentDTO, StudentCreateDTO> {
+public class StudentResource extends PersonResource<StudentDTO, StudentCreateDTO> {
     private static final String STUDENTS_URL = "/students";
-    private static final String READ_BY_USERNAME_URL = "";
-    private static final String READ_ALL_BY_NAME_URL = "";
+
+    public static final String STUDENT_JOIN_WORK = "/join-work";
 
     public StudentResource(RestTemplateBuilder builder,
-                           @Value( "${cz.cvut.fit.baklaal1.server.url}" ) String apiUrl) {
+                           @Value( "${cz.cvut.fit.baklaal1.tjv-sem.api.url}" ) String apiUrl) {
         super(builder, apiUrl, STUDENTS_URL, StudentDTO.class);
     }
 
-    public StudentDTO readByUsername(String username) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(READ_BY_USERNAME_URL).queryParam("username", username);
-        StudentDTO student = restTemplate.getForObject(builder.build().toUriString(), StudentDTO.class);
-        return student;
+    public void joinWork(String studentId, String workId) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(STUDENT_JOIN_WORK)
+                .queryParam("studentId", studentId)
+                .queryParam("workId", workId);
+        restTemplate.put(uriBuilder.toUriString(), null);
     }
-
-    public Set<StudentDTO> readAllByName(String name) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(READ_ALL_BY_NAME_URL).queryParam("name", name);
-        Set<StudentDTO> students = restTemplate.getForObject(builder.build().toUriString(), Set.class);
-        return students;
-    }
-
-    /*public URI create(StudentCreateDTO data) {
-        return restTemplate.postForLocation("/", data);
-    }
-
-    public StudentDTO read(String id) {
-        return restTemplate.getForObject(URI_TEMPLATE_ONE, StudentDTO.class, id);
-    }
-
-    public List<StudentDTO> readAll() {
-        List<StudentDTO> allStudents = restTemplate.getForObject("/", List.class);
-        return allStudents;
-    }
-
-    public PagedModel<StudentDTO> pageAll(int page, int size) {
-        ResponseEntity<PagedModel<StudentDTO>> response = restTemplate.exchange(
-                COLLECTION_TEMPLATED,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<PagedModel<StudentDTO>>() {},
-                page,
-                size
-        );
-        return response.getBody();
-    }
-    public void update(String id, StudentCreateDTO data) {
-        restTemplate.put(URI_TEMPLATE_ONE, data, id);
-    }
-
-    public void delete(String id) {
-        restTemplate.delete(URI_TEMPLATE_ONE, id);
-    }*/
 }

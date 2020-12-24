@@ -7,11 +7,11 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TeacherResource extends BasicResource<TeacherDTO, TeacherCreateDTO> {
+public class TeacherResource extends PersonResource<TeacherDTO, TeacherCreateDTO> {
     private static final String TEACHERS_URL = "/teachers";
 
     public TeacherResource(RestTemplateBuilder builder,
-                           @Value( "${cz.cvut.fit.baklaal1.server.url}" ) String apiUrl) {
+                           @Value( "${cz.cvut.fit.baklaal1.tjv-sem.api.url}" ) String apiUrl) {
         super(builder, apiUrl, TEACHERS_URL, TeacherDTO.class);
     }
 }
