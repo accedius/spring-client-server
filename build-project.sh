@@ -5,7 +5,7 @@
 ./gradlew init -p modules/client
 
 ./gradlew install -p modules/model
-./gradlew build -p modules/server
+./gradlew build -x test -p modules/server
 ./gradlew build -p modules/client
 
 echo 
