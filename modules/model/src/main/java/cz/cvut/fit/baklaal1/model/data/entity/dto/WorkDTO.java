@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class WorkDTO extends RepresentationModel<WorkDTO> implements ReadableId, Comparable<WorkDTO> {
+public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
     private final int id;
     private final String title;
     private final String text;
@@ -55,6 +55,26 @@ public class WorkDTO extends RepresentationModel<WorkDTO> implements ReadableId,
 
     public Integer getAssessmentId() {
         return assessmentId;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Work: {");
+        printFormatted("id", id);
+        printFormatted("title", title);
+        printFormatted("text", text);
+
+        //TODO make a universal method to print collections formatted in json-like format
+        System.out.println("Author (Student) Ids: {");
+        for (Integer authorId : authorIds) {
+            printFormatted("authorId", authorId);
+        }
+        System.out.println("}");
+
+        printFormatted("assessmentId", assessmentId);
+
+        System.out.println(super.toString());
+        System.out.println("}");
     }
 
     @Override

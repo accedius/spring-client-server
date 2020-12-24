@@ -33,6 +33,26 @@ public class TeacherDTO extends PersonDTO<TeacherDTO> {
     }
 
     @Override
+    public void print() {
+        System.out.println("Teacher: {");
+        printFormatted("id", id);
+        printFormatted("username", username);
+        printFormatted("name", name);
+        printFormatted("birthdate", birthdate);
+        printFormatted("wage", wage);
+
+        //TODO make a universal method to print collections formatted in json-like format
+        System.out.println("Assessment Ids: {");
+        for (Integer assessmentId : assessmentIds) {
+            printFormatted("assessmentId", assessmentId);
+        }
+        System.out.println("}");
+
+        System.out.println(super.toString());
+        System.out.println("}");
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof TeacherDTO)) return false;

@@ -1,11 +1,10 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
 import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class AssessmentDTO extends RepresentationModel<AssessmentDTO> implements ReadableId, Comparable<AssessmentDTO> {
+public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable<AssessmentDTO> {
     private final int id;
     private final int grade;
     private final int workId;
@@ -44,6 +43,17 @@ public class AssessmentDTO extends RepresentationModel<AssessmentDTO> implements
 
     public Integer getEvaluatorId() {
         return evaluatorId;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Assessment: {");
+        printFormatted("id", id);
+        printFormatted("grade", grade);
+        printFormatted("workId", workId);
+        printFormatted("evaluatorId (teacherId)", evaluatorId);
+        System.out.println(super.toString());
+        System.out.println("}");
     }
 
     @Override

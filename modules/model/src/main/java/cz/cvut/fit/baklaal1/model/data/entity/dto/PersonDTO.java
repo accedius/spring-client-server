@@ -6,7 +6,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends RepresentationModel<T_DTO> implements ReadableId, Comparable<PersonDTO<T_DTO>> {
+public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends BasicDTO<T_DTO> implements Comparable<PersonDTO<T_DTO>> {
     protected int id;
     protected String username;
     protected String name;
