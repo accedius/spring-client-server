@@ -9,17 +9,20 @@
 ### Execute following steps, if using linux terminal:
 
 - Navigate to the root directory of the project
-- Run command `./project-build.sh`
-- To run server run command `./run-server.sh`
+- Switch to branch `kb3` or later
+- Execute `build-project.sh`
+- To run server execute `run-server.sh`
 
 ### Execute following steps, if using explorer:
 
 - Open the root directory of the project
-- Execute `project-build.sh`
+- Switch to branch `kb3` or later using any git client (e.g. GitKraken)
+- Execute `build-project.sh`
 - Execute `run-server.sh`
 
 ### Alternatively you can start IntellijIDEA and:
 
+- Switch to branch `kb3` or later in VCS settings of the directory
 - Run gradle task `Install` on `model` project at subdirectory `modules/model`
 - Run `ServerApp` in project `server` at subdirectory `modules/server`
 
