@@ -5,6 +5,7 @@ import cz.cvut.fit.baklaal1.client.handler.StudentHandler;
 import cz.cvut.fit.baklaal1.client.handler.TeacherHandler;
 import cz.cvut.fit.baklaal1.client.handler.WorkHandler;
 import cz.cvut.fit.baklaal1.client.helper.ClientAppHelp;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -17,7 +18,6 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.HypermediaRestTemplateConfigurer;
 
 @SpringBootApplication
-@EntityScan("cz.cvut.fit.baklaal1.model.data.entity")
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class ClientApp implements ApplicationRunner {
 	@Autowired
@@ -71,8 +71,8 @@ public class ClientApp implements ApplicationRunner {
 					}
 				}
 			} catch (Exception e) {
-				System.err.println(e.getMessage());
-				e.printStackTrace();
+				System.err.println("Exception Message: " + e.getMessage());
+				System.err.println(ExceptionUtils.getStackTrace(e));
 			}
 		} else {
         	ClientAppHelp.printHelp();

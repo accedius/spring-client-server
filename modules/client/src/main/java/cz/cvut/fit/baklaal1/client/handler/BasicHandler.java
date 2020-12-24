@@ -3,6 +3,7 @@ package cz.cvut.fit.baklaal1.client.handler;
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.BasicResource;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.RepresentationModel;
@@ -140,10 +141,10 @@ public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
         resource.delete(id);
     }
 
-    protected void printError(Exception e, String actionName, ApplicationArguments args) {
-        System.err.println("Error on action \"" + actionName + "\" with given args: \"" + args + "\"!");
-        System.err.println(e.getMessage());
-        e.getCause().printStackTrace();
+    protected void printError(final Exception e, final String actionName, final ApplicationArguments args) {
+        System.err.println("Error on action \"" + actionName + "\" with given args: \"" + args.toString() + "\"!");
+        System.err.println("Exception Message: " + e.getMessage());
+        System.out.println(ExceptionUtils.getStackTrace(e));
     }
 
     protected void throwMustContain(String... optionNames) throws IllegalArgumentException {
