@@ -2,17 +2,11 @@ plugins {
     id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
-
-    id 'application'
 }
 
 group = 'cz.cvut.fit.baklaal1.tjv-sem.client'
 version = '0.1-SNAPSHOT'
 sourceCompatibility = '11'
-
-application {
-    mainClass = 'cz.cvut.fit.baklaal1.client.ClientApp'
-}
 
 repositories {
     mavenCentral()
