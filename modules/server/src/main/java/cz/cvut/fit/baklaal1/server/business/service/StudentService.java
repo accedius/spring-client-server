@@ -39,7 +39,7 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
         Student student = fillStudent(new Student(), studentDTO, works);
 
         if(exists(student))
-            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, studentDTO);
+            throw getServiceException(actionCreate, ServiceConstants.STUDENT + ServiceConstants.ALREADY_EXISTS, studentDTO);
 
         Student savedStudent = studentRepository.save(student);
 

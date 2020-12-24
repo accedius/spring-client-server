@@ -36,7 +36,7 @@ public class TeacherService extends PersonService<Teacher, TeacherDTO, TeacherCr
         Teacher teacher = fillTeacher(new Teacher(), teacherDTO, assessments);
 
         if(exists(teacher))
-            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, teacherDTO);
+            throw getServiceException(actionCreate, ServiceConstants.TEACHER + ServiceConstants.ALREADY_EXISTS, teacherDTO);
 
         Teacher savedTeacher = teacherRepository.save(teacher);
 

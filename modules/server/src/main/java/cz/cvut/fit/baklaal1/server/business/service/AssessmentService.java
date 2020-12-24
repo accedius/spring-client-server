@@ -52,7 +52,7 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         Assessment assessment = new Assessment(assessmentDTO.getGrade(), work, evaluator);
 
         if(exists(assessment))
-            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, assessmentDTO);
+            throw getServiceException(actionCreate, ServiceConstants.ASSESSMENT + ServiceConstants.ALREADY_EXISTS, assessmentDTO);
 
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
