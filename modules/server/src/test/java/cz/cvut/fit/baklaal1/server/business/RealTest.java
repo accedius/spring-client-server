@@ -51,7 +51,7 @@ class RealTest {
     private static WorkService workStaticService;
 
     private Student generateStudent(int i) {
-        String username = "student" + i;
+        String username = "studentUsername" + studentService.hashCode() + "_" + i;
         String name = "studentName" + i;
         Timestamp birthdate = new Timestamp(i*10000000);
         float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
@@ -65,17 +65,11 @@ class RealTest {
     }
 
     private StudentCreateDTO generateStudentCreateDTO(int i) {
-        String username = "student" + i;
-        String name = "studentName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
-        Set<Integer> workIds = new TreeSet<>();
-        StudentCreateDTO studentCreateDTO = new StudentCreateDTO(username, name, birthdate, averageGrade, workIds);
-        return studentCreateDTO;
+        return generateStudent(i).toCreateDTO();
     }
 
     private WorkCreateDTO generateWorkCreateDTO(int i) {
-        String title = "title"+i;
+        String title = "title" + workService.hashCode() + "_" + i;
         String text = "text"+i;
         Set<Integer> authorIds = new TreeSet<>();
         Integer assessmentId = null;
