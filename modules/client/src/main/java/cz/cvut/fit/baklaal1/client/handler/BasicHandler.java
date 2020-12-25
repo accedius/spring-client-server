@@ -122,6 +122,11 @@ public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> 
             page++;
         } while (pages.hasLink("next"));
 
+        if(items.size() < 1) {
+            System.out.println("Response empty, nothing to show!");
+            return;
+        }
+
         for (T_DTO item : items) {
             System.out.println();
             printPagedModel(item);
@@ -130,6 +135,11 @@ public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> 
     }
 
     protected void printAll(Collection<T_DTO> collection) {
+        if(collection.size() < 1) {
+            System.out.println("Response empty, nothing to show!");
+            return;
+        }
+
         for(T_DTO item : collection) {
             System.out.println();
             printModel(item);
@@ -148,8 +158,8 @@ public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> 
     }
 
     protected void printError(final Exception e, final String actionName, final ApplicationArguments args) {
-        System.err.println("Error on action \"" + actionName + "\" with given args: \"" + args.toString() + "\"!");
-        System.err.println("Exception Message: " + e.getMessage());
+        System.err.println("Error on action \"" + actionName + "\" with given args: \"" + Arrays.toString(args.getSourceArgs()) + "\"!");
+        System.err.println("Exception message: " + e.getMessage());
         System.out.println(ExceptionUtils.getStackTrace(e));
     }
 
