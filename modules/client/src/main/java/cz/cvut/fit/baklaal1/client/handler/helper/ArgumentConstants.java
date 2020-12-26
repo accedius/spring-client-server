@@ -5,6 +5,7 @@ public class ArgumentConstants {
     public static final String QUIT = "quit";
     public static final String Q = "q";
     public static final String HELP = "help";
+    public static final String H = "h";
     public static final String MANUAL = "manual";
     public static final String MAN = "man";
     public static final String DATE = "date";

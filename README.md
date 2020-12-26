@@ -69,6 +69,7 @@ If you want only to run client from the command line just use `exit` argument at
 To get help type in:
 
 - `help`
+- `h`
 - `manual`
 - `man`
 

@@ -104,6 +104,7 @@ public class ClientApp implements ApplicationRunner {
 				}
 				case ArgumentConstants.MANUAL :
 				case ArgumentConstants.MAN :
+				case ArgumentConstants.H :
 				case ArgumentConstants.HELP : {
 					helped = true;
 					appHelp.printHelp();

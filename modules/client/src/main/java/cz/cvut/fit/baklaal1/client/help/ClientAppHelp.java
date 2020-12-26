@@ -14,6 +14,7 @@ public class ClientAppHelp {
             "To get help type in:\n" +
             "\n" +
             "- \"help\"\n" +
+            "- \"h\"\n" +
             "- \"manual\"\n" +
             "- \"man\"\n" +
             "\n" +
@@ -123,7 +124,7 @@ public class ClientAppHelp {
         System.out.println("Made by Aleksei Baklanov");
         System.out.println("Contact me at \"baklaal1@fit.cvut.cz\"");
         System.out.println();
-        System.out.println("For help type in \"" + ArgumentConstants.HELP + "\"");
+        System.out.println("For help type in \"" + ArgumentConstants.HELP + "\" or simply \"" + ArgumentConstants.H + "\"");
         System.out.println();
     }
 }
