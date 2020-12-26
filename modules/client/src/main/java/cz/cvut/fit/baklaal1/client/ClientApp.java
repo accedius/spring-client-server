@@ -1,9 +1,6 @@
 package cz.cvut.fit.baklaal1.client;
 
-import cz.cvut.fit.baklaal1.client.handler.AssessmentHandler;
-import cz.cvut.fit.baklaal1.client.handler.StudentHandler;
-import cz.cvut.fit.baklaal1.client.handler.TeacherHandler;
-import cz.cvut.fit.baklaal1.client.handler.WorkHandler;
+import cz.cvut.fit.baklaal1.client.handler.*;
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.help.ClientAppHelp;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -27,16 +24,7 @@ public class ClientApp implements ApplicationRunner {
 	private static final String formatForDate = "HH:mm:ss";
 
 	@Autowired
-	private AssessmentHandler assessmentHandler;
-
-	@Autowired
-	private StudentHandler studentHandler;
-
-	@Autowired
-	private TeacherHandler teacherHandler;
-
-	@Autowired
-	private WorkHandler workHandler;
+	private MainHandler handler;
 
 	@Autowired
 	private ClientAppHelp appHelp;
@@ -52,87 +40,6 @@ public class ClientApp implements ApplicationRunner {
 		};
 	}
 
-	private boolean handleArguments(ApplicationArguments args) {
-    	boolean helpIsNeeded = false;
-    	boolean helped = false;
-
-		if (args.containsOption("action") && args.containsOption("entity")) {
-			String entity = args.getOptionValues("entity").get(0);
-			try {
-				switch (entity) {
-					case ArgumentConstants.STUDENT: {
-						studentHandler.handle(args);
-						break;
-					}
-					case ArgumentConstants.TEACHER: {
-						teacherHandler.handle(args);
-						break;
-					}
-					case ArgumentConstants.WORK: {
-						workHandler.handle(args);
-						break;
-					}
-					case ArgumentConstants.ASSESSMENT: {
-						assessmentHandler.handle(args);
-						break;
-					}
-					default: {
-						System.err.println("Invalid entity name: \"" + entity + "\"!");
-						helpIsNeeded = true;
-						//System.out.println("Maybe try \"help\"?");
-					}
-				}
-			} catch (IllegalArgumentException e) {
-				System.err.println("Exception message: " + e.getMessage());
-				System.err.println(ExceptionUtils.getStackTrace(e));
-				helpIsNeeded = true;
-			} catch (Exception e) {
-				System.err.println("Exception message: " + e.getMessage());
-				System.err.println(ExceptionUtils.getStackTrace(e));
-			}
-		} else if(args.getNonOptionArgs().size() == 0 && args.getSourceArgs().length > 0) {
-			helpIsNeeded = true;
-		}
-
-		Set<String> nonOptions = new LinkedHashSet<>(args.getNonOptionArgs());
-		for(String nonOption : nonOptions) {
-			switch (nonOption) {
-				case ArgumentConstants.QUIT :
-				case ArgumentConstants.Q :
-				case ArgumentConstants.EXIT : {
-					return false;
-				}
-				case ArgumentConstants.MANUAL :
-				case ArgumentConstants.MAN :
-				case ArgumentConstants.H :
-				case ArgumentConstants.HELP : {
-					helped = true;
-					appHelp.printHelp();
-					break;
-				}
-				case ArgumentConstants.DATE :
-				case ArgumentConstants.TIME : {
-					System.out.println("Currently it is " + Calendar.getInstance().getTime());
-					break;
-				}
-				case "" : {
-					break;
-				}
-				default: {
-					if(!helpIsNeeded && nonOption.matches(".*[a-zA-Z0-9]+.*")) {
-						helpIsNeeded = true;
-					}
-				}
-			}
-		}
-
-		if(helpIsNeeded && !helped) {
-			System.out.println("Maybe try \"help\"?");
-		}
-
-		return true;
-	}
-
     @Override
     public void run(ApplicationArguments args) {
     	ApplicationArguments argsToHandle = args;
@@ -141,7 +48,7 @@ public class ClientApp implements ApplicationRunner {
 
 		appHelp.printWelcomeMessage();
 
-		while(handleArguments(argsToHandle)) {
+		while(handler.handleArguments(argsToHandle)) {
 			Date date = Calendar.getInstance().getTime();
 			System.out.print(dateFormat.format(date) + " Client>");
 
