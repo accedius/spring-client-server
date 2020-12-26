@@ -160,7 +160,7 @@ public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> 
     protected void printError(final Exception e, final String actionName, final ApplicationArguments args) {
         System.err.println("Error on action \"" + actionName + "\" with given args: \"" + Arrays.toString(args.getSourceArgs()) + "\"!");
         System.err.println("Exception message: " + e.getMessage());
-        System.out.println(ExceptionUtils.getStackTrace(e));
+        System.err.println(ExceptionUtils.getStackTrace(e));
     }
 
     protected void throwMustContain(String... optionNames) throws IllegalArgumentException {
