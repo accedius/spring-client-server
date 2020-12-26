@@ -16,23 +16,23 @@ public class StudentCreateDTO extends PersonCreateDTO {
 
     public StudentCreateDTO(String username, String name, Timestamp birthDate, float averageGrade, Set<Integer> workIds) {
         super(username, name, birthDate);
-        this.averageGrade = averageGrade;
-        this.workIds = workIds;
+        this.averageGrade = makeAverageGrade(averageGrade);
+        this.workIds = makeWorkIds(workIds);
     }
 
     public StudentCreateDTO() {
     }
 
-    public void setAverageGrade(float averageGrade) {
+    private float makeAverageGrade(float averageGrade) {
         if(Grades.isGrade(averageGrade)) {
-            this.averageGrade = averageGrade;
+            return averageGrade;
         } else {
-            this.averageGrade = Grades.DEFAULT;
+            return Grades.DEFAULT;
         }
     }
 
-    public void setWorkIds(Set<Integer> workIds) {
-        this.workIds = Objects.requireNonNullElseGet(workIds, this::getDefaultWorkIds);
+    private Set<Integer> makeWorkIds(Set<Integer> workIds) {
+        return Objects.requireNonNullElseGet(workIds, this::getDefaultWorkIds);
     }
 
     public float getAverageGrade() {
