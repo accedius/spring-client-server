@@ -5,10 +5,10 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends BasicDTO<T_DTO> implements Comparable<PersonDTO<T_DTO>> {
-    protected int id;
-    protected String username;
-    protected String name;
-    protected Timestamp birthdate;
+    protected final int id;
+    protected final String username;
+    protected final String name;
+    protected final Timestamp birthdate;
 
     public PersonDTO(int id, String username, String name, Timestamp birthdate) {
         this.id = id;
