@@ -14,6 +14,8 @@ repositories {
 }
 
 dependencies {
+    //TODO entity is dependent on model; when only dependent on entity implementation, model library is included to external libraries too, but is inaccessible from java code
+    implementation 'cz.cvut.fit.baklaal1.tjv-sem:entity:0.1-SNAPSHOT'
     implementation 'cz.cvut.fit.baklaal1.tjv-sem:model:0.1-SNAPSHOT'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

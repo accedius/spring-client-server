@@ -1,6 +1,6 @@
 package cz.cvut.fit.baklaal1.server.business.repository;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Person;
+import cz.cvut.fit.baklaal1.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

@@ -1,8 +1,5 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 import java.util.Set;
@@ -21,15 +18,6 @@ public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
         this.text = text;
         this.authorIds = authorIds;
         this.assessmentId = assessmentId;
-    }
-
-    public WorkDTO(final Work work) {
-        this.id = work.getId() == null ? -1 : work.getId();
-        this.title = work.getTitle();
-        this.text = work.getText();
-        Set<Student> authors = work.getAuthors();
-        this.authorIds = authors.stream().map(Student::getId).collect(Collectors.toSet());
-        this.assessmentId = work.getAssessment() != null ? work.getAssessment().getId() : null;
     }
 
     public int getId() {

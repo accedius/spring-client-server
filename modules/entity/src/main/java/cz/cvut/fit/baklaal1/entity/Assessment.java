@@ -1,4 +1,4 @@
-package cz.cvut.fit.baklaal1.model.data.entity;
+package cz.cvut.fit.baklaal1.entity;
 
 import com.sun.istack.NotNull;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
@@ -88,11 +88,18 @@ public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<Asse
 
     @Override
     public AssessmentDTO toDTO() {
-        return new AssessmentDTO(this);
+        int id = this.getId() == null ? -1 : this.getId();
+        int grade = this.getGrade();
+        int workId = this.getWork().getId();
+        Integer evaluatorId = this.getEvaluator() != null ? this.getEvaluator().getId() : null;
+        return new AssessmentDTO(id, grade, workId, evaluatorId);
     }
 
     @Override
     public AssessmentCreateDTO toCreateDTO() {
-        return new AssessmentCreateDTO(this);
+        int grade = this.getGrade();
+        int workId = this.getWork().getId();
+        Integer evaluatorId = this.getEvaluator() != null ? this.getEvaluator().getId() : null;
+        return new AssessmentCreateDTO(grade, workId, evaluatorId);
     }
 }

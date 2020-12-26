@@ -2,9 +2,9 @@ package cz.cvut.fit.baklaal1.server.business.service;
 
 import cz.cvut.fit.baklaal1.server.business.repository.WorkRepository;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Student;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +114,6 @@ public class WorkService extends BasicService<Work, WorkDTO, WorkCreateDTO> {
 
     @Override
     protected WorkDTO toDTO(Work work) {
-        return new WorkDTO(work);
+        return work.toDTO();
     }
 }

@@ -3,8 +3,8 @@ package cz.cvut.fit.baklaal1.server.business.service;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.repository.StudentRepository;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Student;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,6 +130,6 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
 
     @Override
     protected StudentDTO toDTO(Student student) {
-        return new StudentDTO(student);
+        return student.toDTO();
     }
 }

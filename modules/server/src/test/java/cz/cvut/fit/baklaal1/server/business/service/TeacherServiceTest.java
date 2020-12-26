@@ -1,8 +1,8 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Teacher;
+import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;

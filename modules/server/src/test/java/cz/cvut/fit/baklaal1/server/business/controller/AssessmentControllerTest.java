@@ -1,7 +1,7 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
-import cz.cvut.fit.baklaal1.model.data.entity.*;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.*;
+import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;

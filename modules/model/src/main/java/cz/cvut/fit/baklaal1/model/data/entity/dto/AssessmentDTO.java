@@ -1,7 +1,5 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-
 import java.util.Objects;
 
 public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable<AssessmentDTO> {
@@ -15,13 +13,6 @@ public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable
         this.grade = grade;
         this.workId = workId;
         this.evaluatorId = evaluatorId;
-    }
-
-    public AssessmentDTO(final Assessment assessment) {
-        this.id = assessment.getId() == null ? -1 : assessment.getId();
-        this.grade = assessment.getGrade();
-        this.workId = assessment.getWork().getId();
-        this.evaluatorId = assessment.getEvaluator() != null ? assessment.getEvaluator().getId() : null;
     }
 
     public int getId() {

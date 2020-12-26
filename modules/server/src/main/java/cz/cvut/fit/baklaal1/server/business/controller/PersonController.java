@@ -1,8 +1,8 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
 import cz.cvut.fit.baklaal1.server.business.service.PersonService;
-import cz.cvut.fit.baklaal1.model.data.entity.ConvertibleToDTO;
-import cz.cvut.fit.baklaal1.model.data.entity.Person;
+import cz.cvut.fit.baklaal1.entity.ConvertibleToDTO;
+import cz.cvut.fit.baklaal1.entity.Person;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.ConvertibleModelAssembler;

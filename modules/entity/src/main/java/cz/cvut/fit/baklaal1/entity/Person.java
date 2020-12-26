@@ -1,4 +1,4 @@
-package cz.cvut.fit.baklaal1.model.data.entity;
+package cz.cvut.fit.baklaal1.entity;
 
 import com.sun.istack.NotNull;
 

@@ -1,4 +1,4 @@
-package cz.cvut.fit.baklaal1.model.data.entity;
+package cz.cvut.fit.baklaal1.entity;
 
 import com.sun.istack.NotNull;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherCreateDTO;
@@ -12,6 +12,7 @@ import javax.persistence.OrderBy;
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Entity
 public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, ConvertibleToCreateDTO<TeacherCreateDTO> {
@@ -54,11 +55,28 @@ public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, Con
 
     @Override
     public TeacherDTO toDTO() {
-        return new TeacherDTO(this);
+        int id = this.getId() == null ? -1 : this.getId();
+        String username = this.getUsername();
+        String name = this.getName();
+        Timestamp birthdate = this.getBirthdate();
+
+        double wage = this.getWage();
+        Set<Assessment> assessments = this.getAssessments();
+        Set<Integer> assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+
+        return new TeacherDTO(id, username, name, birthdate, wage, assessmentIds);
     }
 
     @Override
     public TeacherCreateDTO toCreateDTO() {
-        return new TeacherCreateDTO(this);
+        String username = this.getUsername();
+        String name = this.getName();
+        Timestamp birthdate = this.getBirthdate();
+
+        double wage = this.getWage();
+        Set<Assessment> assessments = this.getAssessments();
+        Set<Integer> assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+
+        return new TeacherCreateDTO(username, name, birthdate, wage, assessmentIds);
     }
 }

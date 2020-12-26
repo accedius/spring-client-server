@@ -1,8 +1,5 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
-
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
@@ -18,11 +15,7 @@ public class TeacherCreateDTO extends PersonCreateDTO {
         this.assessmentIds = assessmentIds;
     }
 
-    public TeacherCreateDTO(Teacher teacher) {
-        super(teacher.getUsername(), teacher.getName(), teacher.getBirthdate());
-        this.wage = teacher.getWage();
-        Set<Assessment> assessments = teacher.getAssessments();
-        this.assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+    public TeacherCreateDTO() {
     }
 
     public double getWage() {

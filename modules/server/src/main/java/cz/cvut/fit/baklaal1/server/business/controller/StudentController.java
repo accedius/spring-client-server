@@ -2,7 +2,7 @@ package cz.cvut.fit.baklaal1.server.business.controller;
 
 import cz.cvut.fit.baklaal1.server.business.service.StudentService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionInBusinessLogic;
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
+import cz.cvut.fit.baklaal1.entity.Student;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.StudentModelAssembler;

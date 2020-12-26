@@ -1,7 +1,5 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Person;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -17,13 +15,6 @@ public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends BasicDTO
         this.username = username;
         this.name = name;
         this.birthdate = birthdate;
-    }
-
-    public PersonDTO(final Person person) {
-        this.id = person.getId() == null ? -1 : person.getId();
-        this.username = person.getUsername();
-        this.name = person.getName();
-        this.birthdate = person.getBirthdate();
     }
 
     public int getId() {

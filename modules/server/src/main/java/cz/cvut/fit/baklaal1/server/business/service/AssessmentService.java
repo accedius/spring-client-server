@@ -2,9 +2,9 @@ package cz.cvut.fit.baklaal1.server.business.service;
 
 import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Teacher;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +106,6 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
 
     @Override
     protected AssessmentDTO toDTO(Assessment assessment) {
-        return new AssessmentDTO(assessment);
+        return assessment.toDTO();
     }
 }

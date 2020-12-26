@@ -1,8 +1,5 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
-
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,13 +12,6 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
         super(id, username, name, birthDate);
         this.averageGrade = averageGrade;
         this.workIds = workIds;
-    }
-
-    public StudentDTO(final Student student) {
-        super(student);
-        this.averageGrade = student.getAverageGrade();
-        Set<Work> works = student.getWorks();
-        this.workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
     }
 
     public float getAverageGrade() {
