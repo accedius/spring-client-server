@@ -22,6 +22,7 @@ import java.util.*;
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class ClientApp implements ApplicationRunner {
 	private static final String formatForDate = "HH:mm:ss";
+	private static boolean welcomed = false;
 
 	@Autowired
 	private MainHandler handler;
@@ -30,7 +31,15 @@ public class ClientApp implements ApplicationRunner {
 	private ClientAppHelp appHelp;
 
     public static void main(String[] args) {
-        SpringApplication.run(ClientApp.class, args);
+    	//TODO do better, see https://stackoverflow.com/questions/4159802/how-can-i-restart-a-java-application
+		try {
+        	SpringApplication.run(ClientApp.class, args);
+		} catch (IllegalStateException e) {
+			System.err.println("Error on parsing given line!");
+			System.err.println("Exception message: " + e.getMessage());
+			System.err.println(ExceptionUtils.getStackTrace(e));
+			main(new String[]{"helpNeeded"});
+		}
     }
 
     @Bean
@@ -46,7 +55,10 @@ public class ClientApp implements ApplicationRunner {
 		Scanner in = new Scanner(System.in);
 		SimpleDateFormat dateFormat = new SimpleDateFormat(formatForDate);
 
-		appHelp.printWelcomeMessage();
+		if(!welcomed) {
+			appHelp.printWelcomeMessage();
+			welcomed = true;
+		}
 
 		while(handler.handleArguments(argsToHandle)) {
 			Date date = Calendar.getInstance().getTime();
