@@ -61,7 +61,7 @@ public class Student extends Person implements ConvertibleToDTO<StudentDTO>, Con
 
         float averageGrade = this.getAverageGrade();
         Set<Work> works = this.getWorks();
-        Set<Integer> workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
+        Set<Integer> workIds = works.stream().map(Work::getId).collect(Collectors.toCollection(TreeSet::new));
 
         return new StudentDTO(id, username, name, birthdate, averageGrade, workIds);
     }
@@ -74,7 +74,7 @@ public class Student extends Person implements ConvertibleToDTO<StudentDTO>, Con
 
         float averageGrade = this.getAverageGrade();
         Set<Work> works = this.getWorks();
-        Set<Integer> workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
+        Set<Integer> workIds = works.stream().map(Work::getId).collect(Collectors.toCollection(TreeSet::new));
 
         return new StudentCreateDTO(username, name, birthdate, averageGrade, workIds);
     }

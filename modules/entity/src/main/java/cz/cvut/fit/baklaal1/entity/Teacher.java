@@ -62,7 +62,7 @@ public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, Con
 
         double wage = this.getWage();
         Set<Assessment> assessments = this.getAssessments();
-        Set<Integer> assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+        Set<Integer> assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toCollection(TreeSet::new));
 
         return new TeacherDTO(id, username, name, birthdate, wage, assessmentIds);
     }
@@ -75,7 +75,7 @@ public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, Con
 
         double wage = this.getWage();
         Set<Assessment> assessments = this.getAssessments();
-        Set<Integer> assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
+        Set<Integer> assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toCollection(TreeSet::new));
 
         return new TeacherCreateDTO(username, name, birthdate, wage, assessmentIds);
     }

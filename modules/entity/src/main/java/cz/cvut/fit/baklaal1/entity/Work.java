@@ -117,7 +117,7 @@ public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO>, Conver
         String title = this.getTitle();
         String text = this.getText();
         Set<Student> authors = this.getAuthors();
-        Set<Integer> authorIds = authors.stream().map(Student::getId).collect(Collectors.toSet());
+        Set<Integer> authorIds = authors.stream().map(Student::getId).collect(Collectors.toCollection(TreeSet::new));
         Integer assessmentId = this.getAssessment() != null ? this.getAssessment().getId() : null;
 
         return new WorkDTO(id, title, text, authorIds, assessmentId);
@@ -128,7 +128,7 @@ public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO>, Conver
         String title = this.getTitle();
         String text = this.getText();
         Set<Student> authors = this.getAuthors();
-        Set<Integer> authorIds = authors.stream().map(Student::getId).collect(Collectors.toSet());
+        Set<Integer> authorIds = authors.stream().map(Student::getId).collect(Collectors.toCollection(TreeSet::new));
         Integer assessmentId = this.getAssessment() != null ? this.getAssessment().getId() : null;
 
         return new WorkCreateDTO(title, text, authorIds, assessmentId);
