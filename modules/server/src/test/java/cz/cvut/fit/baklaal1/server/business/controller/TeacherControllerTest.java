@@ -8,6 +8,7 @@ import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.service.TeacherService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
+import cz.cvut.fit.baklaal1.server.suite.TeacherTestSuite;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -35,14 +36,12 @@ import java.util.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureMockMvc
 @DisplayName("TeacherController Test")
-public class TeacherControllerTest {
+public class TeacherControllerTest extends TeacherTestSuite {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private TeacherService teacherServiceMock;
-
-    private static final String postAddress = TeacherController.TEACHER_DOMAIN_ROOT;
 
     @Test
     public void postConflict() throws Exception {
@@ -233,69 +232,5 @@ public class TeacherControllerTest {
                 .accept("application/json")
                 .contentType("application/json"));
         checkDTOList(result, teachers);
-    }
-
-    private Teacher generateTeacher(int i) {
-        Teacher teacher = new Teacher("username"+i, "name"+i, null, 10000d*i);
-        ReflectionTestUtils.setField(teacher, "id", i);
-        return teacher;
-    }
-
-    private TeacherDTO generateTeacherDTO(int i) {
-        return generateTeacher(i).toDTO();
-    }
-
-    private TeacherCreateDTO generateTeacherCreateDTO(int i) {
-        return generateTeacher(i).toCreateDTO();
-    }
-
-    private void checkDTOPage(ResultActions resultToCheck, List<Teacher> teachers) throws Exception {
-        final int size = teachers.size();
-        for (int i = 0; i < size; i++) {
-            resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$._embedded.teacherDTOList[" + i + "].id", CoreMatchers.is(teachers.get(i).getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.teacherDTOList[" + i + "].username", CoreMatchers.is(teachers.get(i).getUsername())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.teacherDTOList[" + i + "].name", CoreMatchers.is(teachers.get(i).getName())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.teacherDTOList[" + i + "].birthdate", CoreMatchers.is(teachers.get(i).getBirthdate())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.teacherDTOList[" + i + "].wage", CoreMatchers.is(teachers.get(i).getWage())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.teacherDTOList[" + i + "].assessmentIds", CoreMatchers.is(Matchers.empty())));
-        }
-    }
-
-    private void checkDTOList(ResultActions resultToCheck, List<Teacher> teachers) throws Exception {
-        final int size = teachers.size();
-        for (int i = 0; i < size; i++) {
-            resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].id", CoreMatchers.is(teachers.get(i).getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].username", CoreMatchers.is(teachers.get(i).getUsername())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].name", CoreMatchers.is(teachers.get(i).getName())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].birthdate", CoreMatchers.is(teachers.get(i).getBirthdate())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].wage", CoreMatchers.is(teachers.get(i).getWage())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].assessmentIds", CoreMatchers.is(Matchers.empty())));
-        }
-    }
-
-    private <E, V> E setField(E entity, String fieldName, V fieldValue) {
-        ReflectionTestUtils.setField(entity, fieldName, fieldValue);
-        return entity;
-    }
-
-    //TODO move to Jackson preferably, or to GSON or JSON-Java
-    private String generateTeacherCreateDTOJson(int i) {
-        String json = "{\"username\" : \"username" + i + "\", \"name\" : \"name" + i + "\", \"birthdate\" : \"null\", \"wage\" : \"" + 10000d*i +"\", \"assessmentIds\" : [] }";
-        return json;
-    }
-
-    private void checkLinks(ResultActions resultToCheck, TeacherDTO checkAgainst) throws Exception {
-        resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$._links.self.href", CoreMatchers.endsWith(postAddress + "/" + checkAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$._links.collection.href", CoreMatchers.containsString(postAddress)));
-    }
-
-    private void checkResponse(ResultActions resultToCheck, TeacherDTO checkAgainst) throws Exception {
-        resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(checkAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username", CoreMatchers.is(checkAgainst.getUsername())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(checkAgainst.getName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.birthdate", CoreMatchers.is(checkAgainst.getBirthdate())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.wage", CoreMatchers.is(checkAgainst.getWage())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assessmentIds", CoreMatchers.is(Matchers.empty())));
-        checkLinks(resultToCheck, checkAgainst);
     }
 }

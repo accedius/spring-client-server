@@ -8,6 +8,7 @@ import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.repository.TeacherRepository;
+import cz.cvut.fit.baklaal1.server.suite.TeacherTestSuite;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -33,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 //TODO maybe should just use one DataSource for all the Test classes, since Spring creates HikariDataSource pool for each Test class in runtime, causing opening and closing same database Connection for each Test class
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @DisplayName("TeacherService Test")
-class TeacherServiceTest {
+class TeacherServiceTest extends TeacherTestSuite {
     @Autowired
     private TeacherService teacherService;
 
@@ -217,44 +218,5 @@ class TeacherServiceTest {
         ArgumentCaptor<Teacher> argumentCaptor = ArgumentCaptor.forClass(Teacher.class);
         Mockito.verify(teacherRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
         assertEquals(teacherNewToReturn, argumentCaptor.getValue());
-    }
-
-    private Teacher generateTeacher(int i) {
-        String username = "teacher" + i;
-        String name = "teacherName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        double wage = i * 10000;
-        Teacher teacher = new Teacher(username, name, birthdate, wage);
-        ReflectionTestUtils.setField(teacher, "id", i);
-        return teacher;
-    }
-
-    private <L extends Collection<Teacher>> L fillTeacherCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateTeacher(i));
-        }
-        return collection;
-    }
-
-    private TeacherDTO generateTeacherDTO(int i) {
-        return generateTeacher(i).toDTO();
-    }
-
-    private <L extends Collection<TeacherDTO>> L fillTeacherDTOCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateTeacherDTO(i));
-        }
-        return collection;
-    }
-
-    private TeacherCreateDTO generateTeacherCreateDTO(int i) {
-        return generateTeacher(i).toCreateDTO();
-    }
-
-    private <L extends Collection<Integer>> L fillIntegerCollectionUpTo(L collection, int limit) {
-        for (int i = 0; i < limit; i++) {
-            collection.add(i);
-        }
-        return collection;
     }
 }

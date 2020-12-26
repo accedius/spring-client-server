@@ -6,6 +6,7 @@ import cz.cvut.fit.baklaal1.entity.Student;
 import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
+import cz.cvut.fit.baklaal1.server.suite.StudentTestSuite;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,7 @@ import java.util.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureMockMvc
 @DisplayName("StudentController Test")
-class StudentControllerTest {
+class StudentControllerTest extends StudentTestSuite {
     @Autowired
     private MockMvc mockMvc;
 

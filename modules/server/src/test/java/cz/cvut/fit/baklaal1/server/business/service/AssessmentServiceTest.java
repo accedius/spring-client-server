@@ -6,6 +6,7 @@ import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
+import cz.cvut.fit.baklaal1.server.suite.AssessmentTestSuite;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 //TODO maybe should just use one DataSource for all the Test classes, since Spring creates HikariDataSource pool for each Test class in runtime, causing opening and closing same database Connection for each Test class
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @DisplayName("AssessmentService Test")
-class AssessmentServiceTest {
+class AssessmentServiceTest extends AssessmentTestSuite {
     @Autowired
     private AssessmentService assessmentService;
 
