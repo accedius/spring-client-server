@@ -43,8 +43,4 @@ test {
     maxParallelForks = 2;
 }
 
-tasks.withType(Test) {
-    testLogging {
-        events "passed", "failed"
-    }
-}
+apply from: file('testConfig.gradle')
