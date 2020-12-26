@@ -24,7 +24,7 @@
 
 - Switch to branch `kb3` or later in VCS settings of the directory
 - Run gradle task `Install` on `model` project at subdirectory `modules/model`
-- Run gradle task `Install` on `entity` module at subdirectory `modules/model` from root project (tried out what's the difference between module and subproject)
+- Run gradle task `Install` on `entity` module at subdirectory `modules/entity` from root project (tried out what's the difference between module and subproject)
 - Run `ServerApp` in project `server` at subdirectory `modules/server`
 
 ### Alternatively you can directly use commands from shell scripts:
