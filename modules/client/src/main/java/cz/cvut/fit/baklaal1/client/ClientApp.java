@@ -118,7 +118,7 @@ public class ClientApp implements ApplicationRunner {
 					break;
 				}
 				default: {
-					if(nonOption.matches("^[a-zA-Z0-9]*$") && !helpIsNeeded) {
+					if(!helpIsNeeded && nonOption.matches(".*[a-zA-Z0-9]+.*")) {
 						helpIsNeeded = true;
 					}
 				}
