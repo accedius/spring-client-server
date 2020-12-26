@@ -38,17 +38,21 @@ public abstract class BasicTestSuite {
     }
 
     protected Student generateStudent(int i) {
-        String username = "studentUsername" + "_" + this.hashCode() + "_" + i;
+        String username = generateUsername("student", i);
         String name = "studentName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
+        Timestamp birthdate = null;
         float averageGrade = generateAverageGrade(i);
         Student student = new Student(username, name, birthdate, averageGrade);
         ReflectionTestUtils.setField(student, "id", i);
         return student;
     }
 
+    protected String generateTitle(int i) {
+        return "title" + "_" + this.hashCode() + "_" + i;
+    }
+
     protected Work generateWork(int i) {
-        String title = "title" + i;
+        String title = generateTitle(i);
         String text = "text" + i;
         Set<Student> authors = new TreeSet<>();
         Assessment assessment = null;
@@ -57,10 +61,14 @@ public abstract class BasicTestSuite {
         return work;
     }
 
+    protected String generateUsername(String profession, int i) {
+        return profession + "Username" + "_" + this.hashCode() + "_" + i;
+    }
+
     protected Teacher generateTeacher(int i) {
-        String username = "teacherUsername" + "_" + this.hashCode() + "_" + i;
+        String username = generateUsername("teacher", i);
         String name = "teacherName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
+        Timestamp birthdate = null;
         double wage = i * 10000;
         Teacher teacher = new Teacher(username, name, birthdate, wage);
         ReflectionTestUtils.setField(teacher, "id", i);
@@ -73,10 +81,8 @@ public abstract class BasicTestSuite {
 
     protected Assessment generateAssessment(int i) {
         int grade = generateGrade(i);
-        Work work = new Work("title"+i, "text"+i);
-        ReflectionTestUtils.setField(work, "id", i);
-        Teacher teacher = new Teacher("username"+i, "name"+i, new Timestamp(1000000000*i), 10000d*i);
-        ReflectionTestUtils.setField(teacher, "id", i);
+        Work work = generateWork(i);
+        Teacher teacher = generateTeacher(i);
         Assessment assessment = new Assessment(grade, work, teacher);
         ReflectionTestUtils.setField(assessment, "id", i);
         return assessment;

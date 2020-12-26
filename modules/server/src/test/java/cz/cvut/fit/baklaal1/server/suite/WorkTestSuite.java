@@ -39,7 +39,7 @@ public class WorkTestSuite extends BasicTestSuite {
 
     //TODO move to Jackson preferably, or to GSON or JSON-Java
     protected String generateWorkCreateDTOJson(int i) {
-        String json = "{\"title\" : \"title" + i + "\", \"text\" : \"text" + i + "\", \"authorIds\" : [], \"assessmentId\" : null }";
+        String json = "{\"title\" : \"" + generateTitle(i) + "\", \"text\" : \"text" + i + "\", \"authorIds\" : [], \"assessmentId\" : null }";
         return json;
     }
 

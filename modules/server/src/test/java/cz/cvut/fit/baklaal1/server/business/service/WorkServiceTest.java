@@ -47,250 +47,126 @@ class WorkServiceTest extends WorkTestSuite {
 
     @Test
     public void findAll() {
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int authorId = 10;
-        final int work1Id = 1337;
-        final int work2Id = 322;
+        final int allWorksCnt = 10;
+        List<Work> allWorksToReturn = fillWorkCollection(new ArrayList<>(), allWorksCnt);
+        List<Work> allWorksToReceive = fillWorkCollection(new ArrayList<>(), allWorksCnt);
 
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-        Work work1 = new Work(title1, text1, authors, null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, authors, null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        BDDMockito.given(workRepositoryMock.findAll()).willReturn(allWorksToReturn);
 
-        List<Work> allWorks = new ArrayList<>();
-        allWorks.add(work1);
-        allWorks.add(work2);
+        List<Work> receivedAllWorks = workService.findAll();
 
-        BDDMockito.given(workRepositoryMock.findAll()).willReturn(new ArrayList<>(allWorks));
+        assertEquals(allWorksToReceive, receivedAllWorks);
 
-        List<Work> returnedWorks = workService.findAll();
-        assertEquals(allWorks, returnedWorks);
-
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findAll();
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findAll();
     }
 
     @Test
     public void findAllAsDTO() {
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int authorId = 10;
-        final int work1Id = 1337;
-        final int work2Id = 322;
+        final int allWorksCnt = 10;
+        List<Work> allWorksToReturn = fillWorkCollection(new ArrayList<>(), allWorksCnt);
+        List<WorkDTO> allWorksToReceiveAsDTO = fillWorkDTOCollection(new ArrayList<>(), allWorksCnt);
 
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-        Work work1 = new Work(title1, text1, authors, null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, authors, null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        BDDMockito.given(workRepositoryMock.findAll()).willReturn(allWorksToReturn);
 
-        List<Work> allWorks = new ArrayList<>();
-        allWorks.add(work1);
-        allWorks.add(work2);
+        List<WorkDTO> receivedAllWorksAsDTO = workService.findAllAsDTO();
 
-        BDDMockito.given(workRepositoryMock.findAll()).willReturn(new ArrayList<>(allWorks));
+        assertEquals(allWorksToReceiveAsDTO, receivedAllWorksAsDTO);
 
-        Set<Integer> authorIds = new TreeSet<>();
-        authorIds.add(authorId);
-        WorkDTO work1DTO = new WorkDTO(work1Id, title1, text1, authorIds, null);
-        WorkDTO work2DTO = new WorkDTO(work2Id, title2, text2, authorIds, null);
-        List<WorkDTO> expectedWorksAsDTO = new ArrayList<>();
-        expectedWorksAsDTO.add(work1DTO);
-        expectedWorksAsDTO.add(work2DTO);
-
-        List<WorkDTO> returnedWorksAsDTO = workService.findAllAsDTO();
-        assertEquals(expectedWorksAsDTO, returnedWorksAsDTO);
-
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findAll();
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findAll();
     }
 
     @Test
     public void pageAll() {
-        final int page = 0;
-        final int size = 2;
-        final int total = 8;
+        final int allWorksCnt = 10;
+        final int page = 1;
+        final int pageSize = 3;
+        List<Work> allWorksToReturn = fillWorkCollection(new ArrayList<>(), allWorksCnt);
+        List<Work> allWorksToReceive = fillWorkCollection(new ArrayList<>(), allWorksCnt);
 
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int authorId = 10;
-        final int work1Id = 1337;
-        final int work2Id = 322;
+        final Pageable pageableRequested = PageRequest.of(page, pageSize);
+        final Page<Work> pageExpected = new PageImpl<>(allWorksToReceive, pageableRequested, allWorksCnt);
+        final Page<Work> pageToReturn = new PageImpl<>(allWorksToReturn, pageableRequested, allWorksCnt);
 
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-        Work work1 = new Work(title1, text1, authors, null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, authors, null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        BDDMockito.given(workRepositoryMock.findAll(pageableRequested)).willReturn(pageToReturn);
 
-        final Pageable pageableRequested =  PageRequest.of(page, size);
-        final List<Work> data = List.of(work1, work2);
-        final Page<Work> pageExpected = new PageImpl<>(data, pageableRequested, total);
-        final Page<Work> pageToReturn = new PageImpl<>(data, pageableRequested, total);
+        final Page<Work> pageReceived = workService.pageAll(pageableRequested);
 
-        BDDMockito.given(workRepositoryMock.findAll(any(Pageable.class))).willReturn(pageToReturn);
-
-        final Page<Work> pageReturned = workService.pageAll(pageableRequested);
-        assertEquals(pageExpected, pageReturned);
+        assertEquals(pageExpected, pageReceived);
 
         ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findAll(pageableArgumentCaptor.capture());
-        Pageable pageableProvided = pageableArgumentCaptor.getValue();
-        assertEquals(pageableRequested, pageableProvided);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findAll(pageableArgumentCaptor.capture());
+        assertEquals(pageableRequested, pageableArgumentCaptor.getValue());
     }
 
     @Test
     public void findAllByIds() {
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int authorId = 10;
-        final int work1Id = 1337;
-        final int work2Id = 322;
+        final int allWorksCnt = 5;
+        List<Work> allWorksToReturn = fillWorkCollection(new ArrayList<>(), allWorksCnt);
+        Set<Work> allWorksToReceive = fillWorkCollection(new TreeSet<>(), allWorksCnt);
+        Set<Integer> allWantedIds = fillIntegerCollectionUpTo(new HashSet<>(), allWorksCnt);
 
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-        Work work1 = new Work(title1, text1, authors, null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, authors, null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        BDDMockito.given(workRepositoryMock.findAllById(allWantedIds)).willReturn(allWorksToReturn);
 
-        Set<Work> allWorksByIdExpected = new TreeSet<>();
-        allWorksByIdExpected.add(work1);
-        allWorksByIdExpected.add(work2);
+        Set<Work> receivedWorks = workService.findAllByIds(new TreeSet<>(allWantedIds));
+        assertEquals(allWorksToReceive, receivedWorks);
 
-        Set<Integer> wantedIds = new TreeSet<>();
-        wantedIds.add(work1Id);
-        wantedIds.add(work2Id);
-
-        BDDMockito.given(workRepositoryMock.findAllById(wantedIds)).willReturn(new ArrayList<>(allWorksByIdExpected));
-        Set<Work> allWorksByIdsGivenProvided = workService.findAllByIds(new TreeSet<>(wantedIds));
-        assertEquals(allWorksByIdExpected, allWorksByIdsGivenProvided);
-
-        ArgumentCaptor<Iterable<Integer>> idsCaptor = ArgumentCaptor.forClass(Iterable.class);
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findAllById(idsCaptor.capture());
-        Iterable<Integer> wantedIdsProvided = idsCaptor.getValue();
-        assertEquals(wantedIds, wantedIdsProvided);
+        ArgumentCaptor<Iterable<Integer>> argumentCaptor = ArgumentCaptor.forClass(Iterable.class);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findAllById(argumentCaptor.capture());
+        assertEquals(allWantedIds, argumentCaptor.getValue());
     }
 
     @Test
     public void findAllByIdsAsDTO() {
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int authorId = 10;
-        final int work1Id = 1337;
-        final int work2Id = 322;
+        final int allWorksCnt = 5;
+        List<Work> allWorksToReturn = fillWorkCollection(new ArrayList<>(), allWorksCnt);
+        Set<WorkDTO> allWorksToReceive = fillWorkDTOCollection(new TreeSet<>(), allWorksCnt);
+        Set<Integer> allWantedIds = fillIntegerCollectionUpTo(new HashSet<>(), allWorksCnt);
 
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-        Work work1 = new Work(title1, text1, authors, null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, authors, null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        BDDMockito.given(workRepositoryMock.findAllById(allWantedIds)).willReturn(allWorksToReturn);
 
-        Set<Work> allWorksByIdExpected = new TreeSet<>();
-        allWorksByIdExpected.add(work1);
-        allWorksByIdExpected.add(work2);
+        Set<WorkDTO> receivedWorks = workService.findAllByIdsAsDTO(new TreeSet<>(allWantedIds));
+        assertEquals(allWorksToReceive, receivedWorks);
 
-        Set<Integer> wantedIds = new TreeSet<>();
-        wantedIds.add(work1Id);
-        wantedIds.add(work2Id);
-
-        Set<WorkDTO> allWorksByIdExpectedAsDTO = new TreeSet<>();
-        allWorksByIdExpectedAsDTO.add(work1.toDTO());
-        allWorksByIdExpectedAsDTO.add(work2.toDTO());
-
-        BDDMockito.given(workRepositoryMock.findAllById(wantedIds)).willReturn(new ArrayList<>(allWorksByIdExpected));
-        Set<WorkDTO> allWorksByIdsGivenProvided = workService.findAllByIdsAsDTO(new TreeSet<>(wantedIds));
-        assertEquals(allWorksByIdExpectedAsDTO, allWorksByIdsGivenProvided);
-
-        ArgumentCaptor<Iterable<Integer>> idsCaptor = ArgumentCaptor.forClass(Iterable.class);
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findAllById(idsCaptor.capture());
-        Iterable<Integer> wantedIdsProvided = idsCaptor.getValue();
-        assertEquals(wantedIds, wantedIdsProvided);
+        ArgumentCaptor<Iterable<Integer>> argumentCaptor = ArgumentCaptor.forClass(Iterable.class);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findAllById(argumentCaptor.capture());
+        assertEquals(allWantedIds, argumentCaptor.getValue());
     }
 
     @Test
     public void findById() {
-        final String title = "Title1";
-        final String text = "Text1";
-        final int authorId = 10;
-        final int workId = 1337;
-
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-
-        Work workExpected = new Work(title, text, authors, null);
-        ReflectionTestUtils.setField(workExpected, "id", workId);
-        Work workToReturn = new Work(title, text, authors, null);
-        ReflectionTestUtils.setField(workToReturn, "id", workId);
+        final int workId = 10;
+        Work workToReturn = generateWork(workId);
+        Work workToReceive = generateWork(workId);
 
         BDDMockito.given(workRepositoryMock.findById(workId)).willReturn(Optional.of(workToReturn));
-        Work workProvided = workService.findById(workId).orElseThrow();
-        assertEquals(workExpected, workProvided);
 
-        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findById(idCaptor.capture());
-        Integer idCaptured = idCaptor.getValue();
-        assertEquals(workId, idCaptured);
+        Work received = workService.findById(workId).orElseThrow();
+        assertEquals(workToReceive, received);
+
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findById(argumentCaptor.capture());
+        assertEquals(workId, argumentCaptor.getValue());
     }
 
     @Test
     public void findByIdAsDTO() {
-        final String title = "Title1";
-        final String text = "Text1";
-        final int authorId = 10;
-        final int workId = 1337;
-
-        Student author = new Student("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(author, "id", authorId);
-        Set<Student> authors = new TreeSet<>();
-        authors.add(author);
-
-        Set<Integer> authorIds = new TreeSet<>();
-        authorIds.add(authorId);
-
-        WorkDTO workDTOExpected = new WorkDTO(workId, title, text, authorIds, null);
-        Work workToReturn = new Work(title, text, authors, null);
-        ReflectionTestUtils.setField(workToReturn, "id", workId);
+        final int workId = 10;
+        Work workToReturn = generateWork(workId);
+        WorkDTO workDTOToReceive = generateWorkDTO(workId);
 
         BDDMockito.given(workRepositoryMock.findById(workId)).willReturn(Optional.of(workToReturn));
-        WorkDTO workDTOProvided = workService.findByIdAsDTO(workId).orElseThrow();
-        assertEquals(workDTOExpected, workDTOProvided);
 
-        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
-        Mockito.verify(workRepositoryMock, Mockito.times(1)).findById(idCaptor.capture());
-        Integer idCaptured = idCaptor.getValue();
-        assertEquals(workId, idCaptured);
+        WorkDTO receivedDTO = workService.findByIdAsDTO(workId).orElseThrow();
+        assertEquals(workDTOToReceive, receivedDTO);
+
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).findById(argumentCaptor.capture());
+        assertEquals(workId, argumentCaptor.getValue());
     }
 
     @Test
     public void delete() {
-        final int workId = 1337;
+        final int workId = 10;
 
         BDDMockito.doNothing().when(workRepositoryMock).deleteById(workId);
 
@@ -298,11 +174,70 @@ class WorkServiceTest extends WorkTestSuite {
 
         ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
         Mockito.verify(workRepositoryMock, Mockito.times(1)).deleteById(idCaptor.capture());
-        Integer idCaptured = idCaptor.getValue();
-        assertEquals(workId, idCaptured);
+        assertEquals(workId, idCaptor.getValue());
     }
 
     @Test
+    public void create() throws Exception {
+        final int workId = 2;
+        Work workToReturn = generateWork(workId);
+
+        Set<Student> authors = new TreeSet<>();
+        Student author = generateStudent(workId);
+        authors.add(author);
+        workToReturn.setAuthors(authors);
+
+        WorkCreateDTO workCreateDTO = workToReturn.toCreateDTO();
+        WorkDTO workDTOToReceive = workToReturn.toDTO();
+
+        BDDMockito.given(workRepositoryMock.save(any(Work.class))).willReturn(workToReturn);
+        BDDMockito.given(workRepositoryMock.findAllByTitleAndAuthorsIn(any(String.class), any())).willReturn(new TreeSet<>());
+        BDDMockito.given(studentServiceMock.findAllByIds(workCreateDTO.getAuthorIds())).willReturn(workToReturn.getAuthors());
+
+        WorkDTO created = workService.create(workCreateDTO);
+        assertEquals(workDTOToReceive, created);
+
+        ArgumentCaptor<Work> argumentCaptor = ArgumentCaptor.forClass(Work.class);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
+        assertEquals(workToReturn, argumentCaptor.getValue());
+    }
+
+    @Test
+    public void update() throws Exception {
+        final int workId = 2;
+        final int newGenerator = workId + 1;
+        Work workOld = generateWork(workId);
+
+        Assessment newAssessment = generateAssessment(newGenerator);
+
+        Work workNewToReturn = generateWork(newGenerator);
+        ReflectionTestUtils.setField(workNewToReturn, "id", workId);
+        workNewToReturn.setAssessment(newAssessment);
+
+        Set<Student> authors = new TreeSet<>();
+        Student author = generateStudent(workId);
+        authors.add(author);
+        workNewToReturn.setAuthors(authors);
+
+        newAssessment.setWork(workNewToReturn);
+
+        WorkCreateDTO workNewCreateDTO = workNewToReturn.toCreateDTO();
+        WorkDTO workNewDTOToReceive = workNewToReturn.toDTO();
+
+        BDDMockito.given(workRepositoryMock.save(any(Work.class))).willReturn(workNewToReturn);
+        BDDMockito.given(workRepositoryMock.findById(workId)).willReturn(Optional.of(workOld));
+        BDDMockito.given(studentServiceMock.findAllByIds(workNewCreateDTO.getAuthorIds())).willReturn(workNewToReturn.getAuthors());
+        BDDMockito.given(assessmentServiceMock.findById(newGenerator)).willReturn(Optional.of(newAssessment));
+
+        WorkDTO updated = workService.create(workNewCreateDTO);
+        assertEquals(workNewDTOToReceive, updated);
+
+        ArgumentCaptor<Work> argumentCaptor = ArgumentCaptor.forClass(Work.class);
+        Mockito.verify(workRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
+        assertEquals(workNewToReturn, argumentCaptor.getValue());
+    }
+
+    /*@Test
     public void create() throws Exception {
         final String title = "Title";
         final String text = "Text";
@@ -384,7 +319,7 @@ class WorkServiceTest extends WorkTestSuite {
         Work workProvidedToSave = argumentCaptor.getValue();
         assertEquals(newTitle, workProvidedToSave.getTitle());
         assertEquals(newText, workProvidedToSave.getText());
-    }
+    }*/
 
     @Test
     public void findAllByTitleAsDTO() {

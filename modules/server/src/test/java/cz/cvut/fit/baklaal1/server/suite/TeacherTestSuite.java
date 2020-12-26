@@ -63,7 +63,7 @@ public class TeacherTestSuite extends BasicTestSuite {
 
     //TODO move to Jackson preferably, or to GSON or JSON-Java
     protected String generateTeacherCreateDTOJson(int i) {
-        String json = "{\"username\" : \"username" + i + "\", \"name\" : \"name" + i + "\", \"birthdate\" : \"null\", \"wage\" : \"" + 10000d*i +"\", \"assessmentIds\" : [] }";
+        String json = "{\"username\" : \"" + generateUsername("teacher", i) + "\", \"name\" : \"teacherName" + i + "\", \"birthdate\" : \"null\", \"wage\" : \"" + 10000d*i +"\", \"assessmentIds\" : [] }";
         return json;
     }
 

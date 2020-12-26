@@ -64,7 +64,7 @@ public class StudentTestSuite extends BasicTestSuite {
 
     //TODO move to Jackson preferably, or to GSON or JSON-Java
     protected String generateStudentCreateDTOJson(int i) {
-        String json = "{\"username\" : \"username" + i + "\", \"name\" : \"name" + i + "\", \"birthdate\" : \"null\", \"averageGrade\" : \"" + generateAverageGrade(i) +"\", \"workIds\" : [] }";
+        String json = "{\"username\" : \"" + generateUsername("student", i) + "\", \"name\" : \"studentName" + i + "\", \"birthdate\" : \"null\", \"averageGrade\" : \"" + generateAverageGrade(i) +"\", \"workIds\" : [] }";
         return json;
     }
 
