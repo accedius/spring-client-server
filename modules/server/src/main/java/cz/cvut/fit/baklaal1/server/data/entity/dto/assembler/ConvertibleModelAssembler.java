@@ -1,8 +1,8 @@
 package cz.cvut.fit.baklaal1.server.data.entity.dto.assembler;
 
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.server.business.controller.BasicController;
 import cz.cvut.fit.baklaal1.entity.ConvertibleToDTO;
-import cz.cvut.fit.baklaal1.model.data.entity.dto.ReadableId;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -10,7 +10,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import java.util.Collection;
 
-public abstract class ConvertibleModelAssembler<T extends ConvertibleToDTO<T_DTO>, T_DTO extends RepresentationModel<T_DTO> & ReadableId> extends RepresentationModelAssemblerSupport<T, T_DTO> {
+public abstract class ConvertibleModelAssembler<T extends ConvertibleToDTO<T_DTO>, T_DTO extends BasicDTO<T_DTO>> extends RepresentationModelAssemblerSupport<T, T_DTO> {
     private final Class<? extends BasicController> controllerClass;
 
     public ConvertibleModelAssembler(Class<? extends BasicController> controllerClass, Class<T_DTO> resourceType) {
@@ -26,7 +26,7 @@ public abstract class ConvertibleModelAssembler<T extends ConvertibleToDTO<T_DTO
     }
 
     public T_DTO addLinksToModel(T_DTO model) {
-        model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readById(model.readId())).withSelfRel());
+        model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readById(model.getId())).withSelfRel());
         model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(controllerClass).readPage(0, 10)).withRel(IanaLinkRelations.COLLECTION));
         return model;
     }

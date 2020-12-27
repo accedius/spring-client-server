@@ -3,25 +3,15 @@ package cz.cvut.fit.baklaal1.model.data.entity.dto;
 import java.util.Objects;
 
 public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable<AssessmentDTO> {
-    private final int id;
     private final int grade;
     private final int workId;
     private final Integer evaluatorId;
 
     public AssessmentDTO(int id, int grade, int workId, Integer evaluatorId) {
-        this.id = id;
+        super(id);
         this.grade = grade;
         this.workId = workId;
         this.evaluatorId = evaluatorId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public int readId() {
-        return getId();
     }
 
     public int getGrade() {

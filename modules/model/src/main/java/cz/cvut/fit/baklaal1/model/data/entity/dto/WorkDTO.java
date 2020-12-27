@@ -6,14 +6,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
-    private final int id;
     private final String title;
     private final String text;
     private final Set<Integer> authorIds;
     private final Integer assessmentId;
 
     public WorkDTO(int id, String title, String text, Set<Integer> authorIds, Integer assessmentId) {
-        this.id = id;
+        super(id);
         this.title = title;
         this.text = text;
         this.authorIds = authorIds;
@@ -22,11 +21,6 @@ public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
 
     public int getId() {
         return id;
-    }
-
-    @Override
-    public int readId() {
-        return getId();
     }
 
     public String getTitle() {

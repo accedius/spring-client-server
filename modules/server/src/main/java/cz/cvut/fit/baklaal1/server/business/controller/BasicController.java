@@ -1,14 +1,13 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.server.business.service.BasicService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionInBusinessLogic;
 import cz.cvut.fit.baklaal1.entity.ConvertibleToDTO;
-import cz.cvut.fit.baklaal1.model.data.entity.dto.ReadableId;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.ConvertibleModelAssembler;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO extends RepresentationModel<T_DTO> & ReadableId, T_CREATE_DTO> {
+public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> {
     private final BasicService<T, T_DTO, T_CREATE_DTO> service;
     protected final ConvertibleModelAssembler<T, T_DTO> modelAssembler;
     protected final PagedResourcesAssembler<T> pagedResourcesAssembler;
@@ -53,7 +52,7 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     public ResponseEntity create(@RequestBody T_CREATE_DTO itemDTO) {
         try {
             T_DTO createdDTO = service.create(itemDTO);
-            return ResponseEntity.created(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readById(createdDTO.readId())).toUri()).build();
+            return ResponseEntity.created(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).readById(createdDTO.getId())).toUri()).build();
         } catch (ServiceExceptionInBusinessLogic e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
