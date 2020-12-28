@@ -283,4 +283,24 @@ class StudentServiceTest extends StudentTestSuite {
         Mockito.verify(studentRepositoryMock, Mockito.atLeastOnce()).findById(idCaptor.capture());
         assertEquals(studentId, idCaptor.getValue());
     }
+    
+    @Test
+    public void deleteByUsername() {
+        final int id = 105;
+        final Student student = generateStudent(id);
+        final String username = student.getUsername();
+
+        BDDMockito.given(studentRepositoryMock.findByUsername(username)).willReturn(Optional.of(student));
+        BDDMockito.doNothing().when(studentRepositoryMock).deleteById(id);
+
+        studentService.deleteByUsername(username);
+
+        ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
+        Mockito.verify(studentRepositoryMock, Mockito.times(1)).findByUsername(usernameCaptor.capture());
+        assertEquals(username, usernameCaptor.getValue());
+
+        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(studentRepositoryMock, Mockito.times(1)).deleteById(idCaptor.capture());
+        assertEquals(id, idCaptor.getValue());
+    }
 }

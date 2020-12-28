@@ -125,7 +125,7 @@ class RealTest {
         myWorkDTO = workService.update(workId, myWorkToCreate);
         assertFalse(myWorkDTO.getAuthorIds().contains(studentId1));
 
-        studentService.delete(studentId1);
+        studentService.deleteByUsername(myStudent1.getUsername());
         assertFalse(studentService.findById(studentId1).isPresent());
         studentIds.remove(studentId1);
 

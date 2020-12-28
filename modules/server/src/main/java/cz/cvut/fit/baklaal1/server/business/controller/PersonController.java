@@ -8,8 +8,10 @@ import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.ConvertibleModelAssembler;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Set;
@@ -36,5 +38,11 @@ public abstract class PersonController<T extends Person & ConvertibleToDTO<T_DTO
         Set<T_DTO> allMatchedDTO = personService.findAllByNameAsDTO(name);
         modelAssembler.addLinksToModels(allMatchedDTO);
         return allMatchedDTO;
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByUsername(@RequestParam String username) {
+        personService.deleteByUsername(username);
     }
 }
