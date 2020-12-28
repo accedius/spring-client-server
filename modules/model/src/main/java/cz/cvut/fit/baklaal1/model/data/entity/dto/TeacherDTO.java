@@ -1,5 +1,8 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,8 +11,9 @@ public class TeacherDTO extends PersonDTO<TeacherDTO> {
     private final double wage;
     private final Set<Integer> assessmentIds;
 
-    public TeacherDTO(int id, String username, String name, Timestamp birthDate, double wage, Set<Integer> assessmentIds) {
-        super(id, username, name, birthDate);
+    @JsonCreator
+    public TeacherDTO(@JsonProperty("id") int id, @JsonProperty("username") String username, @JsonProperty("name") String name, @JsonProperty("birthdate") Timestamp birthdate, @JsonProperty("wage") double wage, @JsonProperty("assessmentIds") Set<Integer> assessmentIds) {
+        super(id, username, name, birthdate);
         this.wage = wage;
         this.assessmentIds = assessmentIds;
     }

@@ -1,5 +1,8 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable<AssessmentDTO> {
@@ -7,7 +10,8 @@ public class AssessmentDTO extends BasicDTO<AssessmentDTO> implements Comparable
     private final int workId;
     private final Integer evaluatorId;
 
-    public AssessmentDTO(int id, int grade, int workId, Integer evaluatorId) {
+    @JsonCreator
+    public AssessmentDTO(@JsonProperty("id") int id, @JsonProperty("grade") int grade, @JsonProperty("workId") int workId, @JsonProperty("evaluatorId") Integer evaluatorId) {
         super(id);
         this.grade = grade;
         this.workId = workId;
