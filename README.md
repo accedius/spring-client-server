@@ -64,7 +64,7 @@ Client provides both executing arguments from command line and environment insid
 
 If you want only to run client from the command line just use `exit` argument at the end, like this: `java -jar ... --entity=student --action=readAll exit`
 
-This implies, that you can pass pre-written scripts, for example `resources/clientInputSample.txt`, to the client using `java -jar ...SNAPSHOT.jar < resources/clientInputSample.txt` 
+This implies, that you can pass pre-written scripts, for example `resources/clientScript.txt`, to the client using `java -jar ...SNAPSHOT.jar < resources/clientScript.txt` 
 
 ### Basic commands:
 
