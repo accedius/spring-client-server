@@ -14,8 +14,8 @@ public class StudentCreateDTO extends PersonCreateDTO {
     private float averageGrade;
     private Set<Integer> workIds;
 
-    public StudentCreateDTO(String username, String name, Timestamp birthDate, float averageGrade, Set<Integer> workIds) {
-        super(username, name, birthDate);
+    public StudentCreateDTO(String username, String name, Timestamp birthdate, float averageGrade, Set<Integer> workIds) {
+        super(username, name, birthdate);
         this.averageGrade = makeAverageGrade(averageGrade);
         this.workIds = makeWorkIds(workIds);
     }

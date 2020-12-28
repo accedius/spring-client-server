@@ -25,13 +25,13 @@ public class Student extends Person implements ConvertibleToDTO<StudentDTO>, Con
 
     public Student() {}
 
-    public Student(String username, String name, Timestamp birthDate, float averageGrade) {
-        super(username, name, birthDate);
+    public Student(String username, String name, Timestamp birthdate, float averageGrade) {
+        super(username, name, birthdate);
         this.averageGrade = averageGrade;
     }
 
-    public Student(String username, String name, Timestamp birthDate, float averageGrade, Set<Work> works) {
-        super(username, name, birthDate);
+    public Student(String username, String name, Timestamp birthdate, float averageGrade, Set<Work> works) {
+        super(username, name, birthdate);
         this.averageGrade = averageGrade;
         this.works = works;
     }

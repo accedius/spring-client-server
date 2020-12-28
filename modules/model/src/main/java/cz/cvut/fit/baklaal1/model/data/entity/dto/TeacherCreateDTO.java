@@ -9,8 +9,8 @@ public class TeacherCreateDTO extends PersonCreateDTO {
     private double wage;
     private Set<Integer> assessmentIds;
 
-    public TeacherCreateDTO(String username, String name, Timestamp birthDate, double wage, Set<Integer> assessmentIds) {
-        super(username, name, birthDate);
+    public TeacherCreateDTO(String username, String name, Timestamp birthdate, double wage, Set<Integer> assessmentIds) {
+        super(username, name, birthdate);
         this.wage = wage;
         this.assessmentIds = assessmentIds;
     }
