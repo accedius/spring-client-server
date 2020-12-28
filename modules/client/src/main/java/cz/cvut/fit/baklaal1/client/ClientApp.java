@@ -17,6 +17,9 @@ import org.springframework.hateoas.config.HypermediaRestTemplateConfigurer;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
@@ -65,11 +68,23 @@ public class ClientApp implements ApplicationRunner {
 			System.out.print(dateFormat.format(date) + " Client>");
 
 			String argumentsAsString = in.nextLine();
-			String[] argsResource = argumentsAsString.split("\\s+");
+			String[] argsResource = parseArguments(argumentsAsString);
 
 			argsToHandle = new DefaultApplicationArguments(argsResource);
 		}
 
 		System.out.print("Exiting...");
+	}
+
+	private String[] parseArguments(final String source) {
+		final String argumentRegex = "([-a-zA-z][^ ]*=[\"'][^\"']*[\"'])|([-a-zA-z][^ ]*)";
+		String[] arguments = Pattern.compile(argumentRegex).matcher(source).results().map(MatchResult::group).toArray(String[]::new);
+
+		//Delete all the commas, DefaultApplicationArguments views commas as literals, so comma stacking phenomenon appears: on input "\"abc\"" it will save as literally "\"abc\"" and when will be displayed as "\"\"abc\"\""
+		final String commaRegex = "[\"']";
+		for (int i = 0; i < arguments.length; i++) {
+			arguments[i] = arguments[i].replaceAll(commaRegex, "");
+		}
+		return arguments;
 	}
 }
