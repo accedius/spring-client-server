@@ -11,6 +11,7 @@ import java.util.TreeSet;
 public abstract class PersonResource<T_DTO extends PersonDTO<T_DTO>, T_CREATE_DTO> extends BasicResource<T_DTO, T_CREATE_DTO> {
     protected static final String READ_BY_USERNAME = "/by-username";
     protected static final String READ_ALL_BY_NAME = "/all-by-name";
+    protected static final String DELETE_BY_USERNAME = "/";
 
     public PersonResource(RestTemplateBuilder builder, String apiUrl, String classUrl, Class<T_DTO> modelClass) {
         super(builder, apiUrl, classUrl, modelClass);
@@ -27,5 +28,10 @@ public abstract class PersonResource<T_DTO extends PersonDTO<T_DTO>, T_CREATE_DT
         T_DTO[] personArray = restTemplate.getForObject(uriBuilder.toUriString(), getResponseTypeForArray());
         Set<T_DTO> students = fillCollectionFromArray(new TreeSet<>(), personArray);
         return students;
+    }
+
+    public void deleteByUsername(String username) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(DELETE_BY_USERNAME).queryParam("username", username);
+        restTemplate.delete(uriBuilder.build(false).toUriString());
     }
 }

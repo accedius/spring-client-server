@@ -28,6 +28,7 @@ public class ArgumentConstants {
     public static final String READ_ALL_BY_EVALUATOR_ID = "readAllByEvaluatorId";
     public static final String READ_BY_USERNAME = "readByUsername";
     public static final String READ_ALL_BY_NAME = "readAllByName";
+    public static final String DELETE_BY_USERNAME = "deleteByUsername";
     public static final String JOIN_WORK = "joinWork";
     public static final String READ_ALL_BY_TITLE = "readAllByTitle";
 
