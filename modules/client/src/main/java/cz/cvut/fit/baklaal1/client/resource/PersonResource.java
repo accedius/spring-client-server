@@ -18,14 +18,14 @@ public abstract class PersonResource<T_DTO extends PersonDTO<T_DTO>, T_CREATE_DT
     }
 
     public T_DTO readByUsername(String username) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(READ_BY_USERNAME).queryParam("username", username);
-        T_DTO person = restTemplate.getForObject(uriBuilder.build().toUriString(), modelClass);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(READ_BY_USERNAME).queryParam("username", username);
+        T_DTO person = restTemplate.getForObject(uriBuilder.build(false).toUriString(), modelClass);
         return person;
     }
 
     public Set<T_DTO> readAllByName(String name) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(READ_ALL_BY_NAME).queryParam("name", name);
-        T_DTO[] personArray = restTemplate.getForObject(uriBuilder.toUriString(), getResponseTypeForArray());
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(READ_ALL_BY_NAME).queryParam("name", name);
+        T_DTO[] personArray = restTemplate.getForObject(uriBuilder.build(false).toUriString(), getResponseTypeForArray());
         Set<T_DTO> students = fillCollectionFromArray(new TreeSet<>(), personArray);
         return students;
     }

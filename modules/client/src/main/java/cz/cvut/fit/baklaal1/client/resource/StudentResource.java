@@ -21,10 +21,10 @@ public class StudentResource extends PersonResource<StudentDTO, StudentCreateDTO
     }
 
     public void joinWork(String studentId, String workId) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(STUDENT_JOIN_WORK)
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(STUDENT_JOIN_WORK)
                 .queryParam("studentId", studentId)
                 .queryParam("workId", workId);
-        restTemplate.put(uriBuilder.toUriString(), null);
+        restTemplate.put(uriBuilder.build(false).toUriString(), null);
     }
 
     @Override
