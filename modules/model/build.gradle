@@ -21,5 +21,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.springframework.hateoas:spring-hateoas:1.1.2.RELEASE'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.0'
 }
 

@@ -24,8 +24,8 @@ public class AssessmentResource extends BasicResource<AssessmentDTO, AssessmentC
     }
 
     public Set<AssessmentDTO> readAllByEvaluatorId(String evaluatorId) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(READ_ALL_BY_EVALUATOR_ID).queryParam("evaluatorId", evaluatorId);
-        AssessmentDTO[] assessmentArray = restTemplate.getForObject(uriBuilder.toUriString(), getResponseTypeForArray());
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(READ_ALL_BY_EVALUATOR_ID).queryParam("evaluatorId", evaluatorId);
+        AssessmentDTO[] assessmentArray = restTemplate.getForObject(uriBuilder.build(false).toUriString(), getResponseTypeForArray());
         Set<AssessmentDTO> evaluatorAssessments = fillCollectionFromArray(new TreeSet<>(), assessmentArray);
         return evaluatorAssessments;
     }

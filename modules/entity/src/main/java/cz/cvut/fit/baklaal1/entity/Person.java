@@ -54,8 +54,8 @@ public abstract class Person implements Comparable<Person> {
         return birthdate;
     }
 
-    public void setBirthdate(Timestamp birthDate) {
-        this.birthdate = birthDate;
+    public void setBirthdate(Timestamp birthdate) {
+        this.birthdate = birthdate;
     }
 
     @Override

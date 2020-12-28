@@ -64,6 +64,8 @@ Client provides both executing arguments from command line and environment insid
 
 If you want only to run client from the command line just use `exit` argument at the end, like this: `java -jar ... --entity=student --action=readAll exit`
 
+This implies, that you can pass pre-written scripts, for example `resources/clientScript.txt`, to the client using `java -jar ...SNAPSHOT.jar < resources/clientScript.txt` 
+
 ### Basic commands:
 
 To get help type in:
@@ -96,13 +98,14 @@ To exit type in:
 ### Arguments for actions:
 
 - Use `--entity=<wanted-entity>` to operate with entity of type `<wanted-entity>`
-- Use `--valueAttribute=<value>` to pass simple attribute (e.g. Integer, String etc.)
+- Use `--valueAttribute=<value>` to pass simple attribute (e.g. Integer, String etc.), notice, that only the first value passed will be taken unlike the complex attribute
 - Use `--complexAttribute=<value1> --complexAttribute=<value2> ...` to pass multiple attributes as complex attribute (i.e. authorIds for Work entity etc.)
 
 ### Attributes info:
 
-- `*` means non-required 
-- `c` means complex
+- `*` means required for creation, does not mean it always contains some value
+- `(optional)` means non-required for creation
+- `(comlex)` means this attribute can store multiple values at once
 
 ### Available options per entity:
 
@@ -112,11 +115,11 @@ Use `--entity=student`
 
 Student's attributes:
 
-- `--username`
-- `--name`
-- `--birthdate`*
-- `--averageGrade`*
-- `--workIds`*c
+- `--username` *
+- `--name` *
+- `--birthdate` (optional)
+- `--averageGrade` (optional)
+- `--workIds` (optional, complex)
 
 Special actions:
 
@@ -130,11 +133,11 @@ Use `--entity=teacher`
 
 Teacher's attributes:
 
-- `--username`
-- `--name`
-- `--birthdate`*
-- `--wage`*
-- `--assessmentIds`*c
+- `--username` *
+- `--name` *
+- `--birthdate` (optional)
+- `--wage` (optional)
+- `--assessmentIds` (optional, complex)
 
 Special actions:
 
@@ -147,10 +150,10 @@ Use `--entity=work`
 
 Work's attributes:
 
-- `--title`
-- `--text`*
-- `--authorIds`c
-- `--assessmentId`*
+- `--title` *
+- `--text` (optional)
+- `--authorIds` * (complex)
+- `--assessmentId` (optional)
 
 Special actions:
 
@@ -162,9 +165,9 @@ Use `--entity=assessment`
 
 Assessment's attributes:
 
-- `--grade`
-- `--workId`
-- `--evaluatorId`
+- `--grade` *
+- `--workId` *
+- `--evaluatorId` *
 
 Special actions:
 

@@ -198,6 +198,18 @@ class StudentControllerTest extends StudentTestSuite {
     }
 
     @Test
+    public void deleteByUsername() throws Exception {
+        final String username = "username";
+
+        BDDMockito.doNothing().when(studentServiceMock).deleteByUsername(username);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete(postAddress + "?username={username}", username))
+
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
     public void readByUsername() throws Exception {
         final int studentId = 1;
         final Student student = generateStudent(studentId);

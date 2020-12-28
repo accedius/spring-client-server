@@ -26,13 +26,13 @@ public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, Con
 
     public Teacher() {}
 
-    public Teacher(String username, String name, Timestamp birthDate, double wage) {
-        super(username, name, birthDate);
+    public Teacher(String username, String name, Timestamp birthdate, double wage) {
+        super(username, name, birthdate);
         this.wage = wage;
     }
 
-    public Teacher(String username, String name, Timestamp birthDate, double wage, Set<Assessment> assessments) {
-        super(username, name, birthDate);
+    public Teacher(String username, String name, Timestamp birthdate, double wage, Set<Assessment> assessments) {
+        super(username, name, birthdate);
         this.wage = wage;
         this.assessments = assessments;
     }

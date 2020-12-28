@@ -1,6 +1,9 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,7 +14,8 @@ public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
     private final Set<Integer> authorIds;
     private final Integer assessmentId;
 
-    public WorkDTO(int id, String title, String text, Set<Integer> authorIds, Integer assessmentId) {
+    @JsonCreator
+    public WorkDTO(@JsonProperty("id") int id, @JsonProperty("title") String title, @JsonProperty("text") String text, @JsonProperty("authorIds") Set<Integer> authorIds, @JsonProperty("assessmentId") Integer assessmentId) {
         super(id);
         this.title = title;
         this.text = text;

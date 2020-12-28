@@ -24,8 +24,8 @@ public class WorkResource extends BasicResource<WorkDTO, WorkCreateDTO> {
     }
 
     public Set<WorkDTO> readAllByTitle(String title) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(READ_ALL_BY_TITLE).queryParam("title", title);
-        WorkDTO[] workArray = restTemplate.getForObject(uriBuilder.toUriString(), getResponseTypeForArray());
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(READ_ALL_BY_TITLE).queryParam("title", title);
+        WorkDTO[] workArray = restTemplate.getForObject(uriBuilder.build(false).toUriString(), getResponseTypeForArray());
         Set<WorkDTO> works = fillCollectionFromArray(new TreeSet<>(), workArray);
         return works;
     }
