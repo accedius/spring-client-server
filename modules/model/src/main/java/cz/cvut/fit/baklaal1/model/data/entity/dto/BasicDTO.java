@@ -30,10 +30,11 @@ public abstract class BasicDTO<T_DTO extends BasicDTO<T_DTO>> extends Representa
     protected <T> void printCollectionFormatted(String collectionName, Collection<T> collection) {
         String collectionFormatted = "";
         for(T item : collection) {
-            collectionFormatted += " " + item + ", ";
+            collectionFormatted += " " + item + ",";
         }
-        if(collectionFormatted.length() >= 2) {
-            collectionFormatted = collectionFormatted.substring(0, collectionFormatted.length() - 2);
+        if(collectionFormatted.length() >= 1) {
+            collectionFormatted = collectionFormatted.substring(0, collectionFormatted.length() - 1);
+            collectionFormatted += " ";
         }
         System.out.println("\t" + collectionName + ": {" + collectionFormatted + "}");
     }
