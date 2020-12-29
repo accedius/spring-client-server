@@ -77,11 +77,11 @@ public class ClientApp implements ApplicationRunner {
 	}
 
 	private String[] parseArguments(final String source) {
-		final String argumentRegex = "([-a-zA-z][^ ]*=[\"'][^\"']*[\"'])|([-a-zA-z][^ ]*)";
+		final String argumentRegex = "([-a-zA-z][^ ]*=\"[^\"]*\")|([-a-zA-z][^ ]*)";
 		String[] arguments = Pattern.compile(argumentRegex).matcher(source).results().map(MatchResult::group).toArray(String[]::new);
 
 		//Delete all the commas, DefaultApplicationArguments views commas as literals, so comma stacking phenomenon appears: on input "\"abc\"" it will save as literally "\"abc\"" and when will be displayed as "\"\"abc\"\""
-		final String commaRegex = "[\"']";
+		final String commaRegex = "\"";
 		for (int i = 0; i < arguments.length; i++) {
 			arguments[i] = arguments[i].replaceAll(commaRegex, "");
 		}
