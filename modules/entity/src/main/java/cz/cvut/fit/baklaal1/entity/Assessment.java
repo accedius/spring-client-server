@@ -22,7 +22,7 @@ public class Assessment implements Comparable<Assessment>, ConvertibleToDTO<Asse
     private Work work;
 
     @ManyToOne
-    @JoinColumn(name = DBConstants.EVALUATOR_ID)
+    @JoinColumn(name = DBConstants.EVALUATOR_ID, nullable = false)
     private Teacher evaluator;
 
     public Assessment() {}
