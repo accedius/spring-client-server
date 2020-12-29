@@ -5,6 +5,7 @@ import cz.cvut.fit.baklaal1.server.business.service.BasicService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionInBusinessLogic;
 import cz.cvut.fit.baklaal1.entity.ConvertibleToDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.ConvertibleModelAssembler;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
@@ -77,6 +78,10 @@ public abstract class BasicController<T extends ConvertibleToDTO<T_DTO>, T_DTO e
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        service.delete(id);
+        try {
+            service.delete(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 }
