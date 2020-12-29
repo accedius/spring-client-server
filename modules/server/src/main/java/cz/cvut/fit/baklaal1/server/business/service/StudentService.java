@@ -86,7 +86,7 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
         //Checks if student has already going projects
         Set<Work> studentWorks = student.getWorks();
         for(Work studentWork : studentWorks) {
-            if(studentWork == work) {
+            if(studentWork.getId().equals(work.getId())) {
                 break;
             }
             if(!isWorkDone(studentWork)) {
@@ -121,7 +121,7 @@ public class StudentService extends PersonService<Student, StudentDTO, StudentCr
     }
 
     private boolean isWorkDone(Work work) {
-        return work.getAssessment() != null && work.getAssessment().getGrade() != Grades.F;
+        return work.getAssessment() != null && Grades.isFinalGrade(work.getAssessment().getGrade());
     }
 
     private Set<Work> getWorkByIds(Set<Integer> workIds) {
