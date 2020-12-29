@@ -24,7 +24,7 @@ public class StudentCreateDTO extends PersonCreateDTO {
     }
 
     private float makeAverageGrade(float averageGrade) {
-        if(Grades.isGrade(averageGrade)) {
+        if(Grades.isGradeDerived(averageGrade)) {
             return averageGrade;
         } else {
             return Grades.DEFAULT;
