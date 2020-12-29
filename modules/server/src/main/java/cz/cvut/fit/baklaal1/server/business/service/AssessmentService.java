@@ -90,6 +90,24 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
     }
 
     @Override
+    public void delete(Integer id) {
+        Optional<Assessment> assessmentOptional = findById(id);
+        if(assessmentOptional.isEmpty()) {
+            return;
+        }
+
+        Assessment assessment = assessmentOptional.get();
+        Work work = getWorkById(assessment.getWork().getId());
+        work.setAssessment(null);
+        try {
+            workService.update(work.getId(), work.toCreateDTO());
+        } catch (Exception e) {
+            //TODO maybe?
+            super.delete(id);
+        }
+    }
+
+    @Override
     protected boolean exists(Assessment item) {
         return assessmentRepository.findByWork_Id(item.getWork().getId()).isPresent();
     }
