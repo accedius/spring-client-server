@@ -1,20 +1,55 @@
+
+Note, that this script relies on the fact that db is cleared and just created: indexing must start from 1
+
 --entity=student --action=create --username=sa x --name=a --averageGrade=1
 --entity=student --action=create --username="s b" xxx --name="sb" --averageGrade=2,2
---entity=student --action=create --username="s c " --name=' c' --averageGrade=3.3
---entity=student --action=create --username="s d " --name='d ' --averageGrade=4.4
---entity=student --action=create --username='s e ' --name=' e ' --averageGrade=5.5
---entity=student --action=create --username=" sf" --name=' e ' --averageGrade=6.0
+
+//Exception here --entity=student --action=create --username="s b" --name="sandbar" --averageGrade=1,2
+
+--entity=student --action=create --username="s c " --name=" c" --averageGrade="3.3"
+--entity=student --action=create --username="s d " --name="d " --averageGrade=4.4
+--entity=student --action=create --username="s e " --name=" e " --averageGrade=5.5
+--entity=student --action=create --username=" sf" --name=" e " --averageGrade="6.0"
 
 --entity=student --action=readAll
 
---entity=teacher --action=create --username="ta" --name='a' --wage=99999.99
---entity=teacher --action=create --username="tb" --name='b' --wage=88888,88
---entity=teacher --action=create --username="tc" --name='c' --wage=77777
---entity=teacher --action=create --username="td" --name='d' --wage=66666.66
---entity=teacher --action=create --username="te" --name='e' --wage=55555.55
---entity=teacher --action=create --username="tf" --name='f' --wage=44444.44
+--entity=teacher --action=create --username="ta" --name="a" --wage=99999.99
+--entity=teacher --action=create --username="tb" --name="b" --wage="88888,88"
+--entity=teacher --action=create --username="tc" --name="c" --wage=77777
+--entity=teacher --action=create --username="td" --name="d" --wage=66666.66
+--entity=teacher --action=create --username="te" --name="e" --wage=55555.55
+--entity=teacher --action=create --username="tf" --name="f" --wage=44444.44
 
 --entity=teacher --action=readAll
+
+--entity=work --action=create --title="w1,' :!`title's value`." --text="Simple, human readable text: nothing to see here..." --authorIds=1 --authorIds=4
+--entity=student --action=joinWork --studentId=2 --workId=13
+
+--entity=work --action=create --title="w1,' :!`title's value`." --text="Simple text." --authorIds=1 --authorIds=5
+
+//Exception here --entity=student --action=joinWork --studentId=2 --workId=14
+
+--entity=assessment --action=create --grade=3 --workId=13 --evaluatorId=8
+--entity=assessment --action=readAll
+
+--entity=work --action=readAllByTitle --title="w1,' :!`title's value`."
+
+--entity=assessment --action=update --id=15 --grade=2 --workId=13 --evaluatorId=7
+--entity=assessment --action=read --id=15
+--entity=assessment --action=readAllByEvaluatorId --evaluatorId=7
+//Response empty --entity=assessment --action=readAllByEvaluatorId --evaluatorId=8
+
+//Exception here --entity=student --action=joinWork --studentId=6 --workId=13
+
+--entity=work --action=read --id=13
+
+//Exception here --entity=assessment --action=create --grade=3 --workId=13 --evaluatorId=8
+
+--entity=assessment --action=readAll
+--entity=work --action=readAll
+
+--entity=work --action=delete --id=13
+--entity=work --action=delete --id=14
 
 --entity=student --action=readByUsername --username="s c "
 --entity=student --action=deleteByUsername --username="s c "
