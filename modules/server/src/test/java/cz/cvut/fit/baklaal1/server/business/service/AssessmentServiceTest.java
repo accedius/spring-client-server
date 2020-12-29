@@ -185,7 +185,7 @@ class AssessmentServiceTest extends AssessmentTestSuite {
         AssessmentDTO assessmentDTOToReceive = generateAssessmentDTO(assessmentId);
 
         BDDMockito.given(assessmentRepositoryMock.save(any(Assessment.class))).willReturn(assessmentToReturn);
-        BDDMockito.given(assessmentRepositoryMock.findByWork(any(Work.class))).willReturn(Optional.empty());
+        BDDMockito.given(assessmentRepositoryMock.findByWork_Id(assessmentToReturn.getWork().getId())).willReturn(Optional.empty());
         BDDMockito.given(teacherServiceMock.findById(assessmentId)).willReturn(Optional.of(assessmentToReturn.getEvaluator()));
         BDDMockito.given(workServiceMock.findById(assessmentId)).willReturn(Optional.of(assessmentToReturn.getWork()));
 

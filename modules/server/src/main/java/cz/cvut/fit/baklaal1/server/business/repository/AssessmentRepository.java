@@ -12,5 +12,5 @@ import java.util.Set;
 public interface AssessmentRepository extends JpaRepository<Assessment, Integer> {
     public Set<Assessment> findAllByEvaluatorId(int evaluatorId);
 
-    public Optional<Assessment> findByWork(Work work);
+    public Optional<Assessment> findByWork_Id(int workId);
 }

@@ -88,7 +88,7 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
 
     @Override
     protected boolean exists(Assessment item) {
-        return assessmentRepository.findByWork(item.getWork()).isPresent();
+        return assessmentRepository.findByWork_Id(item.getWork().getId()).isPresent();
     }
 
     @Override
