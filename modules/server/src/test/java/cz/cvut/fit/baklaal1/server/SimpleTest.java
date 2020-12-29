@@ -14,6 +14,6 @@ public class SimpleTest {
     @Test
     @DisplayName("Test that should pass")
     public void passingTest() {
-        assertEquals(123,123);
+        assertEquals(1123,123);
     }
 }
