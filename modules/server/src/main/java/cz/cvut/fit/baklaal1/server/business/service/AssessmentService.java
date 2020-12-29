@@ -55,6 +55,8 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
             throw getServiceException(actionCreate, ServiceConstants.ASSESSMENT + ServiceConstants.ALREADY_EXISTS, assessmentDTO);
 
         Assessment savedAssessment = assessmentRepository.save(assessment);
+        work.setAssessment(savedAssessment);
+        workService.update(work.getId(), work.toCreateDTO());
 
         return toDTO(savedAssessment);
     }
@@ -80,6 +82,7 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         Work work = getWorkById(workId);
         if(work == null)
             throw getServiceException(actionUpdate, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+
         assessment.setWork(work);
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
