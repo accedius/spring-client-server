@@ -1,27 +1,21 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TeacherDTO extends PersonDTO<TeacherDTO> {
-    private double wage;
-    private Set<Integer> assessmentIds;
+    private final double wage;
+    private final Set<Integer> assessmentIds;
 
-    public TeacherDTO(int id, String username, String name, Timestamp birthDate, double wage, Set<Integer> assessmentIds) {
-        super(id, username, name, birthDate);
+    @JsonCreator
+    public TeacherDTO(@JsonProperty("id") int id, @JsonProperty("username") String username, @JsonProperty("name") String name, @JsonProperty("birthdate") Timestamp birthdate, @JsonProperty("wage") double wage, @JsonProperty("assessmentIds") Set<Integer> assessmentIds) {
+        super(id, username, name, birthdate);
         this.wage = wage;
         this.assessmentIds = assessmentIds;
-    }
-
-    public TeacherDTO(final Teacher teacher) {
-        super(teacher);
-        this.wage = teacher.getWage();
-        Set<Assessment> assessments = teacher.getAssessments();
-        this.assessmentIds = assessments.stream().map(Assessment::getId).collect(Collectors.toSet());
     }
 
     public double getWage() {
@@ -41,14 +35,9 @@ public class TeacherDTO extends PersonDTO<TeacherDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("wage", wage);
 
-        //TODO make a universal method to print collections formatted in json-like format
-        System.out.println("Assessment Ids: {");
-        for (Integer assessmentId : assessmentIds) {
-            printFormatted("assessmentId", assessmentId);
-        }
-        System.out.println("}");
+        printCollectionFormatted("Assessment Ids", assessmentIds);
 
-        System.out.println(super.toString());
+        printLinksFormatted(super.toString());
         System.out.println("}");
     }
 

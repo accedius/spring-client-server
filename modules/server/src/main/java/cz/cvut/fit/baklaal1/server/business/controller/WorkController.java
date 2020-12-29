@@ -1,7 +1,7 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
 import cz.cvut.fit.baklaal1.server.business.service.WorkService;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.WorkModelAssembler;

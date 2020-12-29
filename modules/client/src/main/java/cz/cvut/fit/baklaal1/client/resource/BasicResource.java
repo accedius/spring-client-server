@@ -1,5 +1,6 @@
 package cz.cvut.fit.baklaal1.client.resource;
 
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.PagedModel;
@@ -8,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
-public abstract class BasicResource<T_DTO, T_CREATE_DTO> {
+public abstract class BasicResource<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> {
     protected final RestTemplate restTemplate;
 
     protected static final String URI_TEMPLATE_ONE = "/{id}";
@@ -42,17 +46,45 @@ public abstract class BasicResource<T_DTO, T_CREATE_DTO> {
         restTemplate.delete(URI_TEMPLATE_ONE, id);
     }
 
-    public List<T_DTO> readAll() {
-        List<T_DTO> allStudents = restTemplate.getForObject("/", List.class);
-        return allStudents;
+    protected abstract Class<T_DTO[]> getResponseTypeForArray();
+
+    protected List<T_DTO> convertArrayToList(final T_DTO[] array) {
+        if(array == null) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(array);
     }
+
+    protected List<T_DTO> convertArrayToSet(final T_DTO[] array) {
+        if(array == null) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(array);
+    }
+
+    protected <C extends Collection<T_DTO>> C fillCollectionFromArray(C collection, final T_DTO[] array) {
+        collection.addAll(Arrays.asList(array));
+        return collection;
+    }
+
+    public List<T_DTO> readAll() {
+        /*Returns List of Linked Hash Maps
+        List<T_DTO> allModels = restTemplate.getForObject("/all", List.class);
+        return  allModels;*/
+
+        T_DTO[] allModelsAsArray = restTemplate.getForObject("/all", getResponseTypeForArray());
+        List<T_DTO> allModels = fillCollectionFromArray(new ArrayList<>(), allModelsAsArray);
+        return allModels;
+    }
+
+    protected abstract ParameterizedTypeReference<PagedModel<T_DTO>> getParametrizedTypeReference();
 
     public PagedModel<T_DTO> pageAll(int page, int size) {
         ResponseEntity<PagedModel<T_DTO>> response = restTemplate.exchange(
                 COLLECTION_TEMPLATED,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<PagedModel<T_DTO>>() {},
+                getParametrizedTypeReference(),
                 page,
                 size
         );

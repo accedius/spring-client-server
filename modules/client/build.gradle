@@ -16,10 +16,7 @@ repositories {
 dependencies {
     implementation 'cz.cvut.fit.baklaal1.tjv-sem:model:0.1-SNAPSHOT'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

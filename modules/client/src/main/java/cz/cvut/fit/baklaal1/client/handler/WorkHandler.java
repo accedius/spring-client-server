@@ -18,6 +18,7 @@ public class WorkHandler extends BasicHandler<WorkDTO, WorkCreateDTO> {
     private static final String READ_ALL_BY_TITLE = ArgumentConstants.READ_ALL_BY_TITLE;
     private static final String AUTHOR_IDS = ArgumentConstants.AUTHOR_IDS;
     private static final String TEXT = ArgumentConstants.TEXT;
+    private static final String ASSESSMENT_ID = ArgumentConstants.ASSESSMENT_ID;
 
     @Autowired
     private final WorkResource workResource;
@@ -72,7 +73,7 @@ public class WorkHandler extends BasicHandler<WorkDTO, WorkCreateDTO> {
         String title = args.getOptionValues(TITLE).get(0);
         String text = args.getOptionValues(TEXT) != null ? args.getOptionValues(TEXT).get(0) : null;
         Set<Integer> authorIds = args.getOptionValues(AUTHOR_IDS).stream().map(Integer::parseInt).distinct().collect(Collectors.toCollection(TreeSet::new));
-        Integer assessmentId = args.getOptionValues("assessmentId") != null ? Integer.parseInt(args.getOptionValues("assessmentId").get(0)) : null;
+        Integer assessmentId = args.getOptionValues(ASSESSMENT_ID) != null ? Integer.parseInt(args.getOptionValues(ASSESSMENT_ID).get(0)) : null;
         return new WorkCreateDTO(title, text, authorIds, assessmentId);
     }
 }

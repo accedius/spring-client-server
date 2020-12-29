@@ -4,10 +4,13 @@ import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 @Component
 public class WorkResource extends BasicResource<WorkDTO, WorkCreateDTO> {
@@ -21,8 +24,19 @@ public class WorkResource extends BasicResource<WorkDTO, WorkCreateDTO> {
     }
 
     public Set<WorkDTO> readAllByTitle(String title) {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(READ_ALL_BY_TITLE).queryParam("title", title);
-        Set<WorkDTO> works = restTemplate.getForObject(uriBuilder.toUriString(), Set.class);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromPath(READ_ALL_BY_TITLE).queryParam("title", title);
+        WorkDTO[] workArray = restTemplate.getForObject(uriBuilder.build(false).toUriString(), getResponseTypeForArray());
+        Set<WorkDTO> works = fillCollectionFromArray(new TreeSet<>(), workArray);
         return works;
+    }
+
+    @Override
+    protected ParameterizedTypeReference<PagedModel<WorkDTO>> getParametrizedTypeReference() {
+        return new ParameterizedTypeReference<PagedModel<WorkDTO>>() {};
+    }
+
+    @Override
+    protected Class<WorkDTO[]> getResponseTypeForArray() {
+        return WorkDTO[].class;
     }
 }

@@ -3,17 +3,21 @@ package cz.cvut.fit.baklaal1.client.handler;
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.BasicResource;
 import cz.cvut.fit.baklaal1.client.resource.PersonResource;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
 import org.springframework.boot.ApplicationArguments;
 
 import java.util.Set;
 
-public abstract class PersonHandler<T_DTO extends Printable, T_CREATE_DTO> extends BasicHandler<T_DTO, T_CREATE_DTO> {
+public abstract class PersonHandler<T_DTO extends PersonDTO<T_DTO>, T_CREATE_DTO> extends BasicHandler<T_DTO, T_CREATE_DTO> {
     protected static final String READ_BY_USERNAME = ArgumentConstants.READ_BY_USERNAME;
     protected static final String USERNAME = ArgumentConstants.USERNAME;
 
     protected static final String READ_ALL_BY_NAME = ArgumentConstants.READ_ALL_BY_NAME;
     protected static final String NAME = ArgumentConstants.NAME;
+
+    protected static final String DELETE_BY_USERNAME = ArgumentConstants.DELETE_BY_USERNAME;
 
     private final PersonResource<T_DTO, T_CREATE_DTO> personResource;
 
@@ -47,6 +51,16 @@ public abstract class PersonHandler<T_DTO extends Printable, T_CREATE_DTO> exten
                 } catch (Exception e) {
                     printError(e, READ_ALL_BY_NAME, args);
                 }
+                break;
+            }
+            case DELETE_BY_USERNAME: {
+                wasHandled = true;
+                try {
+                    deleteByUsername(args);
+                } catch (Exception e) {
+                    printError(e, DELETE_BY_USERNAME, args);
+                }
+                break;
             }
         }
         return wasHandled;
@@ -70,5 +84,14 @@ public abstract class PersonHandler<T_DTO extends Printable, T_CREATE_DTO> exten
         String name = args.getOptionValues(NAME).get(0);
         Set<T_DTO> persons = personResource.readAllByName(name);
         printAll(persons);
+    }
+
+    private void deleteByUsername(ApplicationArguments args) throws Exception {
+        if(!args.containsOption(USERNAME)) {
+            throwMustContain(USERNAME);
+        }
+
+        String username = args.getOptionValues(USERNAME).get(0);
+        personResource.deleteByUsername(username);
     }
 }

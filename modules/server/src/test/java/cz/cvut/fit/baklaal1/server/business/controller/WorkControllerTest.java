@@ -1,12 +1,13 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Student;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkDTO;
 import cz.cvut.fit.baklaal1.server.business.service.WorkService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
+import cz.cvut.fit.baklaal1.server.suite.WorkTestSuite;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -33,14 +34,12 @@ import java.util.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureMockMvc
 @DisplayName("WorkController Test")
-public class WorkControllerTest {
+public class WorkControllerTest extends WorkTestSuite {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private WorkService workServiceMock;
-
-    private static final String postAddress = WorkController.WORK_DOMAIN_ROOT;
 
     @Test
     public void postConflict() throws Exception {
@@ -216,70 +215,5 @@ public class WorkControllerTest {
                 .accept("application/json")
                 .contentType("application/json"));
         checkDTOList(result, works);
-    }
-
-    private Work generateWork(int i) {
-        String title = "title" + i;
-        String text = "text" + i;
-        Set<Student> authors = new TreeSet<>();
-        Assessment assessment = null;
-        Work work = new Work(title, text, authors, assessment);
-        ReflectionTestUtils.setField(work, "id", i);
-        return work;
-    }
-
-    private WorkDTO generateWorkDTO(int i) {
-        return generateWork(i).toDTO();
-    }
-
-    private WorkCreateDTO generateWorkCreateDTO(int i) {
-        return generateWork(i).toCreateDTO();
-    }
-
-    //TODO move to Jackson preferably, or to GSON or JSON-Java
-    private String generateWorkCreateDTOJson(int i) {
-        String json = "{\"title\" : \"title" + i + "\", \"text\" : \"text" + i + "\", \"authorIds\" : [], \"assessmentId\" : null }";
-        return json;
-    }
-
-    private void checkLinks(ResultActions resultToCheck, WorkDTO checkAgainst) throws Exception {
-        resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$._links.self.href", CoreMatchers.endsWith(postAddress + "/" + checkAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$._links.collection.href", CoreMatchers.containsString(postAddress)));
-    }
-
-    private void checkResponse(ResultActions resultToCheck, WorkDTO checkAgainst) throws Exception {
-        resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(checkAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title", CoreMatchers.is(checkAgainst.getTitle())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.text", CoreMatchers.is(checkAgainst.getText())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.authorIds", CoreMatchers.is(Matchers.empty())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assessmentId", CoreMatchers.is(checkAgainst.getAssessmentId())));
-        checkLinks(resultToCheck, checkAgainst);
-    }
-
-    private void checkDTOPage(ResultActions resultToCheck, List<Work> works) throws Exception {
-        final int size = works.size();
-        for (int i = 0; i < size; i++) {
-            resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$._embedded.workDTOList[" + i + "].id", CoreMatchers.is(works.get(i).getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.workDTOList[" + i + "].title", CoreMatchers.is(works.get(i).getTitle())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.workDTOList[" + i + "].text", CoreMatchers.is(works.get(i).getText())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.workDTOList[" + i + "].authorIds", CoreMatchers.is(Matchers.empty())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.workDTOList[" + i + "].assessmentId", CoreMatchers.is(works.get(i).getAssessment())));
-        }
-    }
-
-    private void checkDTOList(ResultActions resultToCheck, List<Work> works) throws Exception {
-        final int size = works.size();
-        for (int i = 0; i < size; i++) {
-            resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].id", CoreMatchers.is(works.get(i).getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].title", CoreMatchers.is(works.get(i).getTitle())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].text", CoreMatchers.is(works.get(i).getText())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].authorIds", CoreMatchers.is(Matchers.empty())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].assessmentId", CoreMatchers.is(works.get(i).getAssessment())));
-        }
-    }
-
-    private <E, V> E setField(E entity, String fieldName, V fieldValue) {
-        ReflectionTestUtils.setField(entity, fieldName, fieldValue);
-        return entity;
     }
 }

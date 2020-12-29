@@ -1,4 +1,3 @@
 #!/usr/bin/env sh
 
-cd modules/server
-./gradlew run
+java -jar modules/server/build/libs/server-0.1-SNAPSHOT.jar

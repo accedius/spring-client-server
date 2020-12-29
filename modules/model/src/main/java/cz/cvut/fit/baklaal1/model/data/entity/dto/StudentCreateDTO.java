@@ -1,7 +1,5 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 
 import java.sql.Timestamp;
@@ -16,29 +14,25 @@ public class StudentCreateDTO extends PersonCreateDTO {
     private float averageGrade;
     private Set<Integer> workIds;
 
-    public StudentCreateDTO(String username, String name, Timestamp birthDate, float averageGrade, Set<Integer> workIds) {
-        super(username, name, birthDate);
-        this.averageGrade = averageGrade;
-        this.workIds = workIds;
+    public StudentCreateDTO(String username, String name, Timestamp birthdate, float averageGrade, Set<Integer> workIds) {
+        super(username, name, birthdate);
+        this.averageGrade = makeAverageGrade(averageGrade);
+        this.workIds = makeWorkIds(workIds);
     }
 
-    public StudentCreateDTO(Student student) {
-        super(student.getUsername(), student.getName(), student.getBirthdate());
-        this.averageGrade = student.getAverageGrade();
-        Set<Work> works = student.getWorks();
-        this.workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
+    public StudentCreateDTO() {
     }
 
-    public void setAverageGrade(float averageGrade) {
-        if(Grades.isGrade(averageGrade)) {
-            this.averageGrade = averageGrade;
+    private float makeAverageGrade(float averageGrade) {
+        if(Grades.isGradeDerived(averageGrade)) {
+            return averageGrade;
         } else {
-            this.averageGrade = Grades.DEFAULT;
+            return Grades.DEFAULT;
         }
     }
 
-    public void setWorkIds(Set<Integer> workIds) {
-        this.workIds = Objects.requireNonNullElseGet(workIds, this::getDefaultWorkIds);
+    private Set<Integer> makeWorkIds(Set<Integer> workIds) {
+        return Objects.requireNonNullElseGet(workIds, this::getDefaultWorkIds);
     }
 
     public float getAverageGrade() {

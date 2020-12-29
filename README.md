@@ -9,19 +9,40 @@
 ### Execute following steps, if using linux terminal:
 
 - Navigate to the root directory of the project
-- Run command `./project-build.sh`
-- To run server run command `./run-server.sh`
+- Switch to branch `kb3` or later
+- Execute `build-project.sh`
+- To run server execute `run-server.sh`
 
 ### Execute following steps, if using explorer:
 
 - Open the root directory of the project
-- Execute `project-build.sh`
+- Switch to branch `kb3` or later using any git client (e.g. GitKraken)
+- Execute `build-project.sh`
 - Execute `run-server.sh`
 
 ### Alternatively you can start IntellijIDEA and:
 
+- Switch to branch `kb3` or later in VCS settings of the directory
 - Run gradle task `Install` on `model` project at subdirectory `modules/model`
+- Run gradle task `Install` on `entity` module at subdirectory `modules/entity` from root project (tried out what's the difference between module and subproject)
 - Run `ServerApp` in project `server` at subdirectory `modules/server`
+
+### Alternatively you can directly use commands from shell scripts:
+
+#### Build project:
+
+- `./gradlew init`
+- `./gradlew init -p modules/model`
+- `./gradlew init -p modules/server`
+- `./gradlew init -p modules/client`
+- `./gradlew install -p modules/model`
+- `./gradlew install -p modules/entity`
+- `./gradlew build -x test -p modules/server`
+- `./gradlew build -p modules/client`
+
+#### Run server:
+
+- `java -jar modules/server/build/libs/server-0.1-SNAPSHOT.jar` 
 
 ## Server
 
@@ -29,59 +50,128 @@ Server uses CTU FIT's OracleDB connection, so where is no need to configure anyt
 
 ## Client
 
-- To run client run command `java -jar modules/client/build/libs/client-0.1-SNAPSHOT.jar` with wanted arguments
+To run client run command `java -jar modules/client/build/libs/client-0.1-SNAPSHOT.jar` with wanted arguments as listed in `Client` section below
 
 Or
 
-- Start IntellijIDEA and run `ClientApp` in project `client` at subdirectory `modules/client` within `Terminal` and give it appropriate arguments as listed in `Client` section below
+Start IntellijIDEA and run `ClientApp` in project `client` at subdirectory `modules/client` and give it appropriate arguments as listed in `Client` section below
 
-### Basic arguments:
+Client provides both executing arguments from command line and environment inside client. So you can:
+
+- Run client with `java -jar modules/client/build/libs/client-0.1-SNAPSHOT.jar --entity=student --action=readAll`, which will give you the result on start-up and client will when wait for other commands
+
+- Run client without any arguments and then execute `--entity=student --action=readAll` from the inside and client will when wait for other commands
+
+If you want only to run client from the command line just use `exit` argument at the end, like this: `java -jar ... --entity=student --action=readAll exit`
+
+This implies, that you can pass pre-written scripts, for example `resources/clientScript.txt`, to the client using `java -jar ...SNAPSHOT.jar < resources/clientScript.txt` 
+
+### Basic commands:
+
+To get help type in:
+
+- `help`
+- `h`
+- `manual`
+- `man`
+
+To get current time type in:
+
+- `date`
+- `time`
+
+To exit type in:
+
+- `exit`
+- `quit`
+- `q`
+
+### Basic actions:
+
+- `--action=create ...`
+- `--action=read id=<id>`
+- `--action=update id=<id> ...`
+- `--action=delete id=<id>`
+- `--action=readAll`
+- `--action=pageAll`
+
+### Arguments for actions:
 
 - Use `--entity=<wanted-entity>` to operate with entity of type `<wanted-entity>`
-- Use `--valueParameter=<value>` to pass simple parameter (e.g. Integer, String etc.)
-- Use `--complexParameter=<value> --complexParameter=<value> ...` to pass multiple parameters to complex parameter (i.e. authorIds for Work entity etc.)
-- `*` means non-required 
-- `c` means complex
+- Use `--valueAttribute=<value>` to pass simple attribute (e.g. Integer, String etc.), notice, that only the first value passed will be taken unlike the complex attribute
+- Use `--complexAttribute=<value1> --complexAttribute=<value2> ...` to pass multiple attributes as complex attribute (i.e. authorIds for Work entity etc.)
 
-### Available commands per entity:
+### Attributes info:
+
+- `*` means required for creation, does not mean it always contains some value
+- `(optional)` means non-required for creation
+- `(comlex)` means this attribute can store multiple values at once
+
+### Available options per entity:
 
 #### Student:
 
-Use `--entity=Student`
+Use `--entity=student`
 
-- `--username`
-- `--name`
-- `--birthdate`*
-- `--averageGrade`*
-- `--workIds`*c
+Student's attributes:
 
+- `--username` *
+- `--name` *
+- `--birthdate` (optional)
+- `--averageGrade` (optional)
+- `--workIds` (optional, complex)
+
+Special actions:
+
+- `--action=readByUsername username=<username>`
+- `--action=readAllByName name=<name>`
+- `--action=joinWork studentId=<id1> workId=<id2>`
 
 #### Teacher:
 
-Use `--entity=Teacher`
+Use `--entity=teacher`
 
-- `--username`
-- `--name`
-- `--birthdate`*
-- `--wage`*
-- `--assessmentIds`*c
+Teacher's attributes:
+
+- `--username` *
+- `--name` *
+- `--birthdate` (optional)
+- `--wage` (optional)
+- `--assessmentIds` (optional, complex)
+
+Special actions:
+
+- `--action=readByUsername username=<username>`
+- `--action=readAllByName name=<name>`
 
 #### Work:
 
-Use `--entity=Work`
+Use `--entity=work`
 
-- `--title`
-- `--text`*
-- `--authorIds`c
-- `--assessmentId`*
+Work's attributes:
+
+- `--title` *
+- `--text` (optional)
+- `--authorIds` * (complex)
+- `--assessmentId` (optional)
+
+Special actions:
+
+- `--action=readAllByTitle title=<title>`
 
 #### Assessment:
 
-Use `--entity=Assessment`
+Use `--entity=assessment`
 
-- `--grade`
-- `--workId`
-- `--evaluatorId`
+Assessment's attributes:
+
+- `--grade` *
+- `--workId` *
+- `--evaluatorId` *
+
+Special actions:
+
+- `--action=readAllByEvaluatorId evaluatorId=<evaluatorId>`
 
 ## Problem Solving
 
@@ -90,4 +180,4 @@ If server application is throwing an error, that wanted port is already in use:
 - At `server` project files at `src/main/resources/application.properties` change value `server.port = 8080` to `8081` or any other port number, compliant to your system port notation.
 - Do not forget to change `client`'s `application.properties` accordingly, the file is located similarly.
 
-Client application may close slowly due to dependency on Oracle DB, but after seeing results (when it's stuck on `Initialized JPA EntityManagerFactory for persistence unit 'default'`) you may close it with `Ctrl + C` or similar combination, depending on your system. It will still finish, but as i mentioned before it will take some time. For the reason see `application.properties` at `client` module. 
+All logs with severity less than `warn` were disabled for `client`. To change that see `application.properties` at `client` module.

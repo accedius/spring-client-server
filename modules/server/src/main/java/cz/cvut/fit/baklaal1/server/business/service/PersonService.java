@@ -1,7 +1,7 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
 import cz.cvut.fit.baklaal1.server.business.repository.PersonRepository;
-import cz.cvut.fit.baklaal1.model.data.entity.Person;
+import cz.cvut.fit.baklaal1.entity.Person;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +37,13 @@ public abstract class PersonService<T extends Person, T_DTO extends PersonDTO<T_
     public Set<T_DTO> findAllByNameAsDTO(String name) {
         Set<T> persons = personRepository.findAllByName(name);
         return toDTO(persons);
+    }
+
+    public void deleteByUsername(String username) {
+        Optional<T_DTO> optionalPerson = findByUsernameAsDTO(username);
+        if(optionalPerson.isPresent()) {
+            int id = optionalPerson.get().getId();
+            delete(id);
+        }
     }
 }

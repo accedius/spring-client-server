@@ -1,13 +1,14 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Student;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.repository.StudentRepository;
+import cz.cvut.fit.baklaal1.server.suite.StudentTestSuite;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -33,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 //TODO maybe should just use one DataSource for all the Test classes, since Spring creates HikariDataSource pool for each Test class in runtime, causing opening and closing same database Connection for each Test class
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @DisplayName("StudentService Test")
-class StudentServiceTest {
+class StudentServiceTest extends StudentTestSuite {
     @Autowired
     private StudentService studentService;
 
@@ -282,65 +283,24 @@ class StudentServiceTest {
         Mockito.verify(studentRepositoryMock, Mockito.atLeastOnce()).findById(idCaptor.capture());
         assertEquals(studentId, idCaptor.getValue());
     }
+    
+    @Test
+    public void deleteByUsername() {
+        final int id = 105;
+        final Student student = generateStudent(id);
+        final String username = student.getUsername();
 
-    private Student generateStudent(int i) {
-        String username = "student" + i;
-        String name = "studentName" + i;
-        Timestamp birthdate = new Timestamp(i*10000000);
-        float averageGrade = (i * 0.1f) % Grades.E + Grades.A;
-        Student student = new Student(username, name, birthdate, averageGrade);
-        ReflectionTestUtils.setField(student, "id", i);
-        return student;
-    }
+        BDDMockito.given(studentRepositoryMock.findByUsername(username)).willReturn(Optional.of(student));
+        BDDMockito.doNothing().when(studentRepositoryMock).deleteById(id);
 
-    private <L extends Collection<Student>> L fillStudentCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateStudent(i));
-        }
-        return collection;
-    }
+        studentService.deleteByUsername(username);
 
-    private StudentDTO generateStudentDTO(int i) {
-        return generateStudent(i).toDTO();
-    }
+        ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
+        Mockito.verify(studentRepositoryMock, Mockito.times(1)).findByUsername(usernameCaptor.capture());
+        assertEquals(username, usernameCaptor.getValue());
 
-    private <L extends Collection<StudentDTO>> L fillStudentDTOCollection(L collection, int count) {
-        for (int i = 0; i < count; i++) {
-            collection.add(generateStudentDTO(i));
-        }
-        return collection;
-    }
-
-    private StudentCreateDTO generateStudentCreateDTO(int i) {
-        return generateStudent(i).toCreateDTO();
-    }
-
-    private <L extends Collection<Integer>> L fillIntegerCollectionUpTo(L collection, int limit) {
-        for (int i = 0; i < limit; i++) {
-            collection.add(i);
-        }
-        return collection;
-    }
-
-    private <E, V> E setField(E entity, String fieldName, V fieldValue) {
-        ReflectionTestUtils.setField(entity, fieldName, fieldValue);
-        return entity;
-    }
-
-    private <E, V, C extends Collection<E>> C setFieldForAll(C collection, String fieldName, V fieldValue) {
-        for(E entity : collection) {
-            setField(entity, fieldName, fieldValue);
-        }
-        return collection;
-    }
-
-    private Work generateWork(int i) {
-        String title = "title" + i;
-        String text = "text" + i;
-        Set<Student> authors = new TreeSet<>();
-        Assessment assessment = null;
-        Work work = new Work(title, text, authors, assessment);
-        ReflectionTestUtils.setField(work, "id", i);
-        return work;
+        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(studentRepositoryMock, Mockito.times(1)).deleteById(idCaptor.capture());
+        assertEquals(id, idCaptor.getValue());
     }
 }

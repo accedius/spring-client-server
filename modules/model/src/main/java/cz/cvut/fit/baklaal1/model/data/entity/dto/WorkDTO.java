@@ -1,44 +1,30 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
-import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
-    private final int id;
     private final String title;
     private final String text;
     private final Set<Integer> authorIds;
     private final Integer assessmentId;
 
-    public WorkDTO(int id, String title, String text, Set<Integer> authorIds, Integer assessmentId) {
-        this.id = id;
+    @JsonCreator
+    public WorkDTO(@JsonProperty("id") int id, @JsonProperty("title") String title, @JsonProperty("text") String text, @JsonProperty("authorIds") Set<Integer> authorIds, @JsonProperty("assessmentId") Integer assessmentId) {
+        super(id);
         this.title = title;
         this.text = text;
         this.authorIds = authorIds;
         this.assessmentId = assessmentId;
     }
 
-    public WorkDTO(final Work work) {
-        this.id = work.getId() == null ? -1 : work.getId();
-        this.title = work.getTitle();
-        this.text = work.getText();
-        Set<Student> authors = work.getAuthors();
-        this.authorIds = authors.stream().map(Student::getId).collect(Collectors.toSet());
-        this.assessmentId = work.getAssessment() != null ? work.getAssessment().getId() : null;
-    }
-
     public int getId() {
         return id;
-    }
-
-    @Override
-    public int readId() {
-        return getId();
     }
 
     public String getTitle() {
@@ -64,16 +50,11 @@ public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
         printFormatted("title", title);
         printFormatted("text", text);
 
-        //TODO make a universal method to print collections formatted in json-like format
-        System.out.println("Author (Student) Ids: {");
-        for (Integer authorId : authorIds) {
-            printFormatted("authorId", authorId);
-        }
-        System.out.println("}");
+        printCollectionFormatted("Author (Student) Ids", authorIds);
 
         printFormatted("assessmentId", assessmentId);
 
-        System.out.println(super.toString());
+        printLinksFormatted(super.toString());
         System.out.println("}");
     }
 

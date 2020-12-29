@@ -1,23 +1,23 @@
 FROM openjdk:14-jdk AS app-build
 
-COPY ./modules/model builds/model
-WORKDIR builds/model
+COPY . build
+
+WORKDIR /build/modules/model
 RUN chmod +x ./gradlew
 RUN ./gradlew init
 RUN ./gradlew install
 
-WORKDIR /
+WORKDIR /build
+RUN chmod +x ./gradlew
+RUN ./gradlew init
+RUN ./gradlew install -p modules/entity
 
-COPY ./modules/server builds/server
-WORKDIR builds/server
+WORKDIR /build/modules/server
 RUN chmod +x ./gradlew
 RUN ./gradlew init
 RUN ./gradlew build
 
-WORKDIR /
-
-COPY ./modules/client builds/client
-WORKDIR builds/client
+WORKDIR /build/modules/client
 RUN chmod +x ./gradlew
 RUN ./gradlew init
 RUN ./gradlew build

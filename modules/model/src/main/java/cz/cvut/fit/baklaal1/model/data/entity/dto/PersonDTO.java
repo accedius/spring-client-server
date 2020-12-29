@@ -1,29 +1,19 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Person;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
 public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends BasicDTO<T_DTO> implements Comparable<PersonDTO<T_DTO>> {
-    protected int id;
-    protected String username;
-    protected String name;
-    protected Timestamp birthdate;
+    protected final String username;
+    protected final String name;
+    protected final Timestamp birthdate;
 
     public PersonDTO(int id, String username, String name, Timestamp birthdate) {
-        this.id = id;
+        super(id);
         this.username = username;
         this.name = name;
         this.birthdate = birthdate;
-    }
-
-    public PersonDTO(final Person person) {
-        this.id = person.getId() == null ? -1 : person.getId();
-        this.username = person.getUsername();
-        this.name = person.getName();
-        this.birthdate = person.getBirthdate();
     }
 
     public int getId() {
@@ -52,11 +42,6 @@ public abstract class PersonDTO<T_DTO extends PersonDTO<T_DTO>> extends BasicDTO
                 username.equals(personDTO.getUsername()) &&
                 name.equals(personDTO.getName()) &&
                 Objects.equals(birthdate, personDTO.getBirthdate());
-    }
-
-    @Override
-    public int readId() {
-        return getId();
     }
 
     @Override

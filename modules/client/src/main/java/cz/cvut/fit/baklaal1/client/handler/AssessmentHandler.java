@@ -1,7 +1,6 @@
 package cz.cvut.fit.baklaal1.client.handler;
 
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
-import cz.cvut.fit.baklaal1.client.helper.ClientAppHelp;
 import cz.cvut.fit.baklaal1.client.resource.AssessmentResource;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;

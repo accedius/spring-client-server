@@ -1,11 +1,12 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Teacher;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
+import cz.cvut.fit.baklaal1.server.suite.AssessmentTestSuite;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 //TODO maybe should just use one DataSource for all the Test classes, since Spring creates HikariDataSource pool for each Test class in runtime, causing opening and closing same database Connection for each Test class
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @DisplayName("AssessmentService Test")
-class AssessmentServiceTest {
+class AssessmentServiceTest extends AssessmentTestSuite {
     @Autowired
     private AssessmentService assessmentService;
 
@@ -45,287 +46,126 @@ class AssessmentServiceTest {
 
     @Test
     public void findAll() {
-        final int grade1 = 3;
-        final int grade2 = 5;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int teacherId = 10;
-        final int assessment1Id = 1337;
-        final int assessment2Id = 322;
+        final int allAssessmentsCnt = 10;
+        List<Assessment> allAssessmentsToReturn = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
+        List<Assessment> allAssessmentsToReceive = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 59999.99);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
+        BDDMockito.given(assessmentRepositoryMock.findAll()).willReturn(allAssessmentsToReturn);
 
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        Work work2 = new Work(title2, text2, new TreeSet<>(), null);
+        List<Assessment> receivedAllAssessments = assessmentService.findAll();
 
-        Assessment assessment1 = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessment1, "id", assessment1Id);
-        Assessment assessment2 = new Assessment(grade2, work2, teacher);
-        ReflectionTestUtils.setField(assessment2, "id", assessment2Id);
+        assertEquals(allAssessmentsToReceive, receivedAllAssessments);
 
-        List<Assessment> allAssessments = new ArrayList<>();
-        allAssessments.add(assessment1);
-        allAssessments.add(assessment2);
-
-        BDDMockito.given(assessmentRepositoryMock.findAll()).willReturn(new ArrayList<>(allAssessments));
-
-        List<Assessment> returnedAssessments = assessmentService.findAll();
-        assertEquals(allAssessments, returnedAssessments);
-
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findAll();
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findAll();
     }
 
     @Test
     public void findAllAsDTO() {
-        final int grade1 = 3;
-        final int grade2 = 5;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int teacherId = 10;
-        final int work1Id = 23;
-        final int work2Id = 75;
-        final int assessment1Id = 1337;
-        final int assessment2Id = 322;
+        final int allAssessmentsCnt = 10;
+        List<Assessment> allAssessmentsToReturn = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
+        List<AssessmentDTO> allAssessmentsToReceiveAsDTO = fillAssessmentDTOCollection(new ArrayList<>(), allAssessmentsCnt);
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
+        BDDMockito.given(assessmentRepositoryMock.findAll()).willReturn(allAssessmentsToReturn);
 
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        List<AssessmentDTO> receivedAllAssessmentsAsDTO = assessmentService.findAllAsDTO();
 
-        Assessment assessment1 = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessment1, "id", assessment1Id);
-        Assessment assessment2 = new Assessment(grade2, work2, teacher);
-        ReflectionTestUtils.setField(assessment2, "id", assessment2Id);
+        assertEquals(allAssessmentsToReceiveAsDTO, receivedAllAssessmentsAsDTO);
 
-        List<Assessment> allAssessments = new ArrayList<>();
-        allAssessments.add(assessment1);
-        allAssessments.add(assessment2);
-
-        BDDMockito.given(assessmentRepositoryMock.findAll()).willReturn(new ArrayList<>(allAssessments));
-
-        AssessmentDTO assessment1DTO = new AssessmentDTO(assessment1Id, grade1, work1.getId(), teacher.getId());
-        AssessmentDTO assessment2DTO = new AssessmentDTO(assessment2Id, grade2, work2.getId(), teacher.getId());
-        List<AssessmentDTO> expectedAssessmentsAsDTO = new ArrayList<>();
-        expectedAssessmentsAsDTO.add(assessment1DTO);
-        expectedAssessmentsAsDTO.add(assessment2DTO);
-
-        List<AssessmentDTO> returnedAssessmentsAsDTO = assessmentService.findAllAsDTO();
-        assertEquals(expectedAssessmentsAsDTO, returnedAssessmentsAsDTO);
-
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findAll();
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findAll();
     }
 
     @Test
     public void pageAll() {
-        final int page = 0;
-        final int size = 2;
-        final int total = 8;
+        final int allAssessmentsCnt = 10;
+        final int page = 1;
+        final int pageSize = 3;
+        List<Assessment> allAssessmentsToReturn = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
+        List<Assessment> allAssessmentsToReceive = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
 
-        final int grade1 = 3;
-        final int grade2 = 5;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int teacherId = 10;
-        final int work1Id = 23;
-        final int work2Id = 75;
-        final int assessment1Id = 1337;
-        final int assessment2Id = 322;
+        final Pageable pageableRequested = PageRequest.of(page, pageSize);
+        final Page<Assessment> pageExpected = new PageImpl<>(allAssessmentsToReceive, pageableRequested, allAssessmentsCnt);
+        final Page<Assessment> pageToReturn = new PageImpl<>(allAssessmentsToReturn, pageableRequested, allAssessmentsCnt);
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
+        BDDMockito.given(assessmentRepositoryMock.findAll(pageableRequested)).willReturn(pageToReturn);
 
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        final Page<Assessment> pageReceived = assessmentService.pageAll(pageableRequested);
 
-        Assessment assessment1 = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessment1, "id", assessment1Id);
-        Assessment assessment2 = new Assessment(grade2, work2, teacher);
-        ReflectionTestUtils.setField(assessment2, "id", assessment2Id);
-
-        final Pageable pageableRequested =  PageRequest.of(page, size);
-        final List<Assessment> data = List.of(assessment1, assessment2);
-        final Page<Assessment> pageExpected = new PageImpl<>(data, pageableRequested, total);
-        final Page<Assessment> pageToReturn = new PageImpl<>(data, pageableRequested, total);
-
-        BDDMockito.given(assessmentRepositoryMock.findAll(any(Pageable.class))).willReturn(pageToReturn);
-
-        final Page<Assessment> pageReturned = assessmentService.pageAll(pageableRequested);
-        assertEquals(pageExpected, pageReturned);
+        assertEquals(pageExpected, pageReceived);
 
         ArgumentCaptor<Pageable> pageableArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findAll(pageableArgumentCaptor.capture());
-        Pageable pageableProvided = pageableArgumentCaptor.getValue();
-        assertEquals(pageableRequested, pageableProvided);
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findAll(pageableArgumentCaptor.capture());
+        assertEquals(pageableRequested, pageableArgumentCaptor.getValue());
     }
 
     @Test
     public void findAllByIds() {
-        final int grade1 = 3;
-        final int grade2 = 5;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int teacherId = 10;
-        final int work1Id = 23;
-        final int work2Id = 75;
-        final int assessment1Id = 1337;
-        final int assessment2Id = 322;
+        final int allAssessmentsCnt = 5;
+        List<Assessment> allAssessmentsToReturn = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
+        Set<Assessment> allAssessmentsToReceive = fillAssessmentCollection(new TreeSet<>(), allAssessmentsCnt);
+        Set<Integer> allWantedIds = fillIntegerCollectionUpTo(new HashSet<>(), allAssessmentsCnt);
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
+        BDDMockito.given(assessmentRepositoryMock.findAllById(allWantedIds)).willReturn(allAssessmentsToReturn);
 
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        Set<Assessment> receivedAssessments = assessmentService.findAllByIds(new TreeSet<>(allWantedIds));
+        assertEquals(allAssessmentsToReceive, receivedAssessments);
 
-        Assessment assessment1 = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessment1, "id", assessment1Id);
-        Assessment assessment2 = new Assessment(grade2, work2, teacher);
-        ReflectionTestUtils.setField(assessment2, "id", assessment2Id);
-
-        Set<Assessment> allAssessmentsByIdExpected = new TreeSet<>();
-        allAssessmentsByIdExpected.add(assessment1);
-        allAssessmentsByIdExpected.add(assessment2);
-
-        Set<Integer> wantedIds = new TreeSet<>();
-        wantedIds.add(assessment1Id);
-        wantedIds.add(assessment2Id);
-
-        BDDMockito.given(assessmentRepositoryMock.findAllById(wantedIds)).willReturn(new ArrayList<>(allAssessmentsByIdExpected));
-        Set<Assessment> allAssessmentsByIdsGivenProvided = assessmentService.findAllByIds(new TreeSet<>(wantedIds));
-        assertEquals(allAssessmentsByIdExpected, allAssessmentsByIdsGivenProvided);
-
-        ArgumentCaptor<Iterable<Integer>> idsCaptor = ArgumentCaptor.forClass(Iterable.class);
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findAllById(idsCaptor.capture());
-        Iterable<Integer> wantedIdsProvided = idsCaptor.getValue();
-        assertEquals(wantedIds, wantedIdsProvided);
+        ArgumentCaptor<Iterable<Integer>> argumentCaptor = ArgumentCaptor.forClass(Iterable.class);
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findAllById(argumentCaptor.capture());
+        assertEquals(allWantedIds, argumentCaptor.getValue());
     }
 
     @Test
     public void findAllByIdsAsDTO() {
-        final int grade1 = 3;
-        final int grade2 = 5;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final String title2 = "Title2";
-        final String text2 = "Text2";
-        final int teacherId = 10;
-        final int work1Id = 23;
-        final int work2Id = 75;
-        final int assessment1Id = 1337;
-        final int assessment2Id = 322;
+        final int allAssessmentsCnt = 5;
+        List<Assessment> allAssessmentsToReturn = fillAssessmentCollection(new ArrayList<>(), allAssessmentsCnt);
+        Set<AssessmentDTO> allAssessmentsToReceive = fillAssessmentDTOCollection(new TreeSet<>(), allAssessmentsCnt);
+        Set<Integer> allWantedIds = fillIntegerCollectionUpTo(new HashSet<>(), allAssessmentsCnt);
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
+        BDDMockito.given(assessmentRepositoryMock.findAllById(allWantedIds)).willReturn(allAssessmentsToReturn);
 
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-        Work work2 = new Work(title2, text2, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work2, "id", work2Id);
+        Set<AssessmentDTO> receivedAssessments = assessmentService.findAllByIdsAsDTO(new TreeSet<>(allWantedIds));
+        assertEquals(allAssessmentsToReceive, receivedAssessments);
 
-        Assessment assessment1 = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessment1, "id", assessment1Id);
-        Assessment assessment2 = new Assessment(grade2, work2, teacher);
-        ReflectionTestUtils.setField(assessment2, "id", assessment2Id);
-
-        Set<Assessment> allAssessmentsByIdExpected = new TreeSet<>();
-        allAssessmentsByIdExpected.add(assessment1);
-        allAssessmentsByIdExpected.add(assessment2);
-
-        Set<Integer> wantedIds = new TreeSet<>();
-        wantedIds.add(assessment1Id);
-        wantedIds.add(assessment2Id);
-
-        Set<AssessmentDTO> allAssessmentsByIdExpectedAsDTO = new TreeSet<>();
-        allAssessmentsByIdExpectedAsDTO.add(assessment1.toDTO());
-        allAssessmentsByIdExpectedAsDTO.add(assessment2.toDTO());
-
-        BDDMockito.given(assessmentRepositoryMock.findAllById(wantedIds)).willReturn(new ArrayList<>(allAssessmentsByIdExpected));
-        Set<AssessmentDTO> allAssessmentsByIdsGivenProvided = assessmentService.findAllByIdsAsDTO(new TreeSet<>(wantedIds));
-        assertEquals(allAssessmentsByIdExpectedAsDTO, allAssessmentsByIdsGivenProvided);
-
-        ArgumentCaptor<Iterable<Integer>> idsCaptor = ArgumentCaptor.forClass(Iterable.class);
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findAllById(idsCaptor.capture());
-        Iterable<Integer> wantedIdsProvided = idsCaptor.getValue();
-        assertEquals(wantedIds, wantedIdsProvided);
+        ArgumentCaptor<Iterable<Integer>> argumentCaptor = ArgumentCaptor.forClass(Iterable.class);
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findAllById(argumentCaptor.capture());
+        assertEquals(allWantedIds, argumentCaptor.getValue());
     }
 
     @Test
     public void findById() {
-        final int grade1 = 3;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final int teacherId = 10;
-        final int work1Id = 23;
-        final int assessmentId = 1337;
-
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
-
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-
-        Assessment assessmentToReturn = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessmentToReturn, "id", assessmentId);
-        Assessment assessmentExpected = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessmentExpected, "id", assessmentId);
+        final int assessmentId = 10;
+        Assessment assessmentToReturn = generateAssessment(assessmentId);
+        Assessment assessmentToReceive = generateAssessment(assessmentId);
 
         BDDMockito.given(assessmentRepositoryMock.findById(assessmentId)).willReturn(Optional.of(assessmentToReturn));
-        Assessment assessmentProvided = assessmentService.findById(assessmentId).orElseThrow();
-        assertEquals(assessmentExpected, assessmentProvided);
 
-        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findById(idCaptor.capture());
-        Integer idCaptured = idCaptor.getValue();
-        assertEquals(assessmentId, idCaptured);
+        Assessment received = assessmentService.findById(assessmentId).orElseThrow();
+        assertEquals(assessmentToReceive, received);
+
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findById(argumentCaptor.capture());
+        assertEquals(assessmentId, argumentCaptor.getValue());
     }
 
     @Test
     public void findByIdAsDTO() {
-        final int grade1 = 3;
-        final String title1 = "Title1";
-        final String text1 = "Text1";
-        final int teacherId = 10;
-        final int work1Id = 23;
-        final int assessmentId = 1337;
-
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
-
-        Work work1 = new Work(title1, text1, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work1, "id", work1Id);
-
-        Assessment assessmentToReturn = new Assessment(grade1, work1, teacher);
-        ReflectionTestUtils.setField(assessmentToReturn, "id", assessmentId);
-        AssessmentDTO assessmentDTOExpected = new AssessmentDTO(assessmentId, grade1, work1.getId(), teacher.getId());
+        final int assessmentId = 10;
+        Assessment assessmentToReturn = generateAssessment(assessmentId);
+        AssessmentDTO assessmentDTOToReceive = generateAssessmentDTO(assessmentId);
 
         BDDMockito.given(assessmentRepositoryMock.findById(assessmentId)).willReturn(Optional.of(assessmentToReturn));
-        AssessmentDTO assessmentDTOProvided = assessmentService.findByIdAsDTO(assessmentId).orElseThrow();
-        assertEquals(assessmentDTOExpected, assessmentDTOProvided);
 
-        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findById(idCaptor.capture());
-        Integer idCaptured = idCaptor.getValue();
-        assertEquals(assessmentId, idCaptured);
+        AssessmentDTO receivedDTO = assessmentService.findByIdAsDTO(assessmentId).orElseThrow();
+        assertEquals(assessmentDTOToReceive, receivedDTO);
+
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).findById(argumentCaptor.capture());
+        assertEquals(assessmentId, argumentCaptor.getValue());
     }
 
     @Test
     public void delete() {
-        final int assessmentId = 1337;
+        final int assessmentId = 10;
 
         BDDMockito.doNothing().when(assessmentRepositoryMock).deleteById(assessmentId);
 
@@ -333,93 +173,55 @@ class AssessmentServiceTest {
 
         ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
         Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).deleteById(idCaptor.capture());
-        Integer idCaptured = idCaptor.getValue();
-        assertEquals(assessmentId, idCaptured);
+        assertEquals(assessmentId, idCaptor.getValue());
     }
 
     @Test
     public void create() throws Exception {
-        final int grade = 3;
-        final String title = "Title1";
-        final String text = "Text1";
-        final int teacherId = 10;
-        final int workId = 23;
-        final int assessmentId = 1337;
+        final int assessmentId = 2;
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
-
-        Work work = new Work(title, text, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work, "id", workId);
-
-        Assessment assessmentToReturn = new Assessment(grade, work, teacher);
-        ReflectionTestUtils.setField(assessmentToReturn, "id", assessmentId);
-
-        AssessmentCreateDTO assessmentCreateDTO = new AssessmentCreateDTO(grade, workId, teacherId);
+        Assessment assessmentToReturn = generateAssessment(assessmentId);
+        AssessmentCreateDTO assessmentCreateDTO = generateAssessmentCreateDTO(assessmentId);
+        AssessmentDTO assessmentDTOToReceive = generateAssessmentDTO(assessmentId);
 
         BDDMockito.given(assessmentRepositoryMock.save(any(Assessment.class))).willReturn(assessmentToReturn);
-        BDDMockito.given(assessmentRepositoryMock.findByWork(any(Work.class))).willReturn(Optional.empty());
-        BDDMockito.given(teacherServiceMock.findById(teacherId)).willReturn(Optional.of(teacher));
-        BDDMockito.given(workServiceMock.findById(workId)).willReturn(Optional.of(work));
+        BDDMockito.given(assessmentRepositoryMock.findByWork_Id(assessmentToReturn.getWork().getId())).willReturn(Optional.empty());
+        BDDMockito.given(teacherServiceMock.findById(assessmentId)).willReturn(Optional.of(assessmentToReturn.getEvaluator()));
+        BDDMockito.given(workServiceMock.findById(assessmentId)).willReturn(Optional.of(assessmentToReturn.getWork()));
 
-        AssessmentDTO returnedAssessmentDTO = assessmentService.create(assessmentCreateDTO);
-
-        AssessmentDTO expectedAssessmentDTO = new AssessmentDTO(assessmentId, grade, workId, teacherId);
-        assertEquals(expectedAssessmentDTO, returnedAssessmentDTO);
+        AssessmentDTO created = assessmentService.create(assessmentCreateDTO);
+        assertEquals(assessmentDTOToReceive, created);
 
         ArgumentCaptor<Assessment> argumentCaptor = ArgumentCaptor.forClass(Assessment.class);
         Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
-        Assessment assessmentProvidedToSave = argumentCaptor.getValue();
-        assertEquals(grade, assessmentProvidedToSave.getGrade());
-        assertEquals(teacherId, assessmentProvidedToSave.getEvaluator().getId());
-        assertEquals(workId, assessmentProvidedToSave.getWork().getId());
+        assertEquals(assessmentToReturn, argumentCaptor.getValue());
     }
 
     @Test
     public void update() throws Exception {
-        final int grade = 3;
-        final String title = "Title1";
-        final String text = "Text1";
-        final int teacherId = 10;
-        final int workId = 23;
-        final int assessmentId = 1337;
-        final int newGrade = 4;
-        final int newTeacherId = 20;
+        final int assessmentId = 2;
+        final int newGenerator = assessmentId + 1;
+        Assessment assessmentOld = generateAssessment(assessmentId);
 
-        Teacher teacher = new Teacher("perfect", "Perfect", null, 1);
-        ReflectionTestUtils.setField(teacher, "id", teacherId);
+        Assessment assessmentNewToReturn = generateAssessment(newGenerator);
+        ReflectionTestUtils.setField(assessmentNewToReturn, "id", assessmentId);
 
-        Teacher newTeacher = new Teacher("good", "Good", null, 1);
-        ReflectionTestUtils.setField(newTeacher, "id", newTeacherId);
+        AssessmentCreateDTO assessmentNewCreateDTO = generateAssessmentCreateDTO(newGenerator);
 
-        Work work = new Work(title, text, new TreeSet<>(), null);
-        ReflectionTestUtils.setField(work, "id", workId);
+        AssessmentDTO assessmentNewDTOToReceive = generateAssessmentDTO(newGenerator);
+        ReflectionTestUtils.setField(assessmentNewDTOToReceive, "id", assessmentId);
 
-        Assessment assessmentToBeUpdated = new Assessment(grade, work, teacher);
-        ReflectionTestUtils.setField(assessmentToBeUpdated, "id", assessmentId);
+        BDDMockito.given(assessmentRepositoryMock.save(any(Assessment.class))).willReturn(assessmentNewToReturn);
+        BDDMockito.given(assessmentRepositoryMock.findById(assessmentId)).willReturn(Optional.of(assessmentOld));
+        BDDMockito.given(teacherServiceMock.findById(newGenerator)).willReturn(Optional.of(assessmentNewToReturn.getEvaluator()));
+        BDDMockito.given(workServiceMock.findById(newGenerator)).willReturn(Optional.of(assessmentNewToReturn.getWork()));
 
-        Assessment assessmentToReturn = new Assessment(newGrade, work, newTeacher);
-        ReflectionTestUtils.setField(assessmentToReturn, "id", assessmentId);
-
-        AssessmentCreateDTO assessmentCreateDTO = new AssessmentCreateDTO(grade, workId, teacherId);
-
-        AssessmentCreateDTO assessmentToUpdateDTO = new AssessmentCreateDTO(newGrade, workId, newTeacherId);
-
-        BDDMockito.given(assessmentRepositoryMock.findById(assessmentId)).willReturn(Optional.of(assessmentToBeUpdated));
-        BDDMockito.given(assessmentRepositoryMock.save(any(Assessment.class))).willReturn(assessmentToReturn);
-        BDDMockito.given(teacherServiceMock.findById(newTeacherId)).willReturn(Optional.of(newTeacher));
-        BDDMockito.given(workServiceMock.findById(workId)).willReturn(Optional.of(work));
-
-        AssessmentDTO returnedAssessmentDTO = assessmentService.update(assessmentId, assessmentToUpdateDTO);
-
-        AssessmentDTO expectedAssessmentDTO = new AssessmentDTO(assessmentId, newGrade, workId, newTeacherId);
-        assertEquals(expectedAssessmentDTO, returnedAssessmentDTO);
+        AssessmentDTO updated = assessmentService.create(assessmentNewCreateDTO);
+        assertEquals(assessmentNewDTOToReceive, updated);
 
         ArgumentCaptor<Assessment> argumentCaptor = ArgumentCaptor.forClass(Assessment.class);
         Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
-        Assessment assessmentProvidedToSave = argumentCaptor.getValue();
-        assertEquals(newGrade, assessmentProvidedToSave.getGrade());
-        assertEquals(newTeacherId, assessmentProvidedToSave.getEvaluator().getId());
+        assertEquals(assessmentNewToReturn, argumentCaptor.getValue());
     }
 
     @Test

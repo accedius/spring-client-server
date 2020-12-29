@@ -1,7 +1,7 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
 import cz.cvut.fit.baklaal1.server.business.service.TeacherService;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
+import cz.cvut.fit.baklaal1.entity.Teacher;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.TeacherModelAssembler;

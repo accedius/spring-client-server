@@ -1,12 +1,13 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
-import cz.cvut.fit.baklaal1.model.data.entity.*;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.*;
+import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.service.AssessmentService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
+import cz.cvut.fit.baklaal1.server.suite.AssessmentTestSuite;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -34,14 +35,12 @@ import java.util.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureMockMvc
 @DisplayName("AssessmentController Test")
-public class AssessmentControllerTest {
+public class AssessmentControllerTest extends AssessmentTestSuite {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private AssessmentService assessmentServiceMock;
-
-    private static final String postAddress = AssessmentController.ASSESSMENT_DOMAIN_ROOT;
 
     @Test
     public void postConflict() throws Exception {
@@ -221,72 +220,5 @@ public class AssessmentControllerTest {
                 .accept("application/json")
                 .contentType("application/json"));
         checkDTOList(result, assessments);
-    }
-
-    private int generateGrade(int i) {
-        return Grades.A + i % Grades.F;
-    }
-
-    private Assessment generateAssessment(int i) {
-        int grade = generateGrade(i);
-        Work work = new Work("title"+i, "text"+i);
-        ReflectionTestUtils.setField(work, "id", i);
-        Teacher teacher = new Teacher("username"+i, "name"+i, new Timestamp(1000000000*i), 10000d*i);
-        ReflectionTestUtils.setField(teacher, "id", i);
-        Assessment assessment = new Assessment(grade, work, teacher);
-        ReflectionTestUtils.setField(assessment, "id", i);
-        return assessment;
-    }
-
-    private AssessmentDTO generateAssessmentDTO(int i) {
-        return generateAssessment(i).toDTO();
-    }
-
-    private AssessmentCreateDTO generateAssessmentCreateDTO(int i) {
-        return generateAssessment(i).toCreateDTO();
-    }
-
-    private void checkDTOPage(ResultActions resultToCheck, List<Assessment> assessments) throws Exception {
-        final int size = assessments.size();
-        for (int i = 0; i < size; i++) {
-            resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$._embedded.assessmentDTOList[" + i + "].id", CoreMatchers.is(assessments.get(i).getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.assessmentDTOList[" + i + "].grade", CoreMatchers.is(assessments.get(i).getGrade())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.assessmentDTOList[" + i + "].workId", CoreMatchers.is(assessments.get(i).getWork().getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$._embedded.assessmentDTOList[" + i + "].evaluatorId", CoreMatchers.is(assessments.get(i).getEvaluator().getId())));
-        }
-    }
-
-    private void checkDTOList(ResultActions resultToCheck, List<Assessment> assessments) throws Exception {
-        final int size = assessments.size();
-        for (int i = 0; i < size; i++) {
-            resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].id", CoreMatchers.is(assessments.get(i).getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].grade", CoreMatchers.is(assessments.get(i).getGrade())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].workId", CoreMatchers.is(assessments.get(i).getWork().getId())))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.[" + i + "].evaluatorId", CoreMatchers.is(assessments.get(i).getEvaluator().getId())));
-        }
-    }
-
-    private <E, V> E setField(E entity, String fieldName, V fieldValue) {
-        ReflectionTestUtils.setField(entity, fieldName, fieldValue);
-        return entity;
-    }
-
-    //TODO move to Jackson preferably, or to GSON or JSON-Java
-    private String generateAssessmentCreateDTOJson(int i) {
-        String json = "{\"grade\" : \"" + generateGrade(i) + "\", \"workId\" : \"" + i + "\", \"evaluatorId\" : \"" + i + "\" }";
-        return json;
-    }
-
-    private void checkLinks(ResultActions resultToCheck, AssessmentDTO checkAgainst) throws Exception {
-        resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$._links.self.href", CoreMatchers.endsWith(postAddress + "/" + checkAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$._links.collection.href", CoreMatchers.containsString(postAddress)));
-    }
-
-    private void checkResponse(ResultActions resultToCheck, AssessmentDTO checkAgainst) throws Exception {
-        resultToCheck.andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(checkAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.grade", CoreMatchers.is(checkAgainst.getGrade())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.workId", CoreMatchers.is(checkAgainst.getWorkId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.evaluatorId", CoreMatchers.is(checkAgainst.getEvaluatorId())));
-        checkLinks(resultToCheck, checkAgainst);
     }
 }

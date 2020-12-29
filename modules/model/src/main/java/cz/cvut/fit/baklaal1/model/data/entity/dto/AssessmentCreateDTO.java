@@ -1,13 +1,11 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-
 import java.util.Objects;
 
 public class AssessmentCreateDTO {
-    private final int grade;
-    private final int workId;
-    private final Integer evaluatorId;
+    private int grade;
+    private int workId;
+    private Integer evaluatorId;
 
     public AssessmentCreateDTO(int grade, int workId, Integer evaluatorId) {
         this.grade = grade;
@@ -15,10 +13,7 @@ public class AssessmentCreateDTO {
         this.evaluatorId = evaluatorId;
     }
 
-    public AssessmentCreateDTO(Assessment assessment) {
-        this.grade = assessment.getGrade();
-        this.workId = assessment.getWork().getId();
-        this.evaluatorId = assessment.getEvaluator() != null ? assessment.getEvaluator().getId() : null;
+    public AssessmentCreateDTO() {
     }
 
     public int getGrade() {

@@ -2,7 +2,9 @@ package cz.cvut.fit.baklaal1.client.handler;
 
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.BasicResource;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.RepresentationModel;
@@ -10,11 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
+public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> {
     protected static final String CREATE = ArgumentConstants.CREATE;
     protected static final String READ = ArgumentConstants.READ;
     protected static final String UPDATE = ArgumentConstants.UPDATE;
@@ -114,20 +114,37 @@ public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
         final int size = 2;
         int page = 0;
         PagedModel<T_DTO> pages;
+        //Tree set for sorting dtos by compareTo
+        Set<T_DTO> items = new TreeSet<>();
         do {
             pages = resource.pageAll(page, size);
-            for (T_DTO item : pages.getContent()) {
-                printPagedModel(item);
-            }
+            items.addAll(pages.getContent());
             page++;
         } while (pages.hasLink("next"));
+
+        if(items.size() < 1) {
+            System.out.println("Response empty, nothing to show!");
+            return;
+        }
+
+        for (T_DTO item : items) {
+            System.out.println();
+            printPagedModel(item);
+        }
+        System.out.println();
     }
 
     protected void printAll(Collection<T_DTO> collection) {
-        for(T_DTO item : collection) {
-            printModel(item);
-            System.out.println("\n");
+        if(collection.size() < 1) {
+            System.out.println("Response empty, nothing to show!");
+            return;
         }
+
+        for(T_DTO item : collection) {
+            System.out.println();
+            printModel(item);
+        }
+        System.out.println();
     }
 
     private void readAll() {
@@ -137,13 +154,25 @@ public abstract class BasicHandler<T_DTO extends Printable, T_CREATE_DTO> {
 
     private void delete(ApplicationArguments args) throws Exception {
         String id = getIdFromArguments(args);
-        resource.delete(id);
+        try {
+            resource.delete(id);
+        } catch (HttpClientErrorException e) {
+            switch (e.getStatusCode()) {
+                case CONFLICT: {
+                    throw new RuntimeException("Conflict during deletion of entity with id =\"" + id + "\", probably due to integrity violation: check if is mapped to any other entities!", e);
+                }
+                //TODO other codes
+                default: {
+                    throw e;
+                }
+            }
+        }
     }
 
-    protected void printError(Exception e, String actionName, ApplicationArguments args) {
-        System.err.println("Error on action \"" + actionName + "\" with given args: \"" + args + "\"!");
-        System.err.println(e.getMessage());
-        e.getCause().printStackTrace();
+    protected void printError(final Exception e, final String actionName, final ApplicationArguments args) {
+        System.err.println("Error on action \"" + actionName + "\" with given args: \"" + Arrays.toString(args.getSourceArgs()) + "\"!");
+        System.err.println("Exception message: " + e.getMessage());
+        System.err.println(ExceptionUtils.getStackTrace(e));
     }
 
     protected void throwMustContain(String... optionNames) throws IllegalArgumentException {

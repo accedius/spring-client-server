@@ -2,9 +2,9 @@ package cz.cvut.fit.baklaal1.server.business.service;
 
 import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
-import cz.cvut.fit.baklaal1.model.data.entity.Teacher;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Teacher;
+import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +52,11 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         Assessment assessment = new Assessment(assessmentDTO.getGrade(), work, evaluator);
 
         if(exists(assessment))
-            throw getServiceException(actionCreate, ServiceConstants.WORK + ServiceConstants.ALREADY_EXISTS, assessmentDTO);
+            throw getServiceException(actionCreate, ServiceConstants.ASSESSMENT + ServiceConstants.ALREADY_EXISTS, assessmentDTO);
 
         Assessment savedAssessment = assessmentRepository.save(assessment);
+        work.setAssessment(savedAssessment);
+        workService.update(work.getId(), work.toCreateDTO());
 
         return toDTO(savedAssessment);
     }
@@ -80,6 +82,7 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         Work work = getWorkById(workId);
         if(work == null)
             throw getServiceException(actionUpdate, ServiceConstants.WORK + ServiceConstants.NOT_FOUND_IN_DB, assessmentDTO);
+
         assessment.setWork(work);
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
@@ -88,7 +91,7 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
 
     @Override
     protected boolean exists(Assessment item) {
-        return assessmentRepository.findByWork(item.getWork()).isPresent();
+        return assessmentRepository.findByWork_Id(item.getWork().getId()).isPresent();
     }
 
     @Override
@@ -106,6 +109,6 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
 
     @Override
     protected AssessmentDTO toDTO(Assessment assessment) {
-        return new AssessmentDTO(assessment);
+        return assessment.toDTO();
     }
 }

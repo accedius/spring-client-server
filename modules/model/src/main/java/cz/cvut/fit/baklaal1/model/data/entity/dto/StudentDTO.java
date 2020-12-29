@@ -1,7 +1,7 @@
 package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
-import cz.cvut.fit.baklaal1.model.data.entity.Student;
-import cz.cvut.fit.baklaal1.model.data.entity.Work;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.Set;
@@ -11,17 +11,11 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
     private final float averageGrade;
     private final Set<Integer> workIds;
 
-    public StudentDTO(int id, String username, String name, Timestamp birthDate, float averageGrade, Set<Integer> workIds) {
-        super(id, username, name, birthDate);
+    @JsonCreator
+    public StudentDTO(@JsonProperty("id") int id, @JsonProperty("username") String username, @JsonProperty("name") String name, @JsonProperty("birthdate") Timestamp birthdate, @JsonProperty("averageGrade") float averageGrade, @JsonProperty("workIds") Set<Integer> workIds) {
+        super(id, username, name, birthdate);
         this.averageGrade = averageGrade;
         this.workIds = workIds;
-    }
-
-    public StudentDTO(final Student student) {
-        super(student);
-        this.averageGrade = student.getAverageGrade();
-        Set<Work> works = student.getWorks();
-        this.workIds = works.stream().map(Work::getId).collect(Collectors.toSet());
     }
 
     public float getAverageGrade() {
@@ -41,14 +35,9 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("averageGrade", averageGrade);
 
-        //TODO make a universal method to print collections formatted in json-like format
-        System.out.println("Work Ids: {");
-        for (Integer workId : workIds) {
-            printFormatted("workId", workId);
-        }
-        System.out.println("}");
+        printCollectionFormatted("Work Ids", workIds);
 
-        System.out.println(super.toString());
+        printLinksFormatted(super.toString());
         System.out.println("}");
     }
 

@@ -1,4 +1,4 @@
-package cz.cvut.fit.baklaal1.model.data.entity;
+package cz.cvut.fit.baklaal1.entity;
 
 import com.sun.istack.NotNull;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Entity
 public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO>, ConvertibleToCreateDTO<WorkCreateDTO> {
@@ -112,11 +113,24 @@ public class Work implements Comparable<Work>, ConvertibleToDTO<WorkDTO>, Conver
 
     @Override
     public WorkDTO toDTO() {
-        return new WorkDTO(this);
+        int id = this.getId() == null ? -1 : this.getId();
+        String title = this.getTitle();
+        String text = this.getText();
+        Set<Student> authors = this.getAuthors();
+        Set<Integer> authorIds = authors.stream().map(Student::getId).collect(Collectors.toCollection(TreeSet::new));
+        Integer assessmentId = this.getAssessment() != null ? this.getAssessment().getId() : null;
+
+        return new WorkDTO(id, title, text, authorIds, assessmentId);
     }
 
     @Override
     public WorkCreateDTO toCreateDTO() {
-        return new WorkCreateDTO(this);
+        String title = this.getTitle();
+        String text = this.getText();
+        Set<Student> authors = this.getAuthors();
+        Set<Integer> authorIds = authors.stream().map(Student::getId).collect(Collectors.toCollection(TreeSet::new));
+        Integer assessmentId = this.getAssessment() != null ? this.getAssessment().getId() : null;
+
+        return new WorkCreateDTO(title, text, authorIds, assessmentId);
     }
 }

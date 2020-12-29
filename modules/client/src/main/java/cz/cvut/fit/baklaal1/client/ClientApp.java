@@ -1,39 +1,48 @@
 package cz.cvut.fit.baklaal1.client;
 
-import cz.cvut.fit.baklaal1.client.handler.AssessmentHandler;
-import cz.cvut.fit.baklaal1.client.handler.StudentHandler;
-import cz.cvut.fit.baklaal1.client.handler.TeacherHandler;
-import cz.cvut.fit.baklaal1.client.handler.WorkHandler;
-import cz.cvut.fit.baklaal1.client.helper.ClientAppHelp;
+import cz.cvut.fit.baklaal1.client.handler.*;
+import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
+import cz.cvut.fit.baklaal1.client.help.ClientAppHelp;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.HypermediaRestTemplateConfigurer;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 @SpringBootApplication
-@EntityScan("cz.cvut.fit.baklaal1.model.data.entity")
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class ClientApp implements ApplicationRunner {
-	@Autowired
-	private AssessmentHandler assessmentHandler;
+	private static final String formatForDate = "HH:mm:ss";
+	private static boolean welcomed = false;
 
 	@Autowired
-	private StudentHandler studentHandler;
+	private MainHandler handler;
 
 	@Autowired
-	private TeacherHandler teacherHandler;
-
-	@Autowired
-	private WorkHandler workHandler;
+	private ClientAppHelp appHelp;
 
     public static void main(String[] args) {
-        SpringApplication.run(ClientApp.class, args);
+    	//TODO do better, see https://stackoverflow.com/questions/4159802/how-can-i-restart-a-java-application
+		try {
+        	SpringApplication.run(ClientApp.class, args);
+		} catch (IllegalStateException e) {
+			System.err.println("Error on parsing given line!");
+			System.err.println("Exception message: " + e.getMessage());
+			System.err.println(ExceptionUtils.getStackTrace(e));
+			main(new String[]{"helpNeeded"});
+		}
     }
 
     @Bean
@@ -45,37 +54,37 @@ public class ClientApp implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (args.containsOption("action") && args.containsOption("entity")) {
-        	String entity = args.getOptionValues("entity").get(0);
-        	try {
-				switch (entity) {
-					case "Student": {
-						studentHandler.handle(args);
-						break;
-					}
-					case "Teacher": {
-						teacherHandler.handle(args);
-						break;
-					}
-					case "Work": {
-						workHandler.handle(args);
-						break;
-					}
-					case "Assessment": {
-						assessmentHandler.handle(args);
-						break;
-					}
-					default: {
-						System.err.println("Invalid entity name: \"" + entity + "\"!");
-						ClientAppHelp.printHelp();
-					}
-				}
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-				e.printStackTrace();
-			}
-		} else {
-        	ClientAppHelp.printHelp();
+    	ApplicationArguments argsToHandle = args;
+		Scanner in = new Scanner(System.in);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(formatForDate);
+
+		if(!welcomed) {
+			appHelp.printWelcomeMessage();
+			welcomed = true;
 		}
-    }
+
+		while(handler.handleArguments(argsToHandle)) {
+			Date date = Calendar.getInstance().getTime();
+			System.out.print(dateFormat.format(date) + " Client>");
+
+			String argumentsAsString = in.nextLine();
+			String[] argsResource = parseArguments(argumentsAsString);
+
+			argsToHandle = new DefaultApplicationArguments(argsResource);
+		}
+
+		System.out.print("Exiting...");
+	}
+
+	private String[] parseArguments(final String source) {
+		final String argumentRegex = "([-a-zA-z][^ ]*=\"[^\"]*\")|([-a-zA-z][^ ]*)";
+		String[] arguments = Pattern.compile(argumentRegex).matcher(source).results().map(MatchResult::group).toArray(String[]::new);
+
+		//Delete all the commas, DefaultApplicationArguments views commas as literals, so comma stacking phenomenon appears: on input "\"abc\"" it will save as literally "\"abc\"" and when will be displayed as "\"\"abc\"\""
+		final String commaRegex = "\"";
+		for (int i = 0; i < arguments.length; i++) {
+			arguments[i] = arguments[i].replaceAll(commaRegex, "");
+		}
+		return arguments;
+	}
 }

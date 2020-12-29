@@ -1,7 +1,7 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
 import cz.cvut.fit.baklaal1.server.business.service.AssessmentService;
-import cz.cvut.fit.baklaal1.model.data.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.AssessmentModelAssembler;

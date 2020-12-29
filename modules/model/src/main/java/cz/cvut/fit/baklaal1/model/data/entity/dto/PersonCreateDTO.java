@@ -16,6 +16,9 @@ public abstract class PersonCreateDTO {
         setBirthdate(birthdate);
     }
 
+    public PersonCreateDTO() {
+    }
+
     public String getUsername() {
         return username;
     }
