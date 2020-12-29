@@ -96,7 +96,8 @@ public class WorkService extends BasicService<Work, WorkDTO, WorkCreateDTO> {
 
     @Override
     protected boolean exists(final Work item) {
-        return !workRepository.findAllByTitleAndAuthorsIn(item.getTitle(), item.getAuthors()).isEmpty();
+        Set<Work> similarWorks = workRepository.findAllByTitleAndAuthorsIn(item.getTitle(), item.getAuthors());
+        return !similarWorks.isEmpty() && similarWorks.stream().anyMatch(work -> item.getAuthors().equals(work.getAuthors()));
     }
 
     @Override
