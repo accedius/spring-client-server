@@ -154,7 +154,19 @@ public abstract class BasicHandler<T_DTO extends BasicDTO<T_DTO>, T_CREATE_DTO> 
 
     private void delete(ApplicationArguments args) throws Exception {
         String id = getIdFromArguments(args);
-        resource.delete(id);
+        try {
+            resource.delete(id);
+        } catch (HttpClientErrorException e) {
+            switch (e.getStatusCode()) {
+                case CONFLICT: {
+                    throw new RuntimeException("Conflict during deletion of entity with id =\"" + id + "\", probably due to integrity violation: check if is mapped to any other entities!", e);
+                }
+                //TODO other codes
+                default: {
+                    throw e;
+                }
+            }
+        }
     }
 
     protected void printError(final Exception e, final String actionName, final ApplicationArguments args) {
