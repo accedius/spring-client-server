@@ -21,7 +21,7 @@ public class Teacher extends Person implements ConvertibleToDTO<TeacherDTO>, Con
 
     @OneToMany(mappedBy = DBConstants.EVALUATOR)
     @SortNatural
-    @OrderBy
+    @OrderBy("id ASC")
     private Set<Assessment> assessments = new TreeSet<>();
 
     public Teacher() {}
