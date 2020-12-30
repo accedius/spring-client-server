@@ -50,7 +50,7 @@ public class WorkDTO extends BasicDTO<WorkDTO> implements Comparable<WorkDTO> {
         printFormatted("title", title);
         printFormatted("text", text);
 
-        printCollectionFormatted("Author (Student) Ids", authorIds);
+        printCollectionFormatted("Author (Student) Ids", sortSet(authorIds));
 
         printFormatted("assessmentId", assessmentId);
 

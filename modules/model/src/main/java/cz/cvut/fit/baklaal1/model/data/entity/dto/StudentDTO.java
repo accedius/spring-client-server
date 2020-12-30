@@ -35,7 +35,7 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("averageGrade", averageGrade);
 
-        printCollectionFormatted("Work Ids", workIds);
+        printCollectionFormatted("Work Ids", sortSet(workIds));
 
         printLinksFormatted(super.toString());
         System.out.println("}");

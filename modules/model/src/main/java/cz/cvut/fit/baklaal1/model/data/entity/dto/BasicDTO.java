@@ -3,6 +3,9 @@ package cz.cvut.fit.baklaal1.model.data.entity.dto;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 //TODO printable methods should = toString() result, connect them for code reuse and readability of toString() method
 public abstract class BasicDTO<T_DTO extends BasicDTO<T_DTO>> extends RepresentationModel<T_DTO> implements Printable {
@@ -39,7 +42,20 @@ public abstract class BasicDTO<T_DTO extends BasicDTO<T_DTO>> extends Representa
         System.out.println("\t" + collectionName + ": {" + collectionFormatted + "}");
     }
 
-    protected  void printLinksFormatted(String links) {
+    protected void printLinksFormatted(String links) {
         System.out.println("\t" + links);
+    }
+
+    /**
+     * Returns sorted version of given set. If set already has a sorted implementation (TreeSet or ConcurrentSkipListSet), returns given set back, otherwise creates and returns a TreeSet of given Set
+     * @param set
+     * @param <T>
+     * @return
+     */
+    protected <T> Set<T> sortSet(Set<T> set) {
+        if(set instanceof TreeSet || set instanceof ConcurrentSkipListSet) {
+            return set;
+        }
+        return new TreeSet<T>(set);
     }
 }

@@ -35,7 +35,7 @@ public class TeacherDTO extends PersonDTO<TeacherDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("wage", wage);
 
-        printCollectionFormatted("Assessment Ids", assessmentIds);
+        printCollectionFormatted("Assessment Ids", sortSet(assessmentIds));
 
         printLinksFormatted(super.toString());
         System.out.println("}");
