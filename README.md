@@ -181,3 +181,5 @@ If server application is throwing an error, that wanted port is already in use:
 - Do not forget to change `client`'s `application.properties` accordingly, the file is located similarly.
 
 All logs with severity less than `warn` were disabled for `client`. To change that see `application.properties` at `client` module.
+
+Client sample script located at `resources/clientScript.txt` will only properly work if the indexing in the database will start from `1` — don't forget to re-create database before running it.
