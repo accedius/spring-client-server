@@ -103,7 +103,7 @@ To exit type in:
 
 ### Attributes info:
 
-- `*` means required for creation, does not mean it always contains some value
+- `*` means required
 - `(optional)` means non-required for creation
 - `(comlex)` means this attribute can store multiple values at once
 
