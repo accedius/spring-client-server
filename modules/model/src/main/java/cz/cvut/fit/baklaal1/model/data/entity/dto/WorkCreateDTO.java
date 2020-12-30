@@ -2,7 +2,6 @@ package cz.cvut.fit.baklaal1.model.data.entity.dto;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class WorkCreateDTO {
     private String title;

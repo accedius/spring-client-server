@@ -1,13 +1,12 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
-import cz.cvut.fit.baklaal1.server.business.service.AssessmentService;
 import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
+import cz.cvut.fit.baklaal1.server.business.service.AssessmentService;
 import cz.cvut.fit.baklaal1.server.data.entity.dto.assembler.AssessmentModelAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

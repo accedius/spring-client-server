@@ -1,37 +1,26 @@
 package cz.cvut.fit.baklaal1.server.business;
 
 import cz.cvut.fit.baklaal1.entity.Student;
-import cz.cvut.fit.baklaal1.entity.Teacher;
-import cz.cvut.fit.baklaal1.entity.Work;
-import cz.cvut.fit.baklaal1.model.data.entity.dto.*;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkDTO;
 import cz.cvut.fit.baklaal1.model.data.helper.Grades;
-import cz.cvut.fit.baklaal1.server.business.repository.TeacherRepository;
-import cz.cvut.fit.baklaal1.server.business.service.AssessmentService;
 import cz.cvut.fit.baklaal1.server.business.service.StudentService;
-import cz.cvut.fit.baklaal1.server.business.service.TeacherService;
 import cz.cvut.fit.baklaal1.server.business.service.WorkService;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 //TODO maybe should just use one DataSource for all the Test classes, since Spring creates HikariDataSource pool for each Test class in runtime, causing opening and closing same database Connection for each Test class

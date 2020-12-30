@@ -1,7 +1,6 @@
 package cz.cvut.fit.baklaal1.client;
 
-import cz.cvut.fit.baklaal1.client.handler.*;
-import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
+import cz.cvut.fit.baklaal1.client.handler.MainHandler;
 import cz.cvut.fit.baklaal1.client.help.ClientAppHelp;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,11 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.HypermediaRestTemplateConfigurer;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)

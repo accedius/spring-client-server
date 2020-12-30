@@ -1,14 +1,17 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionInBusinessLogic;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionBuilder;
+import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionInBusinessLogic;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Transactional

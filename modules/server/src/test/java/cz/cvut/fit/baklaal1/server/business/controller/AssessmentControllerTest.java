@@ -1,15 +1,13 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
-import cz.cvut.fit.baklaal1.entity.*;
 import cz.cvut.fit.baklaal1.entity.Assessment;
+import cz.cvut.fit.baklaal1.entity.Teacher;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
-import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.service.AssessmentService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
 import cz.cvut.fit.baklaal1.server.suite.AssessmentTestSuite;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;

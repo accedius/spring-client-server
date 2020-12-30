@@ -3,12 +3,9 @@ package cz.cvut.fit.baklaal1.client.handler;
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
 import cz.cvut.fit.baklaal1.client.resource.BasicResource;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
-import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.URI;

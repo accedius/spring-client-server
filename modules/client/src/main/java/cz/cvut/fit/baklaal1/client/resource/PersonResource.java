@@ -1,6 +1,5 @@
 package cz.cvut.fit.baklaal1.client.resource;
 
-import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.util.UriComponentsBuilder;

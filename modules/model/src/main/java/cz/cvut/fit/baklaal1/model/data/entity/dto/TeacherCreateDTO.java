@@ -3,7 +3,6 @@ package cz.cvut.fit.baklaal1.model.data.entity.dto;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TeacherCreateDTO extends PersonCreateDTO {
     private double wage;

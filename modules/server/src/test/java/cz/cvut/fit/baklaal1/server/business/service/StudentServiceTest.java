@@ -1,12 +1,10 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.entity.Student;
 import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
-import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.repository.StudentRepository;
 import cz.cvut.fit.baklaal1.server.suite.StudentTestSuite;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
