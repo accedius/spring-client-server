@@ -5,6 +5,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 //apply from: file('testConfig.gradle')
 
 def testsResults = []
+def buildFailed = false
 
 tasks.withType(Test) { testTask ->
 
@@ -39,6 +40,9 @@ tasks.withType(Test) { testTask ->
             testsResults.add(0, summary)
         } else {
             testsResults += summary
+            if(!buildFailed) {
+                buildFailed = true
+            }
         }
     }
 }
@@ -48,6 +52,10 @@ gradle.buildFinished {
 
     if (!allResults.isEmpty()) {
         printResults allResults
+    }
+
+    if(buildFailed) {
+        ant.fail("Testing failed!")
     }
 }
 
