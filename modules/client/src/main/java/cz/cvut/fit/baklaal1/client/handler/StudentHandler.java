@@ -75,7 +75,7 @@ public class StudentHandler extends PersonHandler<StudentDTO, StudentCreateDTO> 
 
         String username = args.getOptionValues(USERNAME).get(0);
         String name = args.getOptionValues(NAME).get(0);
-        Timestamp birthdate = args.getOptionValues(BIRTHDATE) != null ? new Timestamp(Integer.parseInt(args.getOptionValues(BIRTHDATE).get(0))) : null;
+        Timestamp birthdate = args.getOptionValues(BIRTHDATE) != null ? new Timestamp(Long.parseLong(args.getOptionValues(BIRTHDATE).get(0))) : null;
 
         String averageGradeString = args.getOptionValues(AVERAGE_GRADE) != null ? args.getOptionValues(AVERAGE_GRADE).get(0) : "0";
         //TODO Number locales are hell
