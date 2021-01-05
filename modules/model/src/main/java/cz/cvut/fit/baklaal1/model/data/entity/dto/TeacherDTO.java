@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TeacherDTO extends PersonDTO<TeacherDTO> {
     private final double wage;
@@ -35,7 +34,7 @@ public class TeacherDTO extends PersonDTO<TeacherDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("wage", wage);
 
-        printCollectionFormatted("Assessment Ids", assessmentIds);
+        printCollectionFormatted("Assessment Ids", sortSet(assessmentIds));
 
         printLinksFormatted(super.toString());
         System.out.println("}");

@@ -1,11 +1,8 @@
 package cz.cvut.fit.baklaal1.client.handler;
 
 import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
-import cz.cvut.fit.baklaal1.client.resource.BasicResource;
 import cz.cvut.fit.baklaal1.client.resource.PersonResource;
-import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
-import cz.cvut.fit.baklaal1.model.data.entity.dto.Printable;
 import org.springframework.boot.ApplicationArguments;
 
 import java.util.Set;

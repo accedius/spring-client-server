@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 public class StudentCreateDTO extends PersonCreateDTO {
     private static final Set<Integer> defaultWorkIds = new TreeSet<>();

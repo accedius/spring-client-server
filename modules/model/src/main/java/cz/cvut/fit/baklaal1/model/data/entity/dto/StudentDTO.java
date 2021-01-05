@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class StudentDTO extends PersonDTO<StudentDTO> {
     private final float averageGrade;
@@ -35,7 +34,7 @@ public class StudentDTO extends PersonDTO<StudentDTO> {
         printFormatted("birthdate", birthdate);
         printFormatted("averageGrade", averageGrade);
 
-        printCollectionFormatted("Work Ids", workIds);
+        printCollectionFormatted("Work Ids", sortSet(workIds));
 
         printLinksFormatted(super.toString());
         System.out.println("}");

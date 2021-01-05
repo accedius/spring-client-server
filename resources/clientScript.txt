@@ -44,9 +44,14 @@ Note, that this script relies on the fact that db is cleared and just created: i
 --entity=work --action=read --id=13
 
 //Exception here --entity=assessment --action=create --grade=3 --workId=13 --evaluatorId=8
+--entity=assessment --action=create --grade=3 --workId=14 --evaluatorId=7
 
 --entity=assessment --action=readAll
 --entity=work --action=readAll
+--entity=teacher --action=read --id=7
+
+--entity=assessment --action=delete --id=15
+--entity=work --action=read --id=13
 
 --entity=work --action=delete --id=13
 --entity=work --action=delete --id=14

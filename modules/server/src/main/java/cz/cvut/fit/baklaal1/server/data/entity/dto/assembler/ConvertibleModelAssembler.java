@@ -1,10 +1,9 @@
 package cz.cvut.fit.baklaal1.server.data.entity.dto.assembler;
 
+import cz.cvut.fit.baklaal1.entity.ConvertibleToDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.BasicDTO;
 import cz.cvut.fit.baklaal1.server.business.controller.BasicController;
-import cz.cvut.fit.baklaal1.entity.ConvertibleToDTO;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 

@@ -1,14 +1,13 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
-import cz.cvut.fit.baklaal1.server.business.service.StudentService;
-import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
 import cz.cvut.fit.baklaal1.entity.Student;
 import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.StudentDTO;
+import cz.cvut.fit.baklaal1.server.business.service.StudentService;
+import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
 import cz.cvut.fit.baklaal1.server.suite.StudentTestSuite;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

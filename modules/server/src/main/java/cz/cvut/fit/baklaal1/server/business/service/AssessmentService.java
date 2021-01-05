@@ -1,12 +1,12 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
-import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
 import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.entity.Teacher;
 import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
+import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
+import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -87,6 +87,24 @@ public class AssessmentService extends BasicService<Assessment, AssessmentDTO, A
         Assessment savedAssessment = assessmentRepository.save(assessment);
 
         return toDTO(savedAssessment);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Optional<Assessment> assessmentOptional = findById(id);
+        if(assessmentOptional.isEmpty()) {
+            return;
+        }
+
+        Assessment assessment = assessmentOptional.get();
+        Work work = getWorkById(assessment.getWork().getId());
+        work.setAssessment(null);
+        try {
+            workService.update(work.getId(), work.toCreateDTO());
+        } catch (Exception e) {
+            //TODO maybe?
+            super.delete(id);
+        }
     }
 
     @Override

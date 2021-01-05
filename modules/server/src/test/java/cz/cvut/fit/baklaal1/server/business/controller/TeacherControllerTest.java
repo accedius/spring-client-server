@@ -1,16 +1,12 @@
 package cz.cvut.fit.baklaal1.server.business.controller;
 
 import cz.cvut.fit.baklaal1.entity.Teacher;
-import cz.cvut.fit.baklaal1.entity.Teacher;
-import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
-import cz.cvut.fit.baklaal1.model.data.helper.Grades;
 import cz.cvut.fit.baklaal1.server.business.service.TeacherService;
 import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceExceptionEntityAlreadyExists;
 import cz.cvut.fit.baklaal1.server.suite.TeacherTestSuite;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -23,13 +19,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @SpringBootTest

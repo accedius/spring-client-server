@@ -1,9 +1,9 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.server.business.repository.PersonRepository;
 import cz.cvut.fit.baklaal1.entity.Person;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.PersonDTO;
+import cz.cvut.fit.baklaal1.server.business.repository.PersonRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;

@@ -5,6 +5,7 @@ import cz.cvut.fit.baklaal1.entity.Teacher;
 import cz.cvut.fit.baklaal1.entity.Work;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.WorkCreateDTO;
 import cz.cvut.fit.baklaal1.server.business.repository.AssessmentRepository;
 import cz.cvut.fit.baklaal1.server.suite.AssessmentTestSuite;
 import org.junit.jupiter.api.DisplayName;
@@ -164,19 +165,6 @@ class AssessmentServiceTest extends AssessmentTestSuite {
     }
 
     @Test
-    public void delete() {
-        final int assessmentId = 10;
-
-        BDDMockito.doNothing().when(assessmentRepositoryMock).deleteById(assessmentId);
-
-        assessmentService.delete(assessmentId);
-
-        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
-        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).deleteById(idCaptor.capture());
-        assertEquals(assessmentId, idCaptor.getValue());
-    }
-
-    @Test
     public void create() throws Exception {
         final int assessmentId = 2;
 
@@ -222,6 +210,34 @@ class AssessmentServiceTest extends AssessmentTestSuite {
         ArgumentCaptor<Assessment> argumentCaptor = ArgumentCaptor.forClass(Assessment.class);
         Mockito.verify(assessmentRepositoryMock, Mockito.atLeastOnce()).save(argumentCaptor.capture());
         assertEquals(assessmentNewToReturn, argumentCaptor.getValue());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        final int assessmentId = 10;
+        Assessment assessment = generateAssessment(assessmentId);
+        final int workId = assessment.getWork().getId();
+        Work workOld = assessment.getWork();
+        Work workNewWithoutAssessment = generateWork(workId);
+        workNewWithoutAssessment.setAssessment(null);
+
+        BDDMockito.given(assessmentRepositoryMock.findById(assessmentId)).willReturn(Optional.of(assessment));
+        BDDMockito.given(workServiceMock.findById(workId)).willReturn(Optional.of(workOld));
+        BDDMockito.given(workServiceMock.update(workId, workNewWithoutAssessment.toCreateDTO())).willReturn(workNewWithoutAssessment.toDTO());
+
+        assessmentService.delete(assessmentId);
+
+        ArgumentCaptor<Integer> idCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(assessmentRepositoryMock, Mockito.times(1)).findById(idCaptor.capture());
+        assertEquals(assessmentId, idCaptor.getValue());
+
+        Mockito.verify(workServiceMock, Mockito.times(1)).findById(idCaptor.capture());
+        assertEquals(workId, idCaptor.getValue());
+
+        ArgumentCaptor<WorkCreateDTO> workCaptor = ArgumentCaptor.forClass(WorkCreateDTO.class);
+        Mockito.verify(workServiceMock, Mockito.times(1)).update(idCaptor.capture(), workCaptor.capture());
+        assertEquals(workId, idCaptor.getValue());
+        assertEquals(workNewWithoutAssessment.toCreateDTO(), workCaptor.getValue());
     }
 
     @Test

@@ -1,11 +1,11 @@
 package cz.cvut.fit.baklaal1.server.business.service;
 
-import cz.cvut.fit.baklaal1.server.business.repository.TeacherRepository;
-import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
 import cz.cvut.fit.baklaal1.entity.Assessment;
 import cz.cvut.fit.baklaal1.entity.Teacher;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherCreateDTO;
 import cz.cvut.fit.baklaal1.model.data.entity.dto.TeacherDTO;
+import cz.cvut.fit.baklaal1.server.business.repository.TeacherRepository;
+import cz.cvut.fit.baklaal1.server.business.service.helper.ServiceConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
