@@ -17,6 +17,7 @@ import org.springframework.hateoas.config.HypermediaRestTemplateConfigurer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -37,6 +38,8 @@ public class ClientApp implements ApplicationRunner {
     	//TODO do better, see https://stackoverflow.com/questions/4159802/how-can-i-restart-a-java-application
 		try {
         	SpringApplication.run(ClientApp.class, args);
+		} catch (NoSuchElementException e) {
+			return;
 		} catch (IllegalStateException e) {
 			System.err.println("Error on parsing given line!");
 			System.err.println("Exception message: " + e.getMessage());
@@ -52,6 +55,7 @@ public class ClientApp implements ApplicationRunner {
 		};
 	}
 
+	//TODO implement new argument for script passing instead of dealing with redirection from "< script.txt", which causes the sout stacking problem: on script input where are no keyboard interactions, thus no "enter" is being hit, so the new line does not appear, so "some-time Client>" messages stack up in just one row
     @Override
     public void run(ApplicationArguments args) {
     	ApplicationArguments argsToHandle = args;
@@ -67,6 +71,10 @@ public class ClientApp implements ApplicationRunner {
 			Date date = Calendar.getInstance().getTime();
 			System.out.print(dateFormat.format(date) + " Client>");
 
+			if(!in.hasNextLine()) {
+				System.out.println();
+				break;
+			}
 			String argumentsAsString = in.nextLine();
 			String[] argsResource = parseArguments(argumentsAsString);
 
