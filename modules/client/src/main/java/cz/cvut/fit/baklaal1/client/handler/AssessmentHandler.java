@@ -1,0 +1,76 @@
+package cz.cvut.fit.baklaal1.client.handler;
+
+import cz.cvut.fit.baklaal1.client.handler.helper.ArgumentConstants;
+import cz.cvut.fit.baklaal1.client.resource.AssessmentResource;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentCreateDTO;
+import cz.cvut.fit.baklaal1.model.data.entity.dto.AssessmentDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
+
+@Component
+public class AssessmentHandler extends BasicHandler<AssessmentDTO, AssessmentCreateDTO> {
+    private static final String EVALUATOR_ID = ArgumentConstants.EVALUATOR_ID;
+    private static final String READ_ALL_BY_EVALUATOR_ID = ArgumentConstants.READ_ALL_BY_EVALUATOR_ID;
+
+    private static final String GRADE = ArgumentConstants.GRADE;
+    private static final String WORK_ID = ArgumentConstants.WORK_ID;
+
+    @Autowired
+    private final AssessmentResource assessmentResource;
+
+    public AssessmentHandler(AssessmentResource assessmentResource) {
+        super(assessmentResource);
+        this.assessmentResource = assessmentResource;
+    }
+
+    @Override
+    public boolean handle(ApplicationArguments args) throws Exception {
+        boolean wasHandled = super.handle(args);
+        if(wasHandled) {
+            return wasHandled;
+        }
+
+        String action = args.getOptionValues("action").get(0);
+        switch (action) {
+            case READ_ALL_BY_EVALUATOR_ID: {
+                wasHandled = true;
+                try {
+                    readAllByEvaluatorId(args);
+                } catch (Exception e) {
+                    printError(e, READ_ALL_BY_EVALUATOR_ID, args);
+                }
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException("No such action for Assessment: \"" + action + "\"!");
+            }
+        }
+
+        return wasHandled;
+    }
+
+    private void readAllByEvaluatorId(ApplicationArguments args) throws Exception {
+        if(!args.containsOption(EVALUATOR_ID)) {
+            throwMustContain(EVALUATOR_ID);
+        }
+
+        String evaluatorId = args.getOptionValues(EVALUATOR_ID).get(0);
+        Set<AssessmentDTO> assessments = assessmentResource.readAllByEvaluatorId(evaluatorId);
+        printAll(assessments);
+    }
+
+    @Override
+    protected AssessmentCreateDTO makeCreateModelFromArguments(ApplicationArguments args) throws Exception {
+        if(!args.containsOption(GRADE) || !args.containsOption(EVALUATOR_ID) || !args.containsOption(WORK_ID) ) {
+            throwMustContain(GRADE, EVALUATOR_ID, WORK_ID);
+        }
+
+        int grade = Integer.parseInt(args.getOptionValues(GRADE).get(0));
+        Integer evaluatorId = Integer.parseInt(args.getOptionValues(EVALUATOR_ID).get(0));
+        int workId = Integer.parseInt(args.getOptionValues(WORK_ID).get(0));
+        return new AssessmentCreateDTO(grade, workId, evaluatorId);
+    }
+}

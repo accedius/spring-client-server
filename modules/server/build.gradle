@@ -1,0 +1,46 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group 'cz.cvut.fit.baklaal1.tjv-sem.server'
+version '0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    //TODO entity is dependent on model; when only dependent on entity implementation, model library is included to external libraries too, but is inaccessible from java code
+    implementation 'cz.cvut.fit.baklaal1.tjv-sem:entity:0.1-SNAPSHOT'
+    implementation 'cz.cvut.fit.baklaal1.tjv-sem:model:0.1-SNAPSHOT'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.springframework.hateoas:spring-hateoas:1.2.1'
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    testCompile 'org.junit.jupiter:junit-jupiter:5.7.0'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testRuntime 'com.h2database:h2'
+
+    //for the application runtime
+    runtimeOnly 'org.springframework.hateoas:spring-hateoas:1.2.1'
+}
+
+configurations {
+    testCompile.extendsFrom compileOnly
+}
+
+test {
+    useJUnitPlatform()
+
+    //TODO CTU FIT's OracleDB has a limit for parallel sessions for students, but in production reality could be up to Runtime.runtime.availableProcessors()
+    maxParallelForks = 2;
+}
+
+apply from: file('testConfig.gradle')

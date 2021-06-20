@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'maven'
+}
+
+group 'cz.cvut.fit.baklaal1.tjv-sem'
+version '0.1-SNAPSHOT'
+
+java {
+    withSourcesJar()
+}
+
+jar {
+    enabled = true
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly 'org.springframework.hateoas:spring-hateoas:1.1.2.RELEASE'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.0'
+}
+

@@ -1,0 +1,8 @@
+rootProject.name = 'tjv-sem'
+
+include 'modules:model', 'modules:server', 'modules:client', 'modules:entity'
+
+findProject(':modules:entity')?.name = 'entity'
+findProject(':modules:model')?.name = 'model'
+findProject(':modules:server')?.name = 'server'
+findProject(':modules:client')?.name = 'client'

@@ -1,0 +1,69 @@
+###All
+GET http://localhost:8080/students/all
+Accept: application/json
+
+###PagedAll
+GET http://localhost:8080/students
+
+###1
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "username" : "student1",
+  "name" : "StudentName1",
+  "birthdate" : "1000000",
+  "averageGrade" : "0",
+  "workIds" : []
+}
+
+###2
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "username" : "student2",
+  "name" : "StudentName2",
+  "birthdate" : "100000000",
+  "averageGrade" : "0",
+  "workIds" : []
+}
+
+###3
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+"username" : "student3",
+"name" : "StudentName3",
+"birthdate" : "1000000000",
+"averageGrade" : "0",
+"workIds" : []
+}
+
+###4
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+"username" : "student4",
+"name" : "StudentName4",
+"birthdate" : "10000000000",
+"averageGrade" : "0",
+"workIds" : []
+}
+
+###3
+DELETE http://localhost:8080/students/3
+
+###4
+PUT http://localhost:8080/students/4
+Content-Type: application/json
+
+{
+  "username" : "student4",
+  "name" : "StudentName4Changed",
+  "birthdate" : "10000000000000",
+  "averageGrade" : "3",
+  "workIds" : []
+}
