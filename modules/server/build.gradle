@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.springframework.hateoas:spring-hateoas:1.2.1'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    runtimeOnly 'org.postgresql:postgresql:42.1.4'
     testCompile 'org.junit.jupiter:junit-jupiter:5.7.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
