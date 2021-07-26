@@ -1,0 +1,41 @@
+--entity=student --action=create --username="Student 1" --name="Name 1"
+--entity=student --action=create --username="Student 2" --name="Name 2" --averageGrade=2,2
+--entity=student --action=create --username="Student 3" --name="Name 3" --averageGrade=3.3
+--entity=student --action=readAll
+
+--entity=teacher --action=create  --username="Teacher 1" --name="Name 4"
+--entity=teacher --action=create  --username="Teacher 2" --name="Name 5" --wage="99999.99"
+--entity=teacher --action=read --id=4
+--entity=teacher --action=read --id=5
+
+--entity=work --action=create --title="Title 1" --text="Some text..." --authorIds=1 --authorIds=3
+--entity=work --action=pageAll
+
+--entity=assessment --action=create --grade=3 --evaluatorId=4 --workId=6
+--entity=assessment --action=read --id=7
+--entity=work --action=read --id=6
+--entity=student --action=readAll
+
+--entity=work --action=update --id=6 --title="Title 1 new" --text="Some new text..." --authorIds=1 --authorIds=2 --assessmentId=7
+--entity=student --action=readAll
+--entity=work --action=readAll
+
+--entity=assessment --action=delete --id=7
+--entity=work --action=read --id=6
+--entity=student --action=joinWork --workId=6 --studentId=3
+--entity=student --action=readAll
+--entity=work --action=read --id=6
+
+--entity=student --action=update --id=1 --username="Student 1 new" --name="Name 1 new" --averageGrade=3 --birthdate="940433574"
+--entity=student --action=read --id=1
+
+--entity=work --action=delete --id=6
+
+--entity=student --action=deleteByUsername --username="Student 1 new"
+--entity=student --action=deleteByUsername --username="Student 2"
+--entity=student --action=deleteByUsername --username="Student 3"
+
+--entity=teacher --action=deleteByUsername --username="Teacher 1"
+--entity=teacher --action=deleteByUsername --username="Teacher 2"
+
+q
